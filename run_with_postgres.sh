@@ -49,7 +49,6 @@ fi
 
 printf -- '%s\n' "Creating \"${DOCKER_POSTGRES_CONTAINER}\" container..."
 
-# Create container
 docker run --detach \
 	--name "${DOCKER_POSTGRES_CONTAINER}" \
 	--hostname "${DOCKER_POSTGRES_CONTAINER}" \
@@ -61,7 +60,8 @@ docker run --detach \
 	--mount type=volume,src="${DOCKER_POSTGRES_VOLUME}",dst='/var/lib/postgresql/data/' \
 	"${DOCKER_POSTGRES_IMAGE}"
 
-sleep 10
+printf -- '%s\n' 'Waiting for database server...'
+until nc -zv 127.0.0.1 5432; do sleep 1; done && sleep 10
 
 # Pentaho BI Server container
 #############################
