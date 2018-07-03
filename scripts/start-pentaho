@@ -2,6 +2,10 @@
 
 set -eu
 
+if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
+	/usr/local/bin/setup-postgres
+fi
+
 DI_HOME="${BISERVER_HOME}"/pentaho-solutions/system/kettle
 export CATALINA_OPTS="
  -Xms1024m

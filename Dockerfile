@@ -6,7 +6,9 @@ RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		ca-certificates \
 		curl \
-		openjdk-8-jre \
+		netcat-traditional \
+		openjdk-8-jdk \
+		postgresql-client \
 		unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -31,27 +33,30 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 # Download and install Pentaho BI Server
 ARG BISERVER_PKG_URL=
 ENV BISERVER_HOME=/opt/biserver
+ENV BISERVER_ENABLE_POSTGRES=false
 RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		printf '%s\n' 'BISERVER_PKG_URL cannot be blank!'; \
 		exit 1; \
 	fi \
 	&& mkdir -p "${BISERVER_HOME}" \
 	&& curl -Lo /tmp/biserver.zip "${BISERVER_PKG_URL}" \
-	&& unzip /tmp/biserver.zip -d /tmp/biserver \
-	&& mv \
-		/tmp/biserver/pentaho.war \
-		/tmp/biserver/pentaho-style.war \
-		"${CATALINA_HOME}"/webapps/ \
+	&& unzip /tmp/biserver.zip -d /tmp/biserver/ \
+	&& (mkdir "${CATALINA_HOME}"/webapps/pentaho/ \
+		&& cd "${CATALINA_HOME}"/webapps/pentaho/ \
+		&& jar -xvf /tmp/biserver/pentaho.war \
+	) \
+	&& (mkdir "${CATALINA_HOME}"/webapps/pentaho-style/ \
+		&& cd "${CATALINA_HOME}"/webapps/pentaho-style/ \
+		&& jar -xvf /tmp/biserver/pentaho-style.war \
+	) \
 	&& unzip /tmp/biserver/pentaho-solutions.zip -d "${BISERVER_HOME}" \
 	&& unzip /tmp/biserver/pentaho-data.zip -d "${BISERVER_HOME}" \
 	&& find "${BISERVER_HOME}" -type f -iname '*.sh' -exec chmod 755 '{}' \; \
 	&& rm -r /tmp/biserver/ /tmp/biserver.zip
 
-# Copy Tomcat files
+# Copy config
+COPY config/pentaho-solutions/ /opt/biserver/pentaho-solutions/
 COPY config/tomcat/ /opt/biserver/tomcat/
-
-# Copy scripts
-COPY scripts/ /usr/bin/
 
 # Download Tomcat libraries
 RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
@@ -62,9 +67,16 @@ RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
 		rm -- "${download}"; \
 	done
 
+# Copy scripts
+COPY scripts/ /usr/local/bin/
+
+VOLUME /opt/biserver/data/hsqldb
+VOLUME /opt/biserver/pentaho-solutions/system/jackrabbit/repository
+VOLUME /opt/biserver/tomcat/logs
+
 WORKDIR /opt/biserver
 
 EXPOSE 8080/tcp
 EXPOSE 8009/tcp
 
-ENTRYPOINT ["/usr/bin/start-pentaho"]
+ENTRYPOINT ["/usr/local/bin/start-pentaho"]
