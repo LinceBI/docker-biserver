@@ -68,7 +68,9 @@ RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
 	done
 
 # Copy scripts
-COPY scripts/ /usr/local/bin/
+COPY scripts/start-pentaho /usr/local/bin/
+COPY scripts/setup-postgres /usr/local/bin/
+COPY scripts/biserver.init.d/ /etc/biserver.init.d/
 
 VOLUME /opt/biserver/data/hsqldb
 VOLUME /opt/biserver/pentaho-solutions/system/jackrabbit/repository

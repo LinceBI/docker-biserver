@@ -6,6 +6,15 @@ if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
 	/usr/local/bin/setup-postgres
 fi
 
+# Run init scripts
+for file in /etc/biserver.init.d/*; do
+	[ -e "${file}" ] || continue
+	case "${file}" in
+		*.sh) "${file}" ;;
+		*) printf -- '%s\n' "$0: ignoring ${file}" ;;
+	esac
+done
+
 DI_HOME="${BISERVER_HOME}"/pentaho-solutions/system/kettle
 export CATALINA_OPTS="
  -Xms1024m
