@@ -1,29 +1,50 @@
 #!/bin/sh
 
 set -eu
+export LC_ALL=C
 
-if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
-	/usr/local/bin/setup-postgres
+# Initial setup
+if [ ! -f "${BISERVER_HOME}"/.biserver.init.lock ]; then
+	if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
+		/usr/local/bin/setup-postgres
+	fi
+
+	for file in /opt/biserver.init.d/*; do
+		[ -e "${file}" ] || continue
+		case "${file}" in
+			# Execute shell scripts
+			*.sh|*.run) cd "${BISERVER_HOME}" && "${file}" ;;
+			# Extract zip files
+			*.zip) unzip "${file}" -od "${BISERVER_HOME}" ;;
+			# Extract tar files
+			*.tar\
+			|*.tar.gz|*.tgz|*.taz\
+			|*.tar.bz2|*.tbz|*.tbz2|*.tz2\
+			|*.tar.lz\
+			|*.tar.lzma|*.tlz\
+			|*.tar.lzo\
+			|*.tar.xz|*.txz\
+			) tar -xvf "${file}" -C "${BISERVER_HOME}" ;;
+			*) printf -- '%s\n' "$0: ignoring ${file}" ;;
+		esac
+	done
+
+	touch "${BISERVER_HOME}"/.biserver.init.lock
 fi
 
-# Run init scripts
-for file in /etc/biserver.init.d/*; do
-	[ -e "${file}" ] || continue
-	case "${file}" in
-		*.sh) "${file}" ;;
-		*) printf -- '%s\n' "$0: ignoring ${file}" ;;
-	esac
-done
-
-DI_HOME="${BISERVER_HOME}"/pentaho-solutions/system/kettle
-export CATALINA_OPTS="
- -Xms1024m
- -Xmx2048m
- -XX:MaxPermSize=256m
- -Dsun.rmi.dgc.client.gcInterval=3600000
- -Dsun.rmi.dgc.server.gcInterval=3600000
- -Dfile.encoding=utf8 -DDI_HOME=\"${DI_HOME}\"
-"
+# Set default CATALINA_OPTS
+if [ -z "${CATALINA_OPTS+x}" ]; then
+	export CATALINA_OPTS="$(cat <<-EOF
+		-Xms2048m
+		-Xmx6144m
+		-XX:MaxPermSize=256m
+		-Dsun.rmi.dgc.client.gcInterval=3600000
+		-Dsun.rmi.dgc.server.gcInterval=3600000
+		-Dfile.encoding=utf8
+		-DDI_HOME="${BISERVER_HOME}/pentaho-solutions/system/kettle"
+	EOF
+	)"
+fi
 
 cd "${CATALINA_HOME}"/bin
 exec sh catalina.sh run

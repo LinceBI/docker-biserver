@@ -9,7 +9,7 @@ RUN apt-get update \
 		netcat-traditional \
 		openjdk-8-jdk \
 		postgresql-client \
-		unzip \
+		unzip tar bzip2 gzip lzip lzma lzop xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Download and install Tomcat 8
@@ -55,8 +55,8 @@ RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 	&& rm -r /tmp/biserver/ /tmp/biserver.zip
 
 # Copy config
-COPY config/pentaho-solutions/ /opt/biserver/pentaho-solutions/
-COPY config/tomcat/ /opt/biserver/tomcat/
+COPY config/biserver/ /opt/biserver/
+COPY config/biserver.init.d/ /opt/biserver.init.d/
 
 # Download Tomcat libraries
 RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
@@ -68,9 +68,7 @@ RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
 	done
 
 # Copy scripts
-COPY scripts/start-pentaho /usr/local/bin/
-COPY scripts/setup-postgres /usr/local/bin/
-COPY scripts/biserver.init.d/ /etc/biserver.init.d/
+COPY scripts/ /usr/local/bin/
 
 VOLUME /opt/biserver/data/hsqldb
 VOLUME /opt/biserver/pentaho-solutions/system/jackrabbit/repository
