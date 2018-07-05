@@ -12,6 +12,19 @@ RUN apt-get update \
 		unzip tar bzip2 gzip lzip lzma lzop xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Create pentaho user and group
+ENV PENTAHO_UID=5000
+ENV PENTAHO_GID=5000
+RUN groupadd \
+		--gid "${PENTAHO_GID}" \
+		pentaho \
+	&& useradd \
+		--uid "${PENTAHO_UID}" \
+		--gid "${PENTAHO_GID}" \
+		--home-dir /var/cache/pentaho/ \
+		--create-home \
+		pentaho
+
 # Download and install Tomcat 8
 ARG TOMCAT_PKG_URL=
 ENV CATALINA_BASE=/opt/biserver/tomcat
@@ -26,14 +39,16 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 	&& curl -Lo /tmp/tomcat.zip "${TOMCAT_PKG_URL}" \
 	&& unzip /tmp/tomcat.zip -d /tmp/tomcat/ \
 	&& mv /tmp/tomcat/apache-tomcat-*/* "${CATALINA_HOME}" \
+	&& chown -R pentaho:pentaho "${CATALINA_HOME}" \
+	&& find "${CATALINA_HOME}" -type f -iname '*.sh' -exec chmod 755 '{}' \; \
 	&& rm -r \
 		"${CATALINA_HOME}"/webapps/* \
 		/tmp/tomcat/ /tmp/tomcat.zip
 
 # Download and install Pentaho BI Server
 ARG BISERVER_PKG_URL=
+ARG BISERVER_ENABLE_POSTGRES=false
 ENV BISERVER_HOME=/opt/biserver
-ENV BISERVER_ENABLE_POSTGRES=false
 RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		printf '%s\n' 'BISERVER_PKG_URL cannot be blank!'; \
 		exit 1; \
@@ -51,12 +66,14 @@ RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 	) \
 	&& unzip /tmp/biserver/pentaho-solutions.zip -d "${BISERVER_HOME}" \
 	&& unzip /tmp/biserver/pentaho-data.zip -d "${BISERVER_HOME}" \
+	&& chown -R pentaho:pentaho "${BISERVER_HOME}" \
 	&& find "${BISERVER_HOME}" -type f -iname '*.sh' -exec chmod 755 '{}' \; \
 	&& rm -r /tmp/biserver/ /tmp/biserver.zip
 
-# Copy config
-COPY config/biserver/ /opt/biserver/
-COPY config/biserver.init.d/ /opt/biserver.init.d/
+# Copy resources
+COPY --chown=root:root scripts/ /usr/local/bin/
+COPY --chown=pentaho:pentaho config/biserver/ /opt/biserver/
+COPY --chown=pentaho:pentaho config/biserver.init.d/ /opt/biserver.init.d/
 
 # Download Tomcat libraries
 RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
@@ -64,11 +81,11 @@ RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
 		file=$(basename -- "${download}" .download); \
 		printf '%s\n' "Downloading \"${file}\"..."; \
 		curl -o "${CATALINA_HOME}/lib/${file}" "${url}"; \
+		chown pentaho:pentaho "${CATALINA_HOME}/lib/${file}"; \
 		rm -- "${download}"; \
 	done
 
-# Copy scripts
-COPY scripts/ /usr/local/bin/
+USER pentaho:pentaho
 
 VOLUME /opt/biserver/data/hsqldb
 VOLUME /opt/biserver/pentaho-solutions/system/jackrabbit/repository
