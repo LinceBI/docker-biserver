@@ -3,33 +3,17 @@
 set -eu
 export LC_ALL=C
 
-# Initial setup
-if [ ! -f "${BISERVER_HOME}"/.biserver.init.lock ]; then
+if [ ! -f "${BISERVER_HOME}"/.biserver.setup.lock ]; then
+	# PostgreSQL setup
 	if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
 		/usr/local/bin/setup-postgres
 	fi
 
-	for file in "${BISERVER_INITD}"/*; do
-		[ -e "${file}" ] || continue
-		case "${file}" in
-			# Execute shell scripts
-			*.sh|*.run) cd "${BISERVER_HOME}" && "${file}" ;;
-			# Extract zip files
-			*.zip) unzip "${file}" -od "${BISERVER_HOME}" ;;
-			# Extract tar files
-			*.tar\
-			|*.tar.gz|*.tgz|*.taz\
-			|*.tar.bz2|*.tbz|*.tbz2|*.tz2\
-			|*.tar.lz\
-			|*.tar.lzma|*.tlz\
-			|*.tar.lzo\
-			|*.tar.xz|*.txz\
-			) tar -xvf "${file}" -C "${BISERVER_HOME}" ;;
-			*) printf -- '%s\n' "$0: ignoring ${file}" ;;
-		esac
-	done
+	# Initial setup
+	/usr/local/bin/setup-init
 
-	touch "${BISERVER_HOME}"/.biserver.init.lock
+	# Create lock file
+	touch "${BISERVER_HOME}"/.biserver.setup.lock
 fi
 
 # Set default CATALINA_OPTS

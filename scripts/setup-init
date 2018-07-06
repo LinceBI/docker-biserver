@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+export LC_ALL=C
+
+for file in "${BISERVER_INITD}"/*; do
+	[ -e "${file}" ] || continue
+	case "${file}" in
+		# Execute shell scripts
+		*.sh|*.run) cd "${BISERVER_HOME}" && "${file}" ;;
+		# Extract zip files
+		*.zip) unzip "${file}" -od "${BISERVER_HOME}" ;;
+		# Extract tar files
+		*.tar\
+		|*.tar.gz|*.tgz|*.taz\
+		|*.tar.bz2|*.tbz|*.tbz2|*.tz2\
+		|*.tar.lz\
+		|*.tar.lzma|*.tlz\
+		|*.tar.lzo\
+		|*.tar.xz|*.txz\
+		) tar -xvf "${file}" -C "${BISERVER_HOME}" ;;
+		*) printf -- '%s\n' "$0: ignoring ${file}" ;;
+	esac
+done
