@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -eu
+export LC_ALL=C
+
+# Environment
+. /usr/local/bin/setup-set-env
+
+[ -z "${FULLY_QUALIFIED_SERVER_URL:-}" ] && FULLY_QUALIFIED_SERVER_URL='http://localhost:8080/pentaho/'
+
+PENTAHO_SERVER_PROPERTIES_FILE="${BISERVER_HOME}"/pentaho-solutions/system/server.properties
+sed -r \
+	-e "s|%FULLY_QUALIFIED_SERVER_URL%|$(quoteSubst "${FULLY_QUALIFIED_SERVER_URL}")|g" \
+	"${PENTAHO_SERVER_PROPERTIES_FILE}.template" > "${PENTAHO_SERVER_PROPERTIES_FILE}"

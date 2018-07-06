@@ -4,6 +4,8 @@ set -eu
 export LC_ALL=C
 
 # Environment
+. /usr/local/bin/setup-set-env
+
 [ -z "${PG_HOST:-}" ] && PG_HOST=localhost
 [ -z "${PG_PORT:-}" ] && PG_PORT=5432
 
@@ -22,11 +24,6 @@ export LC_ALL=C
 [ -z "${PG_QUARTZ_USER:-}" ] && PG_QUARTZ_USER=pentaho_user
 [ -z "${PG_QUARTZ_PASSWORD:-}" ] && PG_QUARTZ_PASSWORD=${PG_PASSWORD}
 [ -z "${PG_QUARTZ_DATABASE:-}" ] && PG_QUARTZ_DATABASE=quartz
-
-# Escape strings in sed
-# See: https://stackoverflow.com/a/29613573
-quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
 psqlRun() { PGPASSWORD="${PG_PASSWORD}" psql -h "${PG_HOST}" -p "${PG_PORT}" -U "${PG_USER}" -d "${PG_DATABASE}" "$@"; }
 psqlDbExists() { psqlRun -lqt | cut -d'|' -f1 | grep -qw -- "$1"; }

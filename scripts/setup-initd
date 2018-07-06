@@ -3,6 +3,9 @@
 set -eu
 export LC_ALL=C
 
+# Environment
+. /usr/local/bin/setup-set-env
+
 for file in "${BISERVER_INITD}"/*; do
 	[ -e "${file}" ] || continue
 	case "${file}" in
