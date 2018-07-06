@@ -3,98 +3,139 @@
 set -eu
 export LC_ALL=C
 
+# Environment
 [ -z "${PG_HOST:-}" ] && PG_HOST=localhost
 [ -z "${PG_PORT:-}" ] && PG_PORT=5432
+
 [ -z "${PG_USER:-}" ] && PG_USER=postgres
 [ -z "${PG_PASSWORD:-}" ] && PG_PASSWORD=${PG_USER}
 [ -z "${PG_DATABASE:-}" ] && PG_DATABASE=${PG_USER}
+
+[ -z "${PG_JACKRABBIT_USER:-}" ] && PG_JACKRABBIT_USER=jcr_user
+[ -z "${PG_JACKRABBIT_PASSWORD:-}" ] && PG_JACKRABBIT_PASSWORD=${PG_PASSWORD}
+[ -z "${PG_JACKRABBIT_DATABASE:-}" ] && PG_JACKRABBIT_DATABASE=jackrabbit
+
+[ -z "${PG_HIBERNATE_USER:-}" ] && PG_HIBERNATE_USER=hibuser
+[ -z "${PG_HIBERNATE_PASSWORD:-}" ] && PG_HIBERNATE_PASSWORD=${PG_PASSWORD}
+[ -z "${PG_HIBERNATE_DATABASE:-}" ] && PG_HIBERNATE_DATABASE=hibernate
+
+[ -z "${PG_QUARTZ_USER:-}" ] && PG_QUARTZ_USER=pentaho_user
+[ -z "${PG_QUARTZ_PASSWORD:-}" ] && PG_QUARTZ_PASSWORD=${PG_PASSWORD}
+[ -z "${PG_QUARTZ_DATABASE:-}" ] && PG_QUARTZ_DATABASE=quartz
 
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
 quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
 
-psql_run() { PGPASSWORD="${PG_PASSWORD}" psql -h "${PG_HOST}" -p "${PG_PORT}" -U "${PG_USER}" -d "${PG_DATABASE}" "$@"; }
-psql_db_exists() { psql_run -lqt | cut -d'|' -f1 | grep -qw -- "$1"; }
+psqlRun() { PGPASSWORD="${PG_PASSWORD}" psql -h "${PG_HOST}" -p "${PG_PORT}" -U "${PG_USER}" -d "${PG_DATABASE}" "$@"; }
+psqlDbExists() { psqlRun -lqt | cut -d'|' -f1 | grep -qw -- "$1"; }
+
+printf '%s\n' 'Checking PostgreSQL connection...'
+if ! nc -zv "${PG_HOST}" "${PG_PORT}" || ! psqlRun -c '\conninfo'; then
+	>&2 printf '%s\n' 'PostgreSQL connection failed'
+	exit 1
+fi
 
 PG_HOST_SUBST=$(quoteSubst "${PG_HOST}")
 PG_PORT_SUBST=$(quoteSubst "${PG_PORT}")
+
 PG_USER_SUBST=$(quoteSubst "${PG_USER}")
 PG_PASSWORD_SUBST=$(quoteSubst "${PG_PASSWORD}")
 PG_DATABASE_SUBST=$(quoteSubst "${PG_DATABASE}")
 
-printf '%s\n' 'Checking PostgreSQL connection...'
-if ! nc -zv "${PG_HOST}" "${PG_PORT}" >/dev/null 2>&1; then
-	printf '%s\n' 'PostgreSQL connection failed'
-	exit 1
+PG_JACKRABBIT_USER_SUBST=$(quoteSubst "${PG_JACKRABBIT_USER}")
+PG_JACKRABBIT_PASSWORD_SUBST=$(quoteSubst "${PG_JACKRABBIT_PASSWORD}")
+PG_JACKRABBIT_DATABASE_SUBST=$(quoteSubst "${PG_JACKRABBIT_DATABASE}")
+
+PG_HIBERNATE_USER_SUBST=$(quoteSubst "${PG_HIBERNATE_USER}")
+PG_HIBERNATE_PASSWORD_SUBST=$(quoteSubst "${PG_HIBERNATE_PASSWORD}")
+PG_HIBERNATE_DATABASE_SUBST=$(quoteSubst "${PG_HIBERNATE_DATABASE}")
+
+PG_QUARTZ_USER_SUBST=$(quoteSubst "${PG_QUARTZ_USER}")
+PG_QUARTZ_PASSWORD_SUBST=$(quoteSubst "${PG_QUARTZ_PASSWORD}")
+PG_QUARTZ_DATABASE_SUBST=$(quoteSubst "${PG_QUARTZ_DATABASE}")
+
+if ! psqlDbExists "${PG_JACKRABBIT_DATABASE}"; then
+	printf '%s\n' "Creating "${PG_JACKRABBIT_DATABASE}" database..."
+	PG_JACKRABBIT_SQL_FILE="${BISERVER_HOME}"/data/postgresql/create_jcr_postgresql.sql
+	sed -r \
+		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
+		-e "s|%PG_JACKRABBIT_USER%|${PG_JACKRABBIT_USER_SUBST}|g" \
+		-e "s|%PG_JACKRABBIT_PASSWORD%|${PG_JACKRABBIT_PASSWORD_SUBST}|g" \
+		-e "s|%PG_JACKRABBIT_DATABASE%|${PG_JACKRABBIT_DATABASE_SUBST}|g" \
+		"${PG_JACKRABBIT_SQL_FILE}.template" > "${PG_JACKRABBIT_SQL_FILE}"
+	psqlRun -f "${PG_JACKRABBIT_SQL_FILE}"
 fi
 
-if ! psql_db_exists jackrabbit; then
-	printf '%s\n' 'Creating jackrabbit database...'
-	SQL_FILE="${BISERVER_HOME}/data/postgresql/create_jcr_postgresql.sql"
-	sed -ri "s|^(CREATE USER jcr_user PASSWORD ).+$|\1'${PG_PASSWORD_SUBST}';|" "${SQL_FILE}"
-	cat "${SQL_FILE}"
-	psql_run -f "${SQL_FILE}"
+if ! psqlDbExists "${PG_HIBERNATE_DATABASE}"; then
+	printf '%s\n' "Creating "${PG_HIBERNATE_DATABASE}" database..."
+	PG_HIBERNATE_SQL_FILE="${BISERVER_HOME}"/data/postgresql/create_repository_postgresql.sql
+	sed -r \
+		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
+		-e "s|%PG_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
+		-e "s|%PG_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
+		-e "s|%PG_HIBERNATE_DATABASE%|${PG_HIBERNATE_DATABASE_SUBST}|g" \
+		"${PG_HIBERNATE_SQL_FILE}.template" > "${PG_HIBERNATE_SQL_FILE}"
+	psqlRun -f "${PG_HIBERNATE_SQL_FILE}"
 fi
 
-if ! psql_db_exists hibernate; then
-	printf '%s\n' 'Creating hibernate database...'
-	SQL_FILE="${BISERVER_HOME}/data/postgresql/create_repository_postgresql.sql"
-	sed -ri "s|^(CREATE USER hibuser PASSWORD ).+$|\1'${PG_PASSWORD_SUBST}';|" "${SQL_FILE}"
-	psql_run -f "${SQL_FILE}"
+if ! psqlDbExists "${PG_QUARTZ_DATABASE}"; then
+	printf '%s\n' "Creating "${PG_QUARTZ_DATABASE}" database..."
+	PG_QUARTZ_SQL_FILE="${BISERVER_HOME}"/data/postgresql/create_quartz_postgresql.sql
+	sed -r \
+		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
+		-e "s|%PG_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
+		-e "s|%PG_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
+		-e "s|%PG_QUARTZ_DATABASE%|${PG_QUARTZ_DATABASE_SUBST}|g" \
+		"${PG_QUARTZ_SQL_FILE}.template" > "${PG_QUARTZ_SQL_FILE}"
+	psqlRun -f "${PG_QUARTZ_SQL_FILE}"
 fi
 
-if ! psql_db_exists quartz; then
-	printf '%s\n' 'Creating quartz database...'
-	SQL_FILE="${BISERVER_HOME}/data/postgresql/create_quartz_postgresql.sql"
-	sed -ri "s|^(CREATE USER pentaho_user PASSWORD ).+$|\1'${PG_PASSWORD_SUBST}';|" "${SQL_FILE}"
-	psql_run -f "${SQL_FILE}"
-fi
-
-sed -r \
-	-e 's|%CONFIG_FILE%|system/hibernate/postgresql.hibernate.cfg.xml|g' \
-	"${BISERVER_HOME}"/pentaho-solutions/system/hibernate/hibernate-settings.xml.template \
-	> "${BISERVER_HOME}"/pentaho-solutions/system/hibernate/hibernate-settings.xml
-
-sed -r \
-	-e "s|%CONNECTION_DIALECT_CLASS%|org.hibernate.dialect.PostgreSQLDialect|g" \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/hibernate|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|hibuser|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/pentaho-solutions/system/hibernate/postgresql.hibernate.cfg.xml.template \
-	> "${BISERVER_HOME}"/pentaho-solutions/system/hibernate/postgresql.hibernate.cfg.xml
-
-sed -r \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/hibernate|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|hibuser|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/quartz|g" \
-	-e "s|%CONNECTION_QUARTZ_USER%|pentaho_user|g" \
-	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/pentaho-solutions/system/simple-jndi/jdbc.properties.template \
-	> "${BISERVER_HOME}"/pentaho-solutions/system/simple-jndi/jdbc.properties
-
+JACKRABBIT_REPOSITORY_FILE="${BISERVER_HOME}"/pentaho-solutions/system/jackrabbit/repository.xml
 sed -r \
 	-e "s|%CONNECTION_DATABASE_TYPE%|postgresql|g" \
 	-e "s|%CONNECTION_FS_CLASS%|org.apache.jackrabbit.core.fs.db.DbFileSystem|g" \
 	-e "s|%CONNECTION_DS_CLASS%|org.apache.jackrabbit.core.data.db.DbDataStore|g" \
 	-e "s|%CONNECTION_PM_CLASS%|org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager|g" \
 	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_JACKRABBIT_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/jackrabbit|g" \
-	-e "s|%CONNECTION_JACKRABBIT_USER%|jcr_user|g" \
-	-e "s|%CONNECTION_JACKRABBIT_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/pentaho-solutions/system/jackrabbit/repository.xml.template \
-	> "${BISERVER_HOME}"/pentaho-solutions/system/jackrabbit/repository.xml
+	-e "s|%CONNECTION_JACKRABBIT_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_JACKRABBIT_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_JACKRABBIT_USER%|${PG_JACKRABBIT_USER_SUBST}|g" \
+	-e "s|%CONNECTION_JACKRABBIT_PASSWORD%|${PG_JACKRABBIT_PASSWORD}|g" \
+	"${JACKRABBIT_REPOSITORY_FILE}.template" > "${JACKRABBIT_REPOSITORY_FILE}"
 
+HIBERNATE_SETTINGS_FILE="${BISERVER_HOME}"/pentaho-solutions/system/hibernate/hibernate-settings.xml
+sed -r \
+	-e 's|%CONFIG_FILE%|system/hibernate/postgresql.hibernate.cfg.xml|g' \
+	"${HIBERNATE_SETTINGS_FILE}.template" > "${HIBERNATE_SETTINGS_FILE}"
+
+HIBERNATE_POSTGRES_CFG_FILE="${BISERVER_HOME}"/pentaho-solutions/system/hibernate/postgresql.hibernate.cfg.xml
+sed -r \
+	-e "s|%CONNECTION_DIALECT_CLASS%|org.hibernate.dialect.PostgreSQLDialect|g" \
+	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
+	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
+	"${HIBERNATE_POSTGRES_CFG_FILE}.template" > "${HIBERNATE_POSTGRES_CFG_FILE}"
+
+SIMPLEJNDI_JDBC_PROPERTIES_FILE="${BISERVER_HOME}"/pentaho-solutions/system/simple-jndi/jdbc.properties
 sed -r \
 	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/hibernate|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|hibuser|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/quartz|g" \
-	-e "s|%CONNECTION_QUARTZ_USER%|pentaho_user|g" \
-	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/tomcat/webapps/pentaho/META-INF/context.xml.template \
-	> "${BISERVER_HOME}"/tomcat/webapps/pentaho/META-INF/context.xml
+	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_QUARTZ_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
+	"${SIMPLEJNDI_JDBC_PROPERTIES_FILE}.template" > "${SIMPLEJNDI_JDBC_PROPERTIES_FILE}"
+
+TOMCAT_PENTAHO_CONTEXT_FILE="${BISERVER_HOME}"/tomcat/webapps/pentaho/META-INF/context.xml
+sed -r \
+	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
+	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_QUARTZ_DATABASE_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
+	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
+	"${TOMCAT_PENTAHO_CONTEXT_FILE}.template" > "${TOMCAT_PENTAHO_CONTEXT_FILE}"

@@ -9,7 +9,7 @@ if [ ! -f "${BISERVER_HOME}"/.biserver.init.lock ]; then
 		/usr/local/bin/setup-postgres
 	fi
 
-	for file in /opt/biserver.init.d/*; do
+	for file in "${BISERVER_INITD}"/*; do
 		[ -e "${file}" ] || continue
 		case "${file}" in
 			# Execute shell scripts

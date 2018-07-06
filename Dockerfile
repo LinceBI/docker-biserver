@@ -49,6 +49,7 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 ARG BISERVER_PKG_URL=
 ARG BISERVER_ENABLE_POSTGRES=false
 ENV BISERVER_HOME=/opt/biserver
+ENV BISERVER_INITD=/opt/biserver.init.d
 RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		printf '%s\n' 'BISERVER_PKG_URL cannot be blank!'; \
 		exit 1; \

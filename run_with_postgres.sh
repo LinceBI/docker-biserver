@@ -55,7 +55,7 @@ docker run --detach \
 	--network "${DOCKER_NETWORK}" \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
-	--publish '127.0.0.1:5432:5432/tcp' \
+	--publish '127.0.0.1:5432:5432/tcp' --publish '[::1]:5432:5432/tcp' \
 	--env POSTGRES_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
 	--mount type=volume,src="${DOCKER_POSTGRES_VOLUME}",dst='/var/lib/postgresql/data/' \
 	"${DOCKER_POSTGRES_IMAGE}"
