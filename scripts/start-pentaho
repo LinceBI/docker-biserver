@@ -24,7 +24,7 @@ export CATALINA_OPTS="$(cat <<-EOF
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
 	-Dfile.encoding=utf8
-	-DDI_HOME="${BISERVER_HOME}/pentaho-solutions/system/kettle"
+	-DDI_HOME="${BISERVER_SOLUTION_PATH}/system/kettle"
 	${CATALINA_OPTS_EXTRA-
 		-Xms1024m
 		-Xmx4096m

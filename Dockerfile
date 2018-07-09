@@ -12,6 +12,17 @@ RUN apt-get update \
 		unzip tar bzip2 gzip lzip lzma lzop xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Pentaho BI Server environment
+ENV BISERVER_HOME=/opt/biserver
+ENV BISERVER_SOLUTION_PATH=${BISERVER_HOME}/pentaho-solutions
+ENV BISERVER_DATA_PATH=${BISERVER_HOME}/data
+ENV BISERVER_INITD=/opt/biserver.init.d
+ENV BISERVER_ENABLE_POSTGRES=false
+ENV CATALINA_HOME=${BISERVER_HOME}/tomcat
+ENV CATALINA_BASE=${CATALINA_HOME}
+ENV CATALINA_TMPDIR=${CATALINA_BASE}/temp
+ENV CATALINA_PID=${CATALINA_BASE}/bin/catalina.pid
+
 # Create pentaho user and group
 ENV PENTAHO_UID=5000
 ENV PENTAHO_GID=5000
@@ -25,12 +36,8 @@ RUN groupadd \
 		--create-home \
 		pentaho
 
-# Download and install Tomcat 8
+# Download and install Tomcat
 ARG TOMCAT_PKG_URL=
-ENV CATALINA_BASE=/opt/biserver/tomcat
-ENV CATALINA_HOME=/opt/biserver/tomcat
-ENV CATALINA_TMPDIR=/opt/biserver/tomcat/temp
-ENV CATALINA_PID=/opt/biserver/tomcat/bin/catalina.pid
 RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 		printf '%s\n' 'TOMCAT_PKG_URL cannot be blank!'; \
 		exit 1; \
@@ -47,9 +54,6 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 
 # Download and install Pentaho BI Server
 ARG BISERVER_PKG_URL=
-ARG BISERVER_ENABLE_POSTGRES=false
-ENV BISERVER_HOME=/opt/biserver
-ENV BISERVER_INITD=/opt/biserver.init.d
 RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		printf '%s\n' 'BISERVER_PKG_URL cannot be blank!'; \
 		exit 1; \
@@ -65,36 +69,49 @@ RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		&& cd "${CATALINA_HOME}"/webapps/pentaho-style/ \
 		&& jar -xvf /tmp/biserver/pentaho-style.war \
 	) \
-	&& unzip /tmp/biserver/pentaho-solutions.zip -d "${BISERVER_HOME}" \
-	&& unzip /tmp/biserver/pentaho-data.zip -d "${BISERVER_HOME}" \
-	&& chown -R pentaho:pentaho "${BISERVER_HOME}" \
+	&& (cd /tmp/biserver/ \
+		&& unzip ./pentaho-solutions.zip \
+		&& mv ./pentaho-solutions "${BISERVER_SOLUTION_PATH}" \
+		&& unzip ./pentaho-data.zip \
+		&& mv ./data "${BISERVER_DATA_PATH}" \
+	) \
+	&& chown -R pentaho:pentaho \
+		"${BISERVER_HOME}" \
+		"${BISERVER_SOLUTION_PATH}" \
+		"${BISERVER_DATA_PATH}" \
 	&& find "${BISERVER_HOME}" -type f -iname '*.sh' -exec chmod 755 '{}' \; \
 	&& rm -r /tmp/biserver/ /tmp/biserver.zip
 
-# Copy resources
-COPY --chown=root:root scripts/ /usr/local/bin/
-COPY --chown=pentaho:pentaho config/biserver/ /opt/biserver/
-COPY --chown=pentaho:pentaho config/biserver.init.d/ /opt/biserver.init.d/
+# Copy Tomcat config
+COPY --chown=pentaho:pentaho config/biserver/tomcat/ "${CATALINA_HOME}"
 
 # Download Tomcat libraries
-RUN for download in "${CATALINA_HOME}"/lib/*.download; do \
-		url=$(cat -- "${download}" | tr -d '\n'); \
-		file=$(basename -- "${download}" .download); \
+RUN for placeholder in "${CATALINA_HOME}"/lib/*.download; do \
+		url=$(cat "${placeholder}" | tr -d '\n'); \
+		file=$(basename "${placeholder}" .download); \
 		printf '%s\n' "Downloading \"${file}\"..."; \
-		curl -o "${CATALINA_HOME}/lib/${file}" "${url}"; \
+		curl -o "${CATALINA_HOME}"/lib/"${file}" "${url}"; \
 		chown pentaho:pentaho "${CATALINA_HOME}/lib/${file}"; \
-		rm -- "${download}"; \
+		rm "${placeholder}"; \
 	done
 
-USER pentaho:pentaho
+# Copy Pentaho BI Server config
+COPY --chown=pentaho:pentaho config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"
+COPY --chown=pentaho:pentaho config/biserver/data/ "${BISERVER_DATA_PATH}"
+COPY --chown=pentaho:pentaho config/biserver.init.d/ "${BISERVER_INITD}"
 
-VOLUME /opt/biserver/data/hsqldb
-VOLUME /opt/biserver/pentaho-solutions/system/jackrabbit/repository
-VOLUME /opt/biserver/tomcat/logs
+# Copy scripts
+COPY --chown=root:root scripts/ /usr/local/bin/
 
-WORKDIR /opt/biserver
+VOLUME ${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository
+VOLUME ${BISERVER_DATA_PATH}/hsqldb
+VOLUME ${CATALINA_BASE}/logs
+
+WORKDIR ${BISERVER_HOME}
 
 EXPOSE 8080/tcp
 EXPOSE 8009/tcp
+
+USER pentaho:pentaho
 
 CMD ["/usr/local/bin/start-pentaho"]

@@ -8,7 +8,18 @@ export LC_ALL=C
 
 [ -z "${FULLY_QUALIFIED_SERVER_URL:-}" ] && FULLY_QUALIFIED_SERVER_URL='http://localhost:8080/pentaho/'
 
-PENTAHO_SERVER_PROPERTIES_FILE="${BISERVER_HOME}"/pentaho-solutions/system/server.properties
+PENTAHO_SERVER_PROPERTIES_FILE="${BISERVER_SOLUTION_PATH}"/system/server.properties
 sed -r \
 	-e "s|%FULLY_QUALIFIED_SERVER_URL%|$(quoteSubst "${FULLY_QUALIFIED_SERVER_URL}")|g" \
 	"${PENTAHO_SERVER_PROPERTIES_FILE}.template" > "${PENTAHO_SERVER_PROPERTIES_FILE}"
+
+HIBERNATE_H2_CFG_FILE="${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml
+sed -r \
+	-e "s|%BISERVER_SOLUTION_PATH%|$(quoteSubst "${BISERVER_SOLUTION_PATH}")|g" \
+	"${HIBERNATE_H2_CFG_FILE}.template" > "${HIBERNATE_H2_CFG_FILE}"
+
+TOMCAT_PENTAHO_WEB_FILE="${CATALINA_HOME}"/webapps/pentaho/WEB-INF/web.xml
+sed -r \
+	-e "s|%BISERVER_SOLUTION_PATH%|$(quoteSubst "${BISERVER_SOLUTION_PATH}")|g" \
+	-e "s|%BISERVER_DATA_PATH%|$(quoteSubst "${BISERVER_DATA_PATH}")|g" \
+	"${TOMCAT_PENTAHO_WEB_FILE}.template" > "${TOMCAT_PENTAHO_WEB_FILE}"
