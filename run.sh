@@ -7,7 +7,7 @@ imageExists() { [ -n "$(docker images -q "$1")" ]; }
 containerExists() { docker ps -aqf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 
-DOCKER_BISERVER_IMAGE=pentaho-biserver:latest
+DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:latest
 DOCKER_BISERVER_CONTAINER=pentaho-biserver
 DOCKER_BISERVER_VOLUME_HSQLDB="${DOCKER_BISERVER_CONTAINER}-hsqldb"
 DOCKER_BISERVER_VOLUME_JACKRABBIT="${DOCKER_BISERVER_CONTAINER}-jackrabbit"
