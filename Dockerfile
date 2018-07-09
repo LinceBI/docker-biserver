@@ -97,4 +97,4 @@ WORKDIR /opt/biserver
 EXPOSE 8080/tcp
 EXPOSE 8009/tcp
 
-ENTRYPOINT ["/usr/local/bin/start-pentaho"]
+CMD ["/usr/local/bin/start-pentaho"]
