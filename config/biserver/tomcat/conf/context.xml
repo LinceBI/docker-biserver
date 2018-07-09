@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 
-	<WatchedResource>WEB-INF/web.xml</WatchedResource>    
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
 	<Manager pathname="" />
-    
+
 </Context>
