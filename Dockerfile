@@ -13,15 +13,15 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Pentaho BI Server environment
-ENV BISERVER_HOME=/opt/biserver
-ENV BISERVER_SOLUTION_PATH=${BISERVER_HOME}/pentaho-solutions
-ENV BISERVER_DATA_PATH=${BISERVER_HOME}/data
-ENV BISERVER_INITD=/opt/biserver.init.d
-ENV BISERVER_ENABLE_POSTGRES=false
-ENV CATALINA_HOME=${BISERVER_HOME}/tomcat
-ENV CATALINA_BASE=${CATALINA_HOME}
-ENV CATALINA_TMPDIR=${CATALINA_BASE}/temp
-ENV CATALINA_PID=${CATALINA_BASE}/bin/catalina.pid
+ENV BISERVER_HOME="/opt/biserver"
+ENV BISERVER_SOLUTION_PATH="${BISERVER_HOME}/pentaho-solutions"
+ENV BISERVER_DATA_PATH="${BISERVER_HOME}/data"
+ENV BISERVER_INITD="/opt/biserver.init.d"
+ENV BISERVER_ENABLE_POSTGRES="false"
+ENV CATALINA_HOME="${BISERVER_HOME}/tomcat"
+ENV CATALINA_BASE="${CATALINA_HOME}"
+ENV CATALINA_TMPDIR="${CATALINA_BASE}/temp"
+ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
 
 # Create pentaho user and group
 ENV PENTAHO_UID=5000
@@ -103,11 +103,11 @@ COPY --chown=pentaho:pentaho config/biserver.init.d/ "${BISERVER_INITD}"
 # Copy scripts
 COPY --chown=root:root scripts/ /usr/local/bin/
 
-VOLUME ${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository
-VOLUME ${BISERVER_DATA_PATH}/hsqldb
-VOLUME ${CATALINA_BASE}/logs
+VOLUME "${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository"
+VOLUME "${BISERVER_DATA_PATH}/hsqldb"
+VOLUME "${CATALINA_BASE}/logs"
 
-WORKDIR ${BISERVER_HOME}
+WORKDIR "${BISERVER_HOME}"
 
 EXPOSE 8080/tcp
 EXPOSE 8009/tcp
