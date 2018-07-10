@@ -3,12 +3,15 @@
 set -eu
 export LC_ALL=C
 
+# Environment
+. /usr/local/bin/setup-set-env
+
 if [ ! -f "${BISERVER_HOME}"/.biserver.setup.lock ]; then
 	# General setup
 	/usr/local/bin/setup-general
 
 	# PostgreSQL setup
-	if [ "${BISERVER_ENABLE_POSTGRES}" = true ]; then
+	if [ "${BISERVER_STORAGE}" = 'postgres' ]; then
 		/usr/local/bin/setup-postgres
 	fi
 

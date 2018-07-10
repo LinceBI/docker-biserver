@@ -8,11 +8,11 @@
 		<property name="cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</property>
 		<property name="hibernate.generate_statistics">true</property>
 		<property name="hibernate.cache.use_query_cache">true</property>
-		<property name="dialect">%CONNECTION_DIALECT_CLASS%</property>
-		<property name="connection.driver_class">%CONNECTION_DRIVER_CLASS%</property>
-		<property name="connection.url">%CONNECTION_HIBERNATE_URL%</property>
-		<property name="connection.username">%CONNECTION_HIBERNATE_USER%</property>
-		<property name="connection.password">%CONNECTION_HIBERNATE_PASSWORD%</property>
+		<property name="dialect">%DBCON_DIALECT_CLASS%</property>
+		<property name="connection.driver_class">%DBCON_DRIVER_CLASS%</property>
+		<property name="connection.url">%DBCON_HIBERNATE_URL%</property>
+		<property name="connection.username">%DBCON_HIBERNATE_USER%</property>
+		<property name="connection.password">%DBCON_HIBERNATE_PASSWORD%</property>
 		<property name="connection.pool_size">10</property>
 		<property name="show_sql">false</property>
 		<property name="hibernate.jdbc.use_streams_for_binary">true</property>

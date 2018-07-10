@@ -3,136 +3,86 @@
 set -eu
 export LC_ALL=C
 
-# Environment
-. /usr/local/bin/setup-set-env
-
-[ -z "${PG_HOST:-}" ] && PG_HOST=localhost
-[ -z "${PG_PORT:-}" ] && PG_PORT=5432
-
-[ -z "${PG_USER:-}" ] && PG_USER=postgres
-[ -z "${PG_PASSWORD:-}" ] && PG_PASSWORD=${PG_USER}
-[ -z "${PG_DATABASE:-}" ] && PG_DATABASE=${PG_USER}
-
-[ -z "${PG_JACKRABBIT_USER:-}" ] && PG_JACKRABBIT_USER=jcr_user
-[ -z "${PG_JACKRABBIT_PASSWORD:-}" ] && PG_JACKRABBIT_PASSWORD=${PG_PASSWORD}
-[ -z "${PG_JACKRABBIT_DATABASE:-}" ] && PG_JACKRABBIT_DATABASE=jackrabbit
-
-[ -z "${PG_HIBERNATE_USER:-}" ] && PG_HIBERNATE_USER=hibuser
-[ -z "${PG_HIBERNATE_PASSWORD:-}" ] && PG_HIBERNATE_PASSWORD=${PG_PASSWORD}
-[ -z "${PG_HIBERNATE_DATABASE:-}" ] && PG_HIBERNATE_DATABASE=hibernate
-
-[ -z "${PG_QUARTZ_USER:-}" ] && PG_QUARTZ_USER=pentaho_user
-[ -z "${PG_QUARTZ_PASSWORD:-}" ] && PG_QUARTZ_PASSWORD=${PG_PASSWORD}
-[ -z "${PG_QUARTZ_DATABASE:-}" ] && PG_QUARTZ_DATABASE=quartz
-
-psqlRun() { PGPASSWORD="${PG_PASSWORD}" psql -h "${PG_HOST}" -p "${PG_PORT}" -U "${PG_USER}" -d "${PG_DATABASE}" "$@"; }
+psqlRun() { PGPASSWORD="${DBCON_PASSWORD}" psql -h "${DBCON_HOST}" -p "${DBCON_PORT}" -U "${DBCON_USER}" -d "${DBCON_DATABASE}" "$@"; }
 psqlDbExists() { psqlRun -lqt | cut -d'|' -f1 | grep -qw -- "$1"; }
 
+########
+
 printf '%s\n' 'Checking PostgreSQL connection...'
-if ! nc -zv "${PG_HOST}" "${PG_PORT}" || ! psqlRun -c '\conninfo'; then
+if ! nc -zv "${DBCON_HOST}" "${DBCON_PORT}" || ! psqlRun -c '\conninfo'; then
 	>&2 printf '%s\n' 'PostgreSQL connection failed'
 	exit 1
 fi
 
-PG_HOST_SUBST=$(quoteSubst "${PG_HOST}")
-PG_PORT_SUBST=$(quoteSubst "${PG_PORT}")
+########
 
-PG_USER_SUBST=$(quoteSubst "${PG_USER}")
-PG_PASSWORD_SUBST=$(quoteSubst "${PG_PASSWORD}")
-PG_DATABASE_SUBST=$(quoteSubst "${PG_DATABASE}")
+sed -r \
+	-e "s|%DBCON_USER%|${DBCON_USER_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_USER%|${DBCON_JACKRABBIT_USER_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_PASSWORD%|${DBCON_JACKRABBIT_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_DATABASE%|${DBCON_JACKRABBIT_DATABASE_SUBST}|g" \
+	"${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql.template \
+	> "${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql
 
-PG_JACKRABBIT_USER_SUBST=$(quoteSubst "${PG_JACKRABBIT_USER}")
-PG_JACKRABBIT_PASSWORD_SUBST=$(quoteSubst "${PG_JACKRABBIT_PASSWORD}")
-PG_JACKRABBIT_DATABASE_SUBST=$(quoteSubst "${PG_JACKRABBIT_DATABASE}")
-
-PG_HIBERNATE_USER_SUBST=$(quoteSubst "${PG_HIBERNATE_USER}")
-PG_HIBERNATE_PASSWORD_SUBST=$(quoteSubst "${PG_HIBERNATE_PASSWORD}")
-PG_HIBERNATE_DATABASE_SUBST=$(quoteSubst "${PG_HIBERNATE_DATABASE}")
-
-PG_QUARTZ_USER_SUBST=$(quoteSubst "${PG_QUARTZ_USER}")
-PG_QUARTZ_PASSWORD_SUBST=$(quoteSubst "${PG_QUARTZ_PASSWORD}")
-PG_QUARTZ_DATABASE_SUBST=$(quoteSubst "${PG_QUARTZ_DATABASE}")
-
-if ! psqlDbExists "${PG_JACKRABBIT_DATABASE}"; then
-	printf '%s\n' "Creating "${PG_JACKRABBIT_DATABASE}" database..."
-	PG_JACKRABBIT_SQL_FILE="${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql
-	sed -r \
-		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
-		-e "s|%PG_JACKRABBIT_USER%|${PG_JACKRABBIT_USER_SUBST}|g" \
-		-e "s|%PG_JACKRABBIT_PASSWORD%|${PG_JACKRABBIT_PASSWORD_SUBST}|g" \
-		-e "s|%PG_JACKRABBIT_DATABASE%|${PG_JACKRABBIT_DATABASE_SUBST}|g" \
-		"${PG_JACKRABBIT_SQL_FILE}.template" > "${PG_JACKRABBIT_SQL_FILE}"
-	psqlRun -f "${PG_JACKRABBIT_SQL_FILE}"
+printf '%s\n' "Checking \"${DBCON_JACKRABBIT_DATABASE}\" database..."
+if ! psqlDbExists "${DBCON_JACKRABBIT_DATABASE}"; then
+	printf '%s\n' "Creating \"${DBCON_JACKRABBIT_DATABASE}\" database..."
+	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql
 fi
 
-if ! psqlDbExists "${PG_HIBERNATE_DATABASE}"; then
-	printf '%s\n' "Creating "${PG_HIBERNATE_DATABASE}" database..."
-	PG_HIBERNATE_SQL_FILE="${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql
-	sed -r \
-		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
-		-e "s|%PG_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
-		-e "s|%PG_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
-		-e "s|%PG_HIBERNATE_DATABASE%|${PG_HIBERNATE_DATABASE_SUBST}|g" \
-		"${PG_HIBERNATE_SQL_FILE}.template" > "${PG_HIBERNATE_SQL_FILE}"
-	psqlRun -f "${PG_HIBERNATE_SQL_FILE}"
+########
+
+sed -r \
+	-e "s|%DBCON_USER%|${DBCON_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_DATABASE%|${DBCON_HIBERNATE_DATABASE_SUBST}|g" \
+	"${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql.template \
+	> "${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql
+
+printf '%s\n' "Checking \"${DBCON_HIBERNATE_DATABASE}\" database..."
+if ! psqlDbExists "${DBCON_HIBERNATE_DATABASE}"; then
+	printf '%s\n' "Creating \"${DBCON_HIBERNATE_DATABASE}\" database..."
+	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql
 fi
 
-if ! psqlDbExists "${PG_QUARTZ_DATABASE}"; then
-	printf '%s\n' "Creating "${PG_QUARTZ_DATABASE}" database..."
-	PG_QUARTZ_SQL_FILE="${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql
-	sed -r \
-		-e "s|%PG_USER%|${PG_USER_SUBST}|g" \
-		-e "s|%PG_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
-		-e "s|%PG_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
-		-e "s|%PG_QUARTZ_DATABASE%|${PG_QUARTZ_DATABASE_SUBST}|g" \
-		"${PG_QUARTZ_SQL_FILE}.template" > "${PG_QUARTZ_SQL_FILE}"
-	psqlRun -f "${PG_QUARTZ_SQL_FILE}"
+########
+
+sed -r \
+	-e "s|%DBCON_USER%|${DBCON_USER_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_DATABASE%|${DBCON_QUARTZ_DATABASE_SUBST}|g" \
+	"${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql.template \
+	> "${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql
+
+printf '%s\n' "Checking \"${DBCON_QUARTZ_DATABASE}\" database..."
+if ! psqlDbExists "${DBCON_QUARTZ_DATABASE}"; then
+	printf '%s\n' "Creating \"${DBCON_QUARTZ_DATABASE}\" database..."
+	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql
 fi
 
-JACKRABBIT_REPOSITORY_FILE="${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml
-sed -r \
-	-e "s|%CONNECTION_DATABASE_TYPE%|postgresql|g" \
-	-e "s|%CONNECTION_FS_CLASS%|org.apache.jackrabbit.core.fs.db.DbFileSystem|g" \
-	-e "s|%CONNECTION_DS_CLASS%|org.apache.jackrabbit.core.data.db.DbDataStore|g" \
-	-e "s|%CONNECTION_PM_CLASS%|org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager|g" \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_JACKRABBIT_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_JACKRABBIT_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_JACKRABBIT_USER%|${PG_JACKRABBIT_USER_SUBST}|g" \
-	-e "s|%CONNECTION_JACKRABBIT_PASSWORD%|${PG_JACKRABBIT_PASSWORD}|g" \
-	"${JACKRABBIT_REPOSITORY_FILE}.template" > "${JACKRABBIT_REPOSITORY_FILE}"
+########
 
-HIBERNATE_SETTINGS_FILE="${BISERVER_SOLUTION_PATH}"/system/hibernate/hibernate-settings.xml
 sed -r \
-	-e 's|%CONFIG_FILE%|system/hibernate/postgresql.hibernate.cfg.xml|g' \
-	"${HIBERNATE_SETTINGS_FILE}.template" > "${HIBERNATE_SETTINGS_FILE}"
+	-e "s|%DBCON_DATABASE_TYPE%|${DBCON_DATABASE_TYPE_SUBST}|g" \
+	-e "s|%DBCON_FILESYSTEM_CLASS%|${DBCON_FILESYSTEM_CLASS_SUBST}|g" \
+	-e "s|%DBCON_DATASTORE_CLASS%|${DBCON_DATASTORE_CLASS_SUBST}|g" \
+	-e "s|%DBCON_PERSISTENCEMANAGER_CLASS%|${DBCON_PERSISTENCEMANAGER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_URL%|${DBCON_JACKRABBIT_URL_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_USER%|${DBCON_JACKRABBIT_USER_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_PASSWORD%|${DBCON_JACKRABBIT_PASSWORD_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml.db.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml
 
-HIBERNATE_POSTGRES_CFG_FILE="${BISERVER_SOLUTION_PATH}"/system/hibernate/postgresql.hibernate.cfg.xml
-sed -r \
-	-e "s|%CONNECTION_DIALECT_CLASS%|org.hibernate.dialect.PostgreSQLDialect|g" \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
-	"${HIBERNATE_POSTGRES_CFG_FILE}.template" > "${HIBERNATE_POSTGRES_CFG_FILE}"
+########
 
-SIMPLEJNDI_JDBC_PROPERTIES_FILE="${BISERVER_SOLUTION_PATH}"/system/simple-jndi/jdbc.properties
 sed -r \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_QUARTZ_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
-	"${SIMPLEJNDI_JDBC_PROPERTIES_FILE}.template" > "${SIMPLEJNDI_JDBC_PROPERTIES_FILE}"
-
-TOMCAT_PENTAHO_CONTEXT_FILE="${CATALINA_HOME}"/webapps/pentaho/META-INF/context.xml
-sed -r \
-	-e "s|%CONNECTION_DRIVER_CLASS%|org.postgresql.Driver|g" \
-	-e "s|%CONNECTION_HIBERNATE_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_HIBERNATE_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_USER%|${PG_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%CONNECTION_HIBERNATE_PASSWORD%|${PG_HIBERNATE_PASSWORD_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_URL%|jdbc:postgresql://${PG_HOST_SUBST}:${PG_PORT_SUBST}/${PG_QUARTZ_DATABASE_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_USER%|${PG_QUARTZ_USER_SUBST}|g" \
-	-e "s|%CONNECTION_QUARTZ_PASSWORD%|${PG_QUARTZ_PASSWORD_SUBST}|g" \
-	"${TOMCAT_PENTAHO_CONTEXT_FILE}.template" > "${TOMCAT_PENTAHO_CONTEXT_FILE}"
+	-e "s|%DBCON_DIALECT_CLASS%|${DBCON_DIALECT_CLASS_SUBST}|g" \
+	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_URL%|${DBCON_HIBERNATE_URL_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/hibernate/postgresql.hibernate.cfg.xml.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/hibernate/postgresql.hibernate.cfg.xml

@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="refresh" content="0; URL=/pentaho">
+		<meta http-equiv="refresh" content="0; URL=/%WEBAPP_PENTAHO_NAME%">
 		<title>Pentaho Business Analytics</title>
 	</head>
 </html>

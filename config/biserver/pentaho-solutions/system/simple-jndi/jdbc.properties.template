@@ -1,14 +1,14 @@
 Hibernate/type=javax.sql.DataSource
-Hibernate/driver=%CONNECTION_DRIVER_CLASS%
-Hibernate/url=%CONNECTION_HIBERNATE_URL%
-Hibernate/user=%CONNECTION_HIBERNATE_USER%
-Hibernate/password=%CONNECTION_HIBERNATE_PASSWORD%
+Hibernate/driver=%DBCON_DRIVER_CLASS%
+Hibernate/url=%DBCON_HIBERNATE_URL%
+Hibernate/user=%DBCON_HIBERNATE_USER%
+Hibernate/password=%DBCON_HIBERNATE_PASSWORD%
 
 Quartz/type=javax.sql.DataSource
-Quartz/driver=%CONNECTION_DRIVER_CLASS%
-Quartz/url=%CONNECTION_QUARTZ_URL%
-Quartz/user=%CONNECTION_QUARTZ_USER%
-Quartz/password=%CONNECTION_QUARTZ_PASSWORD%
+Quartz/driver=%DBCON_DRIVER_CLASS%
+Quartz/url=%DBCON_QUARTZ_URL%
+Quartz/user=%DBCON_QUARTZ_USER%
+Quartz/password=%DBCON_QUARTZ_PASSWORD%
 
 Shark/type=javax.sql.DataSource
 Shark/driver=org.hsqldb.jdbcDriver

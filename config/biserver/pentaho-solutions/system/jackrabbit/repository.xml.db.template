@@ -4,21 +4,21 @@
 	"http://jackrabbit.apache.org/dtd/repository-2.0.dtd">
 <Repository>
 
-	<FileSystem class="%CONNECTION_FS_CLASS%">
-		<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-		<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-		<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-		<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-		<param name="schema" value="%CONNECTION_DATABASE_TYPE%" />
+	<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
+		<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+		<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+		<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+		<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+		<param name="schema" value="%DBCON_DATABASE_TYPE%" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
 
-	<DataStore class="%CONNECTION_DS_CLASS%">
-		<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-		<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-		<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-		<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-		<param name="databaseType" value="%CONNECTION_DATABASE_TYPE%" />
+	<DataStore class="%DBCON_DATASTORE_CLASS%">
+		<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+		<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+		<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+		<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+		<param name="databaseType" value="%DBCON_DATABASE_TYPE%" />
 		<param name="minRecordLength" value="1024" />
 		<param name="maxConnections" value="3" />
 		<param name="copyWhenReading" value="true" />
@@ -45,21 +45,21 @@
 	<Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
 
 	<Workspace name="${wsp.name}">
-		<FileSystem class="%CONNECTION_FS_CLASS%">
-			<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-			<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-			<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-			<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%CONNECTION_DATABASE_TYPE%"/>
+		<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
+			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="%DBCON_DATABASE_TYPE%"/>
 			<param name="schemaObjectPrefix" value="fs_ws_" />
 		</FileSystem>
 
-		<PersistenceManager class="%CONNECTION_PM_CLASS%">
-			<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-			<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-			<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-			<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%CONNECTION_DATABASE_TYPE%" />
+		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
+			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
 
@@ -74,21 +74,21 @@
 	</Workspace>
 
 	<Versioning rootPath="${rep.home}/version">
-		<FileSystem class="%CONNECTION_FS_CLASS%">
-			<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-			<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-			<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-			<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%CONNECTION_DATABASE_TYPE%" />
+		<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
+			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
 			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
 
-		<PersistenceManager class="%CONNECTION_PM_CLASS%">
-			<param name="driver" value="%CONNECTION_DRIVER_CLASS%" />
-			<param name="url" value="%CONNECTION_JACKRABBIT_URL%" />
-			<param name="user" value="%CONNECTION_JACKRABBIT_USER%" />
-			<param name="password" value="%CONNECTION_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%CONNECTION_DATABASE_TYPE%" />
+		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
+			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
+			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
 	</Versioning>

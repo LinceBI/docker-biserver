@@ -3,23 +3,84 @@
 set -eu
 export LC_ALL=C
 
-# Environment
-. /usr/local/bin/setup-set-env
+########
 
-[ -z "${FULLY_QUALIFIED_SERVER_URL:-}" ] && FULLY_QUALIFIED_SERVER_URL='http://localhost:8080/pentaho/'
-
-PENTAHO_SERVER_PROPERTIES_FILE="${BISERVER_SOLUTION_PATH}"/system/server.properties
 sed -r \
-	-e "s|%FULLY_QUALIFIED_SERVER_URL%|$(quoteSubst "${FULLY_QUALIFIED_SERVER_URL}")|g" \
-	"${PENTAHO_SERVER_PROPERTIES_FILE}.template" > "${PENTAHO_SERVER_PROPERTIES_FILE}"
+	-e "s|%WEBAPP_PENTAHO_NAME%|${WEBAPP_PENTAHO_NAME_SUBST}|g" \
+	"${CATALINA_BASE}"/webapps/ROOT/index.html.template \
+	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
-HIBERNATE_H2_CFG_FILE="${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml
-sed -r \
-	-e "s|%BISERVER_SOLUTION_PATH%|$(quoteSubst "${BISERVER_SOLUTION_PATH}")|g" \
-	"${HIBERNATE_H2_CFG_FILE}.template" > "${HIBERNATE_H2_CFG_FILE}"
+########
 
-TOMCAT_PENTAHO_WEB_FILE="${CATALINA_HOME}"/webapps/pentaho/WEB-INF/web.xml
 sed -r \
-	-e "s|%BISERVER_SOLUTION_PATH%|$(quoteSubst "${BISERVER_SOLUTION_PATH}")|g" \
-	-e "s|%BISERVER_DATA_PATH%|$(quoteSubst "${BISERVER_DATA_PATH}")|g" \
-	"${TOMCAT_PENTAHO_WEB_FILE}.template" > "${TOMCAT_PENTAHO_WEB_FILE}"
+	-e "s|%BISERVER_SOLUTION_PATH%|${BISERVER_SOLUTION_PATH_SUBST}|g" \
+	-e "s|%BISERVER_DATA_PATH%|${BISERVER_DATA_PATH_SUBST}|g" \
+	"${WEBAPP_PENTAHO_PATH}"/WEB-INF/web.xml.template \
+	> "${WEBAPP_PENTAHO_PATH}"/WEB-INF/web.xml
+
+########
+
+sed -r \
+	-e "s|%WEBAPP_PENTAHO_NAME%|${WEBAPP_PENTAHO_NAME_SUBST}|g" \
+	-e "s|%WEBAPP_PENTAHO_PATH%|${WEBAPP_PENTAHO_PATH_SUBST}|g" \
+	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_VALIDATIONQUERY%|${DBCON_VALIDATIONQUERY_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_URL%|${DBCON_HIBERNATE_URL_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
+	"${WEBAPP_PENTAHO_PATH}"/META-INF/context.xml.template \
+	> "${WEBAPP_PENTAHO_PATH}"/META-INF/context.xml
+
+########
+
+sed -r \
+	-e "s|%FULLY_QUALIFIED_SERVER_URL%|${FULLY_QUALIFIED_SERVER_URL_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/server.properties.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/server.properties
+
+########
+
+sed -r \
+	-e "s|%DBCON_DATABASE_TYPE%|${DBCON_DATABASE_TYPE_SUBST}|g" \
+	-e "s|%DBCON_FILESYSTEM_CLASS%|${DBCON_FILESYSTEM_CLASS_SUBST}|g" \
+	-e "s|%DBCON_DATASTORE_CLASS%|${DBCON_DATASTORE_CLASS_SUBST}|g" \
+	-e "s|%DBCON_PERSISTENCEMANAGER_CLASS%|${DBCON_PERSISTENCEMANAGER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_URL%|${DBCON_JACKRABBIT_URL_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_USER%|${DBCON_JACKRABBIT_USER_SUBST}|g" \
+	-e "s|%DBCON_JACKRABBIT_PASSWORD%|${DBCON_JACKRABBIT_PASSWORD_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml.local.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml
+
+########
+
+sed -r \
+	-e "s|%DBCON_HIBERNATE_CONFIG_FILE%|${DBCON_HIBERNATE_CONFIG_FILE_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/hibernate/hibernate-settings.xml.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/hibernate/hibernate-settings.xml
+
+########
+
+sed -r \
+	-e "s|%BISERVER_SOLUTION_PATH%|${BISERVER_SOLUTION_PATH_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_DATABASE%|${DBCON_HIBERNATE_DATABASE_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml
+
+########
+
+sed -r \
+	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_URL%|${DBCON_HIBERNATE_URL_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
+	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
+	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
+	"${BISERVER_SOLUTION_PATH}"/system/simple-jndi/jdbc.properties.template \
+	> "${BISERVER_SOLUTION_PATH}"/system/simple-jndi/jdbc.properties

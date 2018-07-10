@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
 
-	<config-file>%CONFIG_FILE%</config-file>
+	<config-file>%DBCON_HIBERNATE_CONFIG_FILE%</config-file>
 	<managed>false</managed>
 
 </settings>
