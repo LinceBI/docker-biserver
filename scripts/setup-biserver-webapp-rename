@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -eu
+export LC_ALL=C
+
+. /usr/local/bin/setup-biserver-set-utils
+
+########
+
+WEBAPP_PENTAHO_WAS_RENAMED=false
+if [ "${WEBAPP_PENTAHO_NAME}" != 'pentaho' ]; then
+	logInfo "Pentaho BI Server webapp was renamed to \"${WEBAPP_PENTAHO_NAME}\""
+	WEBAPP_PENTAHO_WAS_RENAMED=true
+	if [ ! -e "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" ]; then
+		logInfo 'Moving Pentaho BI Server webapp...'
+		mv "${CATALINA_BASE}"/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"
+	fi
+fi
+
+WEBAPP_PENTAHO_STYLE_WAS_RENAMED=false
+if [ "${WEBAPP_PENTAHO_STYLE_NAME}" != 'pentaho-style' ]; then
+	logInfo "Pentaho BI Server style webapp was renamed to \"${WEBAPP_PENTAHO_STYLE_NAME}\""
+	WEBAPP_PENTAHO_STYLE_WAS_RENAMED=true
+	if [ ! -e "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" ]; then
+		logInfo 'Moving Pentaho BI Server style webapp...'
+		mv "${CATALINA_BASE}"/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}"
+	fi
+fi
+
+#
+# This recursive replacement has dangerous implications compared to the benefits it brings.
+# Uncomment only if there is a bug related to the rename operation.
+#
+#if [ "${WEBAPP_PENTAHO_WAS_RENAMED}" = true ]; then
+#	logInfo 'Updating references of Pentaho BI Server webapp...'
+#	find \
+#		"${BISERVER_SOLUTION_PATH}" \
+#		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+#		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+#		-type f \( -iname '*.html' -o -iname '*.jsp' \) \
+#		-exec sed -i "s|/pentaho/|/${WEBAPP_PENTAHO_NAME_SUBST}/|g" '{}' \;
+#fi
+#
+
+if [ "${WEBAPP_PENTAHO_STYLE_WAS_RENAMED}" = true ]; then
+	logInfo 'Updating references of Pentaho BI Server style webapp...'
+	find \
+		"${BISERVER_SOLUTION_PATH}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+		-type f \( -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' \) \
+		-exec sed -i "s|/pentaho-style/|/${WEBAPP_PENTAHO_STYLE_NAME_SUBST}/|g" '{}' \;
+fi

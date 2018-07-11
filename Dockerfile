@@ -17,16 +17,18 @@ ENV BISERVER_HOME="/opt/biserver"
 ENV BISERVER_SOLUTION_PATH="${BISERVER_HOME}/pentaho-solutions"
 ENV BISERVER_DATA_PATH="${BISERVER_HOME}/data"
 ENV BISERVER_INITD="/opt/biserver.init.d"
-ENV BISERVER_STORAGE="local"
+
+ARG BISERVER_STORAGE="local"
+ENV BISERVER_STORAGE="${BISERVER_STORAGE}"
 
 ENV CATALINA_HOME="${BISERVER_HOME}/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
 
-ENV WEBAPP_PENTAHO_NAME="pentaho"
-ENV WEBAPP_PENTAHO_PATH="${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_NAME}"
-ENV WEBAPP_PENTAHO_STYLE_NAME="pentaho-style"
-ENV WEBAPP_PENTAHO_STYLE_PATH="${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_NAME}"
+ARG WEBAPP_PENTAHO_NAME="pentaho"
+ENV WEBAPP_PENTAHO_NAME="${WEBAPP_PENTAHO_NAME}"
+ARG WEBAPP_PENTAHO_STYLE_NAME="pentaho-style"
+ENV WEBAPP_PENTAHO_STYLE_NAME="${WEBAPP_PENTAHO_STYLE_NAME}"
 
 # Create pentaho user and group
 ENV PENTAHO_UID=5000
@@ -55,11 +57,11 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 		&& mv ./bin/ "${CATALINA_HOME}" \
 		&& mv ./conf/ "${CATALINA_BASE}" \
 		&& mv ./lib/ "${CATALINA_HOME}" \
-		&& mv ./logs/ "${CATALINA_BASE}" \
-		&& mv ./temp/ "${CATALINA_BASE}" \
-		&& mv ./work/ "${CATALINA_BASE}" \
-		# Skip default webapps
+		# Skip logs, temp, webapps and work
+		&& mkdir "${CATALINA_BASE}"/logs/ \
+		&& mkdir "${CATALINA_BASE}"/temp/ \
 		&& mkdir "${CATALINA_BASE}"/webapps/ \
+		&& mkdir "${CATALINA_BASE}"/work/ \
 	) \
 	# Cleanup
 	&& rm -r /tmp/tomcat/ /tmp/tomcat.zip \
@@ -72,7 +74,7 @@ RUN if [ -z "${TOMCAT_PKG_URL}" ]; then \
 		-exec chmod 644 '{}' \; \
 	&& find \
 		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-		-type d -or \( -type f -iname '*.sh' \) \
+		-type d -o \( -type f -iname '*.sh' \) \
 		-exec chmod 755 '{}' \;
 
 # Download and install Pentaho BI Server
@@ -91,12 +93,12 @@ RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 		&& unzip ./pentaho-data.zip \
 		&& mv ./data "${BISERVER_DATA_PATH}" \
 	) \
-	&& (mkdir "${WEBAPP_PENTAHO_PATH}" \
-		&& cd "${WEBAPP_PENTAHO_PATH}" \
+	&& (mkdir "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		&& cd "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
 		&& jar -xvf /tmp/biserver/pentaho.war \
 	) \
-	&& (mkdir "${WEBAPP_PENTAHO_STYLE_PATH}" \
-		&& cd "${WEBAPP_PENTAHO_STYLE_PATH}" \
+	&& (mkdir "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+		&& cd "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
 		&& jar -xvf /tmp/biserver/pentaho-style.war \
 	) \
 	# Cleanup
@@ -105,21 +107,24 @@ RUN if [ -z "${BISERVER_PKG_URL}" ]; then \
 	&& chown -R pentaho:pentaho \
 		"${BISERVER_HOME}" \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${WEBAPP_PENTAHO_PATH}" "${WEBAPP_PENTAHO_STYLE_PATH}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
 	&& find \
 		"${BISERVER_HOME}" \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${WEBAPP_PENTAHO_PATH}" "${WEBAPP_PENTAHO_STYLE_PATH}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
 		-type f -exec chmod 644 '{}' \; \
 	&& find \
 		"${BISERVER_HOME}" \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${WEBAPP_PENTAHO_PATH}" "${WEBAPP_PENTAHO_STYLE_PATH}" \
-		-type d -or \( -type f -iname '*.sh' \) \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+		-type d -o \( -type f -iname '*.sh' \) \
 		-exec chmod 755 '{}' \;
 
-# Copy Tomcat config
-COPY --chown=pentaho:pentaho config/biserver/tomcat/ "${CATALINA_BASE}"
+# Copy Tomcat libraries and placeholders
+COPY --chown=pentaho:pentaho config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
 
 # Download Tomcat libraries
 RUN for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
@@ -131,17 +136,24 @@ RUN for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
 		rm "${placeholder}"; \
 	done
 
+# Copy Tomcat config
+COPY --chown=pentaho:pentaho config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
+COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/
+COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}"/
+
 # Copy Pentaho BI Server config
-COPY --chown=pentaho:pentaho config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"
-COPY --chown=pentaho:pentaho config/biserver/data/ "${BISERVER_DATA_PATH}"
-COPY --chown=pentaho:pentaho config/biserver.init.d/ "${BISERVER_INITD}"
+COPY --chown=pentaho:pentaho config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"/
+COPY --chown=pentaho:pentaho config/biserver/data/ "${BISERVER_DATA_PATH}"/
+COPY --chown=pentaho:pentaho config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy scripts
 COPY --chown=root:root scripts/ /usr/local/bin/
 
-VOLUME "${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository"
-VOLUME "${BISERVER_DATA_PATH}/hsqldb"
-VOLUME "${CATALINA_BASE}/logs"
+# Don't declare volumes, let the user decide
+#VOLUME "${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository/"
+#VOLUME "${BISERVER_DATA_PATH}/hsqldb/"
+#VOLUME "${CATALINA_BASE}/logs/"
 
 WORKDIR "${BISERVER_HOME}"
 
@@ -150,4 +162,4 @@ EXPOSE 8009/tcp
 
 USER pentaho:pentaho
 
-CMD ["/usr/local/bin/start-pentaho"]
+CMD ["/usr/local/bin/start-biserver"]

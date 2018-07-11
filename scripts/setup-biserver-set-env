@@ -3,10 +3,9 @@
 set -eu
 export LC_ALL=C
 
-# Escape strings in sed
-# See: https://stackoverflow.com/a/29613573
-quoteRe() { printf -- '%s' "$1" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
-quoteSubst() { printf -- '%s' "$1" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&/\]/\\&/g; s/\n/\\&/g'; }
+. /usr/local/bin/setup-biserver-set-utils
+
+########
 
 [ -z "${FULLY_QUALIFIED_SERVER_URL:-}" ]         && export FULLY_QUALIFIED_SERVER_URL="http://localhost:8080/${WEBAPP_PENTAHO_NAME}/"
 
@@ -75,7 +74,7 @@ elif [ "${BISERVER_STORAGE}" = 'postgres' ]; then
 	[ -z "${DBCON_QUARTZ_URL:-}" ]               && export DBCON_QUARTZ_URL="jdbc:postgresql://${DBCON_HOST}:${DBCON_PORT}/${DBCON_QUARTZ_DATABASE}"
 
 else
-	>&2 printf '%s\n' "Unknown storage type: ${BISERVER_STORAGE}"
+	logFail "Unknown storage type: ${BISERVER_STORAGE}"
 	exit 1
 fi
 
@@ -83,7 +82,7 @@ export BISERVER_SOLUTION_PATH_SUBST="$(quoteSubst "${BISERVER_SOLUTION_PATH}")"
 export BISERVER_DATA_PATH_SUBST="$(quoteSubst "${BISERVER_DATA_PATH}")"
 
 export WEBAPP_PENTAHO_NAME_SUBST="$(quoteSubst "${WEBAPP_PENTAHO_NAME}")"
-export WEBAPP_PENTAHO_PATH_SUBST="$(quoteSubst "${WEBAPP_PENTAHO_PATH}")"
+export WEBAPP_PENTAHO_STYLE_NAME_SUBST="$(quoteSubst "${WEBAPP_PENTAHO_STYLE_NAME}")"
 
 export FULLY_QUALIFIED_SERVER_URL_SUBST="$(quoteSubst "${FULLY_QUALIFIED_SERVER_URL}")"
 

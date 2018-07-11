@@ -3,6 +3,8 @@
 set -eu
 export LC_ALL=C
 
+. /usr/local/bin/setup-biserver-set-utils
+
 ########
 
 sed -r \
@@ -15,14 +17,13 @@ sed -r \
 sed -r \
 	-e "s|%BISERVER_SOLUTION_PATH%|${BISERVER_SOLUTION_PATH_SUBST}|g" \
 	-e "s|%BISERVER_DATA_PATH%|${BISERVER_DATA_PATH_SUBST}|g" \
-	"${WEBAPP_PENTAHO_PATH}"/WEB-INF/web.xml.template \
-	> "${WEBAPP_PENTAHO_PATH}"/WEB-INF/web.xml
+	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/WEB-INF/web.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/WEB-INF/web.xml
 
 ########
 
 sed -r \
 	-e "s|%WEBAPP_PENTAHO_NAME%|${WEBAPP_PENTAHO_NAME_SUBST}|g" \
-	-e "s|%WEBAPP_PENTAHO_PATH%|${WEBAPP_PENTAHO_PATH_SUBST}|g" \
 	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
 	-e "s|%DBCON_VALIDATIONQUERY%|${DBCON_VALIDATIONQUERY_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_URL%|${DBCON_HIBERNATE_URL_SUBST}|g" \
@@ -31,8 +32,8 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
-	"${WEBAPP_PENTAHO_PATH}"/META-INF/context.xml.template \
-	> "${WEBAPP_PENTAHO_PATH}"/META-INF/context.xml
+	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/META-INF/context.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/META-INF/context.xml
 
 ########
 

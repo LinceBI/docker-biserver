@@ -3,14 +3,18 @@
 set -eu
 export LC_ALL=C
 
+. /usr/local/bin/setup-biserver-set-utils
+
+########
+
 psqlRun() { PGPASSWORD="${DBCON_PASSWORD}" psql -h "${DBCON_HOST}" -p "${DBCON_PORT}" -U "${DBCON_USER}" -d "${DBCON_DATABASE}" "$@"; }
 psqlDbExists() { psqlRun -lqt | cut -d'|' -f1 | grep -qw -- "$1"; }
 
 ########
 
-printf '%s\n' 'Checking PostgreSQL connection...'
+logInfo 'Checking PostgreSQL connection...'
 if ! nc -zv "${DBCON_HOST}" "${DBCON_PORT}" || ! psqlRun -c '\conninfo'; then
-	>&2 printf '%s\n' 'PostgreSQL connection failed'
+	logFail 'PostgreSQL connection failed'
 	exit 1
 fi
 
@@ -24,9 +28,9 @@ sed -r \
 	"${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql.template \
 	> "${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql
 
-printf '%s\n' "Checking \"${DBCON_JACKRABBIT_DATABASE}\" database..."
+logInfo "Checking \"${DBCON_JACKRABBIT_DATABASE}\" database..."
 if ! psqlDbExists "${DBCON_JACKRABBIT_DATABASE}"; then
-	printf '%s\n' "Creating \"${DBCON_JACKRABBIT_DATABASE}\" database..."
+	logInfo "Creating \"${DBCON_JACKRABBIT_DATABASE}\" database..."
 	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_jcr_postgresql.sql
 fi
 
@@ -40,9 +44,9 @@ sed -r \
 	"${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql.template \
 	> "${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql
 
-printf '%s\n' "Checking \"${DBCON_HIBERNATE_DATABASE}\" database..."
+logInfo "Checking \"${DBCON_HIBERNATE_DATABASE}\" database..."
 if ! psqlDbExists "${DBCON_HIBERNATE_DATABASE}"; then
-	printf '%s\n' "Creating \"${DBCON_HIBERNATE_DATABASE}\" database..."
+	logInfo "Creating \"${DBCON_HIBERNATE_DATABASE}\" database..."
 	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_repository_postgresql.sql
 fi
 
@@ -56,9 +60,9 @@ sed -r \
 	"${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql.template \
 	> "${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql
 
-printf '%s\n' "Checking \"${DBCON_QUARTZ_DATABASE}\" database..."
+logInfo "Checking \"${DBCON_QUARTZ_DATABASE}\" database..."
 if ! psqlDbExists "${DBCON_QUARTZ_DATABASE}"; then
-	printf '%s\n' "Creating \"${DBCON_QUARTZ_DATABASE}\" database..."
+	logInfo "Creating \"${DBCON_QUARTZ_DATABASE}\" database..."
 	psqlRun -f "${BISERVER_DATA_PATH}"/postgresql/create_quartz_postgresql.sql
 fi
 
