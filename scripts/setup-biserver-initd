@@ -13,7 +13,7 @@ for file in "${BISERVER_INITD}"/*; do
 		# Execute shell scripts
 		*.sh|*.run) cd "${BISERVER_HOME}" && "${file}" ;;
 		# Extract zip files
-		*.zip) unzip "${file}" -od "${BISERVER_HOME}" ;;
+		*.zip) unzip -od "${BISERVER_HOME}" "${file}" ;;
 		# Extract tar files
 		*.tar\
 		|*.tar.gz|*.tgz|*.taz\
@@ -22,7 +22,7 @@ for file in "${BISERVER_INITD}"/*; do
 		|*.tar.lzma|*.tlz\
 		|*.tar.lzo\
 		|*.tar.xz|*.txz\
-		) tar -xvf "${file}" -C "${BISERVER_HOME}" ;;
+		) tar -C "${BISERVER_HOME}" -xvf "${file}" ;;
 		*) logWarn "$0: ignoring ${file}" ;;
 	esac
 done
