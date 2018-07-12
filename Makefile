@@ -5,8 +5,7 @@ MKFILE_ABSPATH := $(shell readlink -f -- '$(MKFILE_RELPATH)')
 MKFILE_DIR := $(shell dirname -- '$(MKFILE_ABSPATH)')
 
 BISERVER_VERSION := 7.1.0.0-12
-BISERVER_PKG_URL := https://sourceforge.net/projects/pentaho/files/Business%20Intelligence%20Server/7.1/pentaho-server-manual-ce-7.1.0.0-12.zip
-TOMCAT_PKG_URL := https://apache.org/dist/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.zip
+BISERVER_MAVEN_REPO := https://repo.stratebi.com/repository/pentaho-mvn/
 
 DIST_DIR := $(MKFILE_DIR)/dist
 
@@ -29,8 +28,8 @@ build-image:
 	docker build \
 		--tag '$(DOCKER_IMAGE):latest' \
 		--tag '$(DOCKER_IMAGE):$(BISERVER_VERSION)' \
-		--build-arg BISERVER_PKG_URL='$(BISERVER_PKG_URL)' \
-		--build-arg TOMCAT_PKG_URL='$(TOMCAT_PKG_URL)' \
+		--build-arg BISERVER_VERSION='$(BISERVER_VERSION)' \
+		--build-arg BISERVER_MAVEN_REPO='$(BISERVER_MAVEN_REPO)' \
 		--file '$(DOCKERFILE)' \
 		-- '$(MKFILE_DIR)'
 
