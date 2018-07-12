@@ -9,6 +9,7 @@ if [ ! -f "${BISERVER_HOME}"/.biserver.setup.lock ]; then
 	touch "${BISERVER_HOME}"/.biserver.setup.lock
 fi
 
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME}/lib"
 export CATALINA_OPTS="$(cat <<-EOF
 	-XX:MaxPermSize=256m
 	-Dsun.rmi.dgc.client.gcInterval=3600000

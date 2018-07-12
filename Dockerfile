@@ -46,16 +46,24 @@ RUN groupadd \
 		--create-home \
 		pentaho
 
-# Download and install Tomcat
 ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_MINOR_VERSION=5
 ARG TOMCAT_PATCH_VERSION=latest
-RUN mkdir -p "${CATALINA_HOME}" "${CATALINA_BASE}" \
+RUN printf '%s\n' 'Installing Tomcat...' \
+	# Install dependencies
+	&& RUN_PKGS="libapr1 libssl1.1" \
+	&& BUILD_PKGS="make gcc libapr1-dev libssl-dev" \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		${RUN_PKGS} ${BUILD_PKGS} \
+	# Download Tomcat
 	&& /usr/local/bin/build-tomcat-dl \
-		${TOMCAT_MAJOR_VERSION} \
-		${TOMCAT_MINOR_VERSION} \
-		${TOMCAT_PATCH_VERSION} \
+		"${TOMCAT_MAJOR_VERSION}" \
+		"${TOMCAT_MINOR_VERSION}" \
+		"${TOMCAT_PATCH_VERSION}" \
 		/tmp/tomcat/ \
+	# Install Tomcat
+	&& mkdir -p "${CATALINA_HOME}" "${CATALINA_BASE}" \
 	&& (cd /tmp/tomcat/ \
 		&& mv ./bin/ "${CATALINA_HOME}" \
 		&& mv ./conf/ "${CATALINA_BASE}" \
@@ -65,6 +73,19 @@ RUN mkdir -p "${CATALINA_HOME}" "${CATALINA_BASE}" \
 		&& mkdir "${CATALINA_BASE}"/temp/ \
 		&& mkdir "${CATALINA_BASE}"/webapps/ \
 		&& mkdir "${CATALINA_BASE}"/work/ \
+	) \
+	# Build and install Tomcat Native Library
+	&& mkdir /tmp/tomcat-native \
+	&& (cd /tmp/tomcat/ \
+		&& tar \
+			--strip-components=1 \
+			-xvf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
+		&& cd ./native \
+		&& ./configure \
+			--with-java-home="$(dirname $(dirname $(readlink -f $(which javac))))" \
+			--prefix="${CATALINA_HOME}" \
+		&& make \
+		&& make install \
 	) \
 	# Set permissions
 	&& chown -R pentaho:pentaho \
@@ -78,16 +99,34 @@ RUN mkdir -p "${CATALINA_HOME}" "${CATALINA_BASE}" \
 		-type d -o \( -type f -iname '*.sh' \) \
 		-exec chmod 755 '{}' \; \
 	# Cleanup
+	&& apt-get purge -y ${BUILD_PKGS} \
+	&& apt-get autoremove -y \
 	&& find /tmp/ -mindepth 1 -delete
 
-# Download and install Pentaho BI Server
+# Copy Tomcat libraries and placeholders
+COPY --chown=pentaho:pentaho config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
+
+# Download Tomcat libraries
+RUN printf '%s\n' 'Downloading Tomcat libraries...' \
+	&& for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
+		url=$(cat "${placeholder}" | tr -d '\n'); \
+		file=$(basename "${placeholder}" .download); \
+		printf '%s\n' "Downloading \"${file}\"..."; \
+		curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}"; \
+		chown pentaho:pentaho "${CATALINA_BASE}"/lib/"${file}"; \
+		rm "${placeholder}"; \
+	done
+
 ARG BISERVER_VERSION='7.1.0.0-12'
 ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
-RUN mkdir -p "${BISERVER_HOME}" \
+RUN printf '%s\n' 'Installing Pentaho BI Server...' \
+	# Download Pentaho BI Server
 	&& /usr/local/bin/build-biserver-dl \
-		${BISERVER_VERSION} \
-		${BISERVER_MAVEN_REPO} \
+		"${BISERVER_VERSION}" \
+		"${BISERVER_MAVEN_REPO}" \
 		/tmp/biserver/ \
+	# Install Pentaho BI Server
+	&& mkdir -p "${BISERVER_HOME}" \
 	&& (cd /tmp/biserver/ \
 		&& unzip ./pentaho-solutions.zip \
 		&& unzip ./pentaho-data.zip \
@@ -123,19 +162,6 @@ RUN mkdir -p "${BISERVER_HOME}" \
 		-exec chmod 755 '{}' \; \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
-
-# Copy Tomcat libraries and placeholders
-COPY --chown=pentaho:pentaho config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
-
-# Download Tomcat libraries
-RUN for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
-		url=$(cat "${placeholder}" | tr -d '\n'); \
-		file=$(basename "${placeholder}" .download); \
-		printf '%s\n' "Downloading \"${file}\"..."; \
-		curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}"; \
-		chown pentaho:pentaho "${CATALINA_BASE}"/lib/"${file}"; \
-		rm "${placeholder}"; \
-	done
 
 # Copy Tomcat config
 COPY --chown=pentaho:pentaho config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
