@@ -12,6 +12,12 @@ RUN apt-get update \
 		unzip tar bzip2 gzip lzip lzma lzop xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Java environment
+RUN ln -rs "$(dirname $(dirname $(readlink -f $(which javac))))" /usr/lib/jvm/java
+ENV JAVA_HOME="/usr/lib/jvm/java"
+ENV JDK_HOME="${JAVA_HOME}"
+ENV JRE_HOME="${JAVA_HOME}/jre"
+
 # Pentaho BI Server environment
 ENV BISERVER_HOME="/opt/biserver"
 ENV BISERVER_SOLUTION_PATH="${BISERVER_HOME}/pentaho-solutions"
@@ -33,18 +39,17 @@ ENV WEBAPP_PENTAHO_STYLE_NAME="${WEBAPP_PENTAHO_STYLE_NAME}"
 # Copy build scripts
 COPY --chown=root:root scripts/build-* /usr/local/bin/
 
-# Create pentaho user and group
-ENV PENTAHO_UID=5000
-ENV PENTAHO_GID=5000
-RUN groupadd \
-		--gid "${PENTAHO_GID}" \
-		pentaho \
+ENV TOMCAT_GID=5000
+ENV TOMCAT_UID=5000
+RUN printf '%s\n' 'Creating users and groups...' \
+	# Create users and groups
+	&& groupadd --gid "${TOMCAT_GID}" tomcat \
 	&& useradd \
-		--uid "${PENTAHO_UID}" \
-		--gid "${PENTAHO_GID}" \
-		--home-dir /var/cache/pentaho/ \
+		--uid "${TOMCAT_UID}" \
+		--gid "${TOMCAT_GID}" \
+		--home-dir /var/cache/tomcat/ \
 		--create-home \
-		pentaho
+		tomcat
 
 ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_MINOR_VERSION=5
@@ -76,35 +81,33 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	) \
 	# Build and install Tomcat Native Library
 	&& mkdir /tmp/tomcat-native \
-	&& (cd /tmp/tomcat/ \
-		&& tar \
-			--strip-components=1 \
-			-xvf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
-		&& cd ./native \
-		&& ./configure \
-			--with-java-home="$(dirname $(dirname $(readlink -f $(which javac))))" \
-			--prefix="${CATALINA_HOME}" \
-		&& make \
-		&& make install \
+	&& (cd /tmp/tomcat-native/ \
+		&& tar --strip-components=1 -xvf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
+		&& cd ./native/ && ./configure --prefix="${CATALINA_HOME}" \
+		&& make && make install \
+	) \
+	# Hide version number
+	&& (cd "${CATALINA_HOME}"/lib/ \
+		&& jar -xf catalina.jar org/apache/catalina/util/ServerInfo.properties \
+		&& sed -i 's|^\(server\.info\)=.*$|\1=Apache Tomcat|g' \
+			./org/apache/catalina/util/ServerInfo.properties \
 	) \
 	# Set permissions
-	&& chown -R pentaho:pentaho \
-		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-	&& find \
-		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-		-type f \
-		-exec chmod 644 '{}' \; \
-	&& find \
-		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-		-type d -o \( -type f -iname '*.sh' \) \
-		-exec chmod 755 '{}' \; \
+	&& chown -R root:tomcat "${CATALINA_HOME}" "${CATALINA_BASE}" \
+	&& find "${CATALINA_HOME}" "${CATALINA_BASE}" -type f -exec chmod 644 '{}' \; \
+	&& find "${CATALINA_HOME}" "${CATALINA_BASE}" -type d -exec chmod 755 '{}' \; \
+	&& chmod 775 \
+		"${CATALINA_BASE}"/logs/ \
+		"${CATALINA_BASE}"/temp/ \
+		"${CATALINA_BASE}"/work/ \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS} \
 	&& apt-get autoremove -y \
+	&& rm -rf /var/lib/apt/lists/* \
 	&& find /tmp/ -mindepth 1 -delete
 
 # Copy Tomcat libraries and placeholders
-COPY --chown=pentaho:pentaho config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
+COPY --chown=root:tomcat config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
 
 # Download Tomcat libraries
 RUN printf '%s\n' 'Downloading Tomcat libraries...' \
@@ -113,7 +116,7 @@ RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 		file=$(basename "${placeholder}" .download); \
 		printf '%s\n' "Downloading \"${file}\"..."; \
 		curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}"; \
-		chown pentaho:pentaho "${CATALINA_BASE}"/lib/"${file}"; \
+		chown root:tomcat "${CATALINA_BASE}"/lib/"${file}"; \
 		rm "${placeholder}"; \
 	done
 
@@ -142,37 +145,33 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& jar -xvf /tmp/biserver/pentaho-style.war \
 	) \
 	# Set permissions
-	&& chown -R pentaho:pentaho \
-		"${BISERVER_HOME}" \
+	&& chown -R tomcat:tomcat \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
 	&& find \
-		"${BISERVER_HOME}" \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
 		-type f -exec chmod 644 '{}' \; \
 	&& find \
-		"${BISERVER_HOME}" \
 		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		-type d -o \( -type f -iname '*.sh' \) \
-		-exec chmod 755 '{}' \; \
+		-type d -exec chmod 755 '{}' \; \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
 # Copy Tomcat config
-COPY --chown=pentaho:pentaho config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
-COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/
-COPY --chown=pentaho:pentaho config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}"/
+COPY --chown=root:tomcat config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}"/
 
 # Copy Pentaho BI Server config
-COPY --chown=pentaho:pentaho config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"/
-COPY --chown=pentaho:pentaho config/biserver/data/ "${BISERVER_DATA_PATH}"/
-COPY --chown=pentaho:pentaho config/biserver.init.d/ "${BISERVER_INITD}"/
+COPY --chown=tomcat:tomcat config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"/
+COPY --chown=tomcat:tomcat config/biserver/data/ "${BISERVER_DATA_PATH}"/
+COPY --chown=root:root config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy runtime scripts
 COPY --chown=root:root scripts/setup-* /usr/local/bin/
@@ -188,6 +187,6 @@ WORKDIR "${BISERVER_HOME}"
 EXPOSE 8080/tcp
 EXPOSE 8009/tcp
 
-USER pentaho:pentaho
+USER tomcat:tomcat
 
 CMD ["/usr/local/bin/start-biserver"]

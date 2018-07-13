@@ -4,9 +4,9 @@ set -eu
 export LC_ALL=C
 
 # Initial setup
-if [ ! -f "${BISERVER_HOME}"/.biserver.setup.lock ]; then
+if [ ! -f "${BISERVER_SOLUTION_PATH}"/.biserver.firstrun.lock ]; then
+	touch "${BISERVER_SOLUTION_PATH}"/.biserver.firstrun.lock
 	/usr/local/bin/setup-biserver
-	touch "${BISERVER_HOME}"/.biserver.setup.lock
 fi
 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME}/lib"
