@@ -4,8 +4,8 @@ set -eu
 export LC_ALL=C
 
 # Initial setup
-if [ ! -f "${BISERVER_SOLUTION_PATH}"/.biserver.firstrun.lock ]; then
-	touch "${BISERVER_SOLUTION_PATH}"/.biserver.firstrun.lock
+if [ ! -f "${HOME}"/.biserver.firstrun.lock ]; then
+	touch "${HOME}"/.biserver.firstrun.lock
 	/usr/local/bin/setup-biserver
 fi
 
@@ -15,7 +15,7 @@ export CATALINA_OPTS="$(cat <<-EOF
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
 	-Dfile.encoding=utf8
-	-DDI_HOME="${BISERVER_SOLUTION_PATH}/system/kettle"
+	-DDI_HOME="${DI_HOME}"
 	${CATALINA_OPTS_EXTRA-
 		-Xms1024m
 		-Xmx4096m

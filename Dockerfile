@@ -9,7 +9,7 @@ RUN apt-get update \
 		netcat-traditional \
 		openjdk-8-jdk \
 		postgresql-client \
-		unzip tar bzip2 gzip lzip lzma lzop xz-utils \
+		unzip tar bzip2 gzip libarchive-tools lzip lzma lzop xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Java environment
@@ -23,6 +23,7 @@ ENV BISERVER_HOME="/opt/biserver"
 ENV BISERVER_SOLUTION_PATH="${BISERVER_HOME}/pentaho-solutions"
 ENV BISERVER_DATA_PATH="${BISERVER_HOME}/data"
 ENV BISERVER_INITD="/opt/biserver.init.d"
+ENV DI_HOME="${BISERVER_HOME}/kettle"
 
 ARG BISERVER_STORAGE="local"
 ENV BISERVER_STORAGE="${BISERVER_STORAGE}"
@@ -87,15 +88,15 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 		&& make && make install \
 	) \
 	# Hide version number
-	&& (cd "${CATALINA_HOME}"/lib/ \
-		&& jar -xf catalina.jar org/apache/catalina/util/ServerInfo.properties \
-		&& sed -i 's|^\(server\.info\)=.*$|\1=Apache Tomcat|g' \
-			./org/apache/catalina/util/ServerInfo.properties \
-	) \
+	&& mkdir -p "${CATALINA_HOME}"/lib/org/apache/catalina/util/ \
+	&& bsdtar -xOf "${CATALINA_HOME}"/lib/catalina.jar org/apache/catalina/util/ServerInfo.properties \
+		| sed 's|^\(server\.info\)=.*$|\1=Apache Tomcat|g' \
+		> "${CATALINA_HOME}"/lib/org/apache/catalina/util/ServerInfo.properties \
 	# Set permissions
-	&& chown -R root:tomcat "${CATALINA_HOME}" "${CATALINA_BASE}" \
-	&& find "${CATALINA_HOME}" "${CATALINA_BASE}" -type f -exec chmod 644 '{}' \; \
-	&& find "${CATALINA_HOME}" "${CATALINA_BASE}" -type d -exec chmod 755 '{}' \; \
+	&& find \
+		"${CATALINA_HOME}" "${CATALINA_BASE}" \
+		-exec chown root:tomcat '{}' \; \
+		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
 	&& chmod 775 \
 		"${CATALINA_BASE}"/logs/ \
 		"${CATALINA_BASE}"/temp/ \
@@ -129,36 +130,29 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		"${BISERVER_MAVEN_REPO}" \
 		/tmp/biserver/ \
 	# Install Pentaho BI Server
-	&& mkdir -p "${BISERVER_HOME}" \
+	&& mkdir -p \
+		"${BISERVER_HOME}" \
+		"${BISERVER_SOLUTION_PATH}" \
+		"${BISERVER_DATA_PATH}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
+		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+		"${DI_HOME}" \
 	&& (cd /tmp/biserver/ \
-		&& unzip ./pentaho-solutions.zip \
-		&& unzip ./pentaho-data.zip \
-		&& mv ./pentaho-solutions "${BISERVER_SOLUTION_PATH}" \
-		&& mv ./data "${BISERVER_DATA_PATH}" \
-	) \
-	&& (mkdir "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		&& cd "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		&& jar -xvf /tmp/biserver/pentaho.war \
-	) \
-	&& (mkdir "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		&& cd "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		&& jar -xvf /tmp/biserver/pentaho-style.war \
+		&& bsdtar -C "${BISERVER_SOLUTION_PATH}" --strip-components=1 --exclude 'pentaho-solutions/system/kettle/*' -xvf ./pentaho-solutions.zip \
+		&& bsdtar -C "${BISERVER_DATA_PATH}" --strip-components=1 -xvf ./pentaho-data.zip\
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" -xvf ./pentaho.war \
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" -xvf ./pentaho-style.war \
+		&& bsdtar -C "${DI_HOME}" --strip-components=3 -xvf ./pentaho-solutions.zip 'pentaho-solutions/system/kettle/*' \
 	) \
 	# Set permissions
-	&& chown -R tomcat:tomcat \
-		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
+	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
-		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		-type f -exec chmod 644 '{}' \; \
-	&& find \
-		"${BISERVER_SOLUTION_PATH}" "${BISERVER_DATA_PATH}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		-type d -exec chmod 755 '{}' \; \
+		"${BISERVER_SOLUTION_PATH}" \
+		"${BISERVER_DATA_PATH}" \
+		"${CATALINA_BASE}"/webapps/ \
+		"${DI_HOME}" \
+		-exec chown tomcat:tomcat '{}' \; \
+		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
