@@ -50,7 +50,7 @@
 			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
 			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
 			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%DBCON_DATABASE_TYPE%"/>
+			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
 			<param name="schemaObjectPrefix" value="fs_ws_" />
 		</FileSystem>
 
