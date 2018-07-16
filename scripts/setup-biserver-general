@@ -8,22 +8,21 @@ export LC_ALL=C
 ########
 
 sed -r \
-	-e "s|%WEBAPP_PENTAHO_NAME%|${WEBAPP_PENTAHO_NAME_SUBST}|g" \
+	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
 	"${CATALINA_BASE}"/webapps/ROOT/index.html.template \
 	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
 ########
 
 sed -r \
-	-e "s|%BISERVER_SOLUTION_PATH%|${BISERVER_SOLUTION_PATH_SUBST}|g" \
-	-e "s|%BISERVER_DATA_PATH%|${BISERVER_DATA_PATH_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/WEB-INF/web.xml.template \
-	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/WEB-INF/web.xml
-
-########
+	-e "s|%BISERVER_HOME%|${BISERVER_HOME_SUBST}|g" \
+	-e "s|%BISERVER_SOLUTIONS_DIRNAME%|${BISERVER_SOLUTIONS_DIRNAME_SUBST}|g" \
+	-e "s|%BISERVER_DATA_DIRNAME%|${BISERVER_DATA_DIRNAME_SUBST}|g" \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml
 
 sed -r \
-	-e "s|%WEBAPP_PENTAHO_NAME%|${WEBAPP_PENTAHO_NAME_SUBST}|g" \
+	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
 	-e "s|%DBCON_DRIVER_CLASS%|${DBCON_DRIVER_CLASS_SUBST}|g" \
 	-e "s|%DBCON_VALIDATIONQUERY%|${DBCON_VALIDATIONQUERY_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_URL%|${DBCON_HIBERNATE_URL_SUBST}|g" \
@@ -32,15 +31,28 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/META-INF/context.xml.template \
-	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/META-INF/context.xml
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml
+
+sed -r \
+	-e "s|%CATALINA_BASE%|${CATALINA_BASE_SUBST}|g" \
+	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/classes/log4j.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/classes/log4j.xml
+
+########
+
+sed -r \
+	-e "s|%BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST}|g" \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/META-INF/context.xml.template \
+	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/META-INF/context.xml
 
 ########
 
 sed -r \
 	-e "s|%FULLY_QUALIFIED_SERVER_URL%|${FULLY_QUALIFIED_SERVER_URL_SUBST}|g" \
-	"${BISERVER_SOLUTION_PATH}"/system/server.properties.template \
-	> "${BISERVER_SOLUTION_PATH}"/system/server.properties
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties
 
 ########
 
@@ -53,25 +65,26 @@ sed -r \
 	-e "s|%DBCON_JACKRABBIT_URL%|${DBCON_JACKRABBIT_URL_SUBST}|g" \
 	-e "s|%DBCON_JACKRABBIT_USER%|${DBCON_JACKRABBIT_USER_SUBST}|g" \
 	-e "s|%DBCON_JACKRABBIT_PASSWORD%|${DBCON_JACKRABBIT_PASSWORD_SUBST}|g" \
-	"${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml.local.template \
-	> "${BISERVER_SOLUTION_PATH}"/system/jackrabbit/repository.xml
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml.local.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml
 
 ########
 
 sed -r \
 	-e "s|%DBCON_HIBERNATE_CONFIG_FILE%|${DBCON_HIBERNATE_CONFIG_FILE_SUBST}|g" \
-	"${BISERVER_SOLUTION_PATH}"/system/hibernate/hibernate-settings.xml.template \
-	> "${BISERVER_SOLUTION_PATH}"/system/hibernate/hibernate-settings.xml
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml
 
 ########
 
 sed -r \
-	-e "s|%BISERVER_SOLUTION_PATH%|${BISERVER_SOLUTION_PATH_SUBST}|g" \
+	-e "s|%BISERVER_HOME%|${BISERVER_HOME_SUBST}|g" \
+	-e "s|%BISERVER_SOLUTIONS_DIRNAME%|${BISERVER_SOLUTIONS_DIRNAME_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_DATABASE%|${DBCON_HIBERNATE_DATABASE_SUBST}|g" \
-	"${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml.template \
-	> "${BISERVER_SOLUTION_PATH}"/system/hibernate/h2.hibernate.cfg.xml
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/h2.hibernate.cfg.xml.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/h2.hibernate.cfg.xml
 
 ########
 
@@ -83,5 +96,5 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
-	"${BISERVER_SOLUTION_PATH}"/system/simple-jndi/jdbc.properties.template \
-	> "${BISERVER_SOLUTION_PATH}"/system/simple-jndi/jdbc.properties
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties

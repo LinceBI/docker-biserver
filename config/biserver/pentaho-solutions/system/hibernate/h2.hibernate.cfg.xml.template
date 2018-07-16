@@ -9,7 +9,7 @@
 		<property name="hibernate.generate_statistics">true</property>
 		<property name="hibernate.cache.use_query_cache">true</property>
 		<property name="connection.driver_class">org.h2.Driver</property>
-		<property name="connection.url">jdbc:h2:%BISERVER_SOLUTION_PATH%/system/hibernate/%DBCON_HIBERNATE_DATABASE%</property>
+		<property name="connection.url">jdbc:h2:%BISERVER_HOME%/%BISERVER_SOLUTIONS_DIRNAME%/system/hibernate/%DBCON_HIBERNATE_DATABASE%</property>
 		<property name="connection.username">%DBCON_HIBERNATE_USER%</property>
 		<property name="connection.password">%DBCON_HIBERNATE_PASSWORD%</property>
 		<property name="dialect">org.hibernate.dialect.H2Dialect</property>

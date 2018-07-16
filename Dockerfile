@@ -18,24 +18,10 @@ ENV JAVA_HOME="/usr/lib/jvm/java"
 ENV JDK_HOME="${JAVA_HOME}"
 ENV JRE_HOME="${JAVA_HOME}/jre"
 
-# Pentaho BI Server environment
-ENV BISERVER_HOME="/opt/biserver"
-ENV BISERVER_SOLUTION_PATH="${BISERVER_HOME}/pentaho-solutions"
-ENV BISERVER_DATA_PATH="${BISERVER_HOME}/data"
-ENV BISERVER_INITD="/opt/biserver.init.d"
-ENV DI_HOME="${BISERVER_HOME}/kettle"
-
-ARG BISERVER_STORAGE="local"
-ENV BISERVER_STORAGE="${BISERVER_STORAGE}"
-
-ENV CATALINA_HOME="${BISERVER_HOME}/tomcat"
-ENV CATALINA_BASE="${CATALINA_HOME}"
+# Tomcat environment
+ENV CATALINA_HOME="/usr/share/tomcat"
+ENV CATALINA_BASE="/var/lib/tomcat"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
-
-ARG WEBAPP_PENTAHO_NAME="pentaho"
-ENV WEBAPP_PENTAHO_NAME="${WEBAPP_PENTAHO_NAME}"
-ARG WEBAPP_PENTAHO_STYLE_NAME="pentaho-style"
-ENV WEBAPP_PENTAHO_STYLE_NAME="${WEBAPP_PENTAHO_STYLE_NAME}"
 
 # Copy build scripts
 COPY --chown=root:root scripts/build-* /usr/local/bin/
@@ -94,12 +80,14 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 		> "${CATALINA_HOME}"/lib/org/apache/catalina/util/ServerInfo.properties \
 	# Set permissions
 	&& find \
-		"${CATALINA_HOME}" "${CATALINA_BASE}" \
+		"${CATALINA_HOME}" \
+		"${CATALINA_BASE}" \
 		-exec chown root:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
-	&& chmod 775 \
+	&& chown -R tomcat:tomcat \
 		"${CATALINA_BASE}"/logs/ \
 		"${CATALINA_BASE}"/temp/ \
+		"${CATALINA_BASE}"/webapps/ \
 		"${CATALINA_BASE}"/work/ \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS} \
@@ -121,6 +109,26 @@ RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 		rm "${placeholder}"; \
 	done
 
+# Pentaho BI Server environment
+ENV BISERVER_HOME="/var/lib/biserver"
+ENV BISERVER_INITD="/etc/biserver.init.d"
+
+ARG BISERVER_KETTLE_DIRNAME="kettle"
+ENV BISERVER_KETTLE_DIRNAME="${BISERVER_KETTLE_DIRNAME}"
+
+ARG BISERVER_SOLUTIONS_DIRNAME="pentaho-solutions"
+ENV BISERVER_SOLUTIONS_DIRNAME="${BISERVER_SOLUTIONS_DIRNAME}"
+ARG BISERVER_DATA_DIRNAME="data"
+ENV BISERVER_DATA_DIRNAME="${BISERVER_DATA_DIRNAME}"
+
+ARG BISERVER_WEBAPP_PENTAHO_DIRNAME="pentaho"
+ENV BISERVER_WEBAPP_PENTAHO_DIRNAME="${BISERVER_WEBAPP_PENTAHO_DIRNAME}"
+ARG BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME="pentaho-style"
+ENV BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME="${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"
+
+ARG BISERVER_STORAGE="local"
+ENV BISERVER_STORAGE="${BISERVER_STORAGE}"
+
 ARG BISERVER_VERSION='7.1.0.0-12'
 ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
@@ -131,26 +139,23 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		/tmp/biserver/ \
 	# Install Pentaho BI Server
 	&& mkdir -p \
-		"${BISERVER_HOME}" \
-		"${BISERVER_SOLUTION_PATH}" \
-		"${BISERVER_DATA_PATH}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" \
-		"${DI_HOME}" \
+		"${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}" \
+		"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}" \
+		"${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 	&& (cd /tmp/biserver/ \
-		&& bsdtar -C "${BISERVER_SOLUTION_PATH}" --strip-components=1 --exclude 'pentaho-solutions/system/kettle/*' -xvf ./pentaho-solutions.zip \
-		&& bsdtar -C "${BISERVER_DATA_PATH}" --strip-components=1 -xvf ./pentaho-data.zip\
-		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}" -xvf ./pentaho.war \
-		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}" -xvf ./pentaho-style.war \
-		&& bsdtar -C "${DI_HOME}" --strip-components=3 -xvf ./pentaho-solutions.zip 'pentaho-solutions/system/kettle/*' \
+		&& bsdtar -C "${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}" --strip-components=3 -xvf ./pentaho-solutions.zip 'pentaho-solutions/system/kettle/*' \
+		&& bsdtar -C "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}" --strip-components=1 --exclude 'pentaho-solutions/system/kettle/*' -xvf ./pentaho-solutions.zip \
+		&& bsdtar -C "${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}" --strip-components=1 -xvf ./pentaho-data.zip\
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" -xvf ./pentaho.war \
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
 	) \
 	# Set permissions
-	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
-		"${BISERVER_SOLUTION_PATH}" \
-		"${BISERVER_DATA_PATH}" \
-		"${CATALINA_BASE}"/webapps/ \
-		"${DI_HOME}" \
+		"${BISERVER_HOME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 		-exec chown tomcat:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
 	# Cleanup
@@ -159,12 +164,12 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 # Copy Tomcat config
 COPY --chown=root:tomcat config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
 COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_NAME}"/
-COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_NAME}"/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/
 
 # Copy Pentaho BI Server config
-COPY --chown=tomcat:tomcat config/biserver/pentaho-solutions/ "${BISERVER_SOLUTION_PATH}"/
-COPY --chown=tomcat:tomcat config/biserver/data/ "${BISERVER_DATA_PATH}"/
+COPY --chown=tomcat:tomcat config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/
+COPY --chown=tomcat:tomcat config/biserver/data/ "${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}"/
 COPY --chown=root:root config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy runtime scripts
@@ -172,9 +177,9 @@ COPY --chown=root:root scripts/setup-* /usr/local/bin/
 COPY --chown=root:root scripts/start-* /usr/local/bin/
 
 # Don't declare volumes, let the user decide
-#VOLUME "${BISERVER_SOLUTION_PATH}/system/jackrabbit/repository/"
-#VOLUME "${BISERVER_DATA_PATH}/hsqldb/"
-#VOLUME "${CATALINA_BASE}/logs/"
+#VOLUME "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
+#VOLUME "${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}/hsqldb/"
+#VOLUME "${CATALINA_BASE}"/logs/
 
 WORKDIR "${BISERVER_HOME}"
 

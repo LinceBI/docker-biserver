@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/%WEBAPP_PENTAHO_NAME%" docbase="webapps/%WEBAPP_PENTAHO_NAME%">
+<Context path="/%BISERVER_WEBAPP_PENTAHO_DIRNAME%" docbase="webapps/%BISERVER_WEBAPP_PENTAHO_DIRNAME%">
 
 	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.commons.dbcp.BasicDataSourceFactory" maxTotal="20" maxIdle="5"

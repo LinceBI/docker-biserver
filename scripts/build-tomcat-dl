@@ -36,4 +36,4 @@ printf -- '%s %s' "${PKG_CHECKSUM}" "${TMP_PKG}" | sha512sum -c
 
 # Extract package
 mkdir -p "${TARGET_DIR}"
-tar --strip-components=1 -C "${TARGET_DIR}" -xvf "${TMP_PKG}"
+tar -C "${TARGET_DIR}" --strip-components=1 -xvf "${TMP_PKG}"

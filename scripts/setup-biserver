@@ -7,8 +7,8 @@ export LC_ALL=C
 
 ########
 
-# Webapp rename setup
-/usr/local/bin/setup-biserver-webapp-rename
+# Directory rename setup
+/usr/local/bin/setup-biserver-rename
 
 # General setup
 /usr/local/bin/setup-biserver-general

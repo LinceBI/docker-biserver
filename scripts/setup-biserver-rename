@@ -1,0 +1,90 @@
+#!/bin/sh
+
+set -eu
+export LC_ALL=C
+
+. /usr/local/bin/setup-biserver-set-utils
+
+########
+
+BISERVER_KETTLE_WAS_RENAMED=false
+if [ "${BISERVER_KETTLE_DIRNAME}" != 'kettle' ]; then
+	logInfo "Kettle directory was renamed to \"${BISERVER_KETTLE_DIRNAME}\""
+	BISERVER_KETTLE_WAS_RENAMED=true
+	if [ ! -e "${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}" ]; then
+		logInfo 'Moving kettle directory...'
+		cp -a "${BISERVER_HOME}"/kettle/ "${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}"
+		rm -r "${BISERVER_HOME}"/kettle/
+	fi
+fi
+
+BISERVER_SOLUTIONS_DIRNAME_WAS_RENAMED=false
+if [ "${BISERVER_SOLUTIONS_DIRNAME}" != 'pentaho-solutions' ]; then
+	logInfo "Solutions directory was renamed to \"${BISERVER_SOLUTIONS_DIRNAME}\""
+	BISERVER_SOLUTIONS_DIRNAME_WAS_RENAMED=true
+	if [ ! -e "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}" ]; then
+		logInfo 'Moving solutions directory...'
+		cp -a "${BISERVER_HOME}"/pentaho-solutions/ "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"
+		rm -r "${BISERVER_HOME}"/pentaho-solutions/
+	fi
+fi
+
+BISERVER_DATA_DIRNAME_WAS_RENAMED=false
+if [ "${BISERVER_DATA_DIRNAME}" != 'data' ]; then
+	logInfo "Data directory was renamed to \"${BISERVER_DATA_DIRNAME}\""
+	BISERVER_DATA_DIRNAME_WAS_RENAMED=true
+	if [ ! -e "${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}" ]; then
+		logInfo 'Moving data directory...'
+		cp -a "${BISERVER_HOME}"/data/ "${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}"
+		rm -r "${BISERVER_HOME}"/data/
+	fi
+fi
+
+########
+
+BISERVER_WEBAPP_PENTAHO_WAS_RENAMED=false
+if [ "${BISERVER_WEBAPP_PENTAHO_DIRNAME}" != 'pentaho' ]; then
+	logInfo "Pentaho webapp directory was renamed to \"${BISERVER_WEBAPP_PENTAHO_DIRNAME}\""
+	BISERVER_WEBAPP_PENTAHO_WAS_RENAMED=true
+	if [ ! -e "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" ]; then
+		logInfo 'Moving Pentaho webapp directory...'
+		cp -a "${CATALINA_BASE}"/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"
+		rm -r "${CATALINA_BASE}"/webapps/pentaho/
+	fi
+fi
+
+BISERVER_WEBAPP_PENTAHO_STYLE_WAS_RENAMED=false
+if [ "${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" != 'pentaho-style' ]; then
+	logInfo "Pentaho style webapp directory was renamed to \"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}\""
+	BISERVER_WEBAPP_PENTAHO_STYLE_WAS_RENAMED=true
+	if [ ! -e "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" ]; then
+		logInfo 'Moving Pentaho style webapp directory...'
+		cp -a "${CATALINA_BASE}"/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"
+		rm -r "${CATALINA_BASE}"/webapps/pentaho-style/
+	fi
+fi
+
+#
+# This recursive replacement has dangerous implications compared to the benefits it brings.
+# Uncomment only if there is a bug related to the rename operation.
+#
+#if [ "${BISERVER_WEBAPP_PENTAHO_WAS_RENAMED}" = true ]; then
+#	logInfo 'Updating references of Pentaho webapp...'
+#	find \
+#		"${BISERVER_HOME}/${BISERVER_SOLUTIONS_DIRNAME}" \
+#		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" \
+#		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
+#		-type f \( -iname '*.html' -o -iname '*.jsp' \) \
+#		-exec sed -i "s|/pentaho/|/${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}/|g" '{}' \;
+#fi
+#
+
+if [ "${BISERVER_WEBAPP_PENTAHO_STYLE_WAS_RENAMED}" = true ]; then
+	logInfo 'Updating references of Pentaho style webapp...'
+	find \
+		"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" \
+		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
+		-type f \( -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' \) \
+		-exec sed -i "s|/pentaho-style/|/${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST}/|g" '{}' \;
+fi
