@@ -3,11 +3,16 @@
 set -eu
 export LC_ALL=C
 
-# Initial setup
+. /usr/local/bin/setup-biserver-set-utils
+
+########
+
 if [ ! -f "${HOME}"/.biserver.firstrun.lock ]; then
 	touch "${HOME}"/.biserver.firstrun.lock
 	/usr/local/bin/setup-biserver
 fi
+
+########
 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME}/lib"
 export CATALINA_OPTS="$(cat <<-EOF
@@ -23,5 +28,6 @@ export CATALINA_OPTS="$(cat <<-EOF
 EOF
 )"
 
+logInfo "Starting Pentaho BI Server..."
 cd "${CATALINA_HOME}"/bin
 exec sh catalina.sh run

@@ -7,13 +7,30 @@ export LC_ALL=C
 
 ########
 
+ROOT_DIR="${BISERVER_HOME}"
+PLUGINS_DIR="${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system
+
 for file in "${BISERVER_INITD}"/*; do
 	[ -e "${file}" ] || continue
 	case "${file}" in
 		# Execute shell scripts
-		*.sh|*.run) cd "${BISERVER_HOME}" && "${file}" ;;
+		*.sh|*.run)
+			logInfo "Executing script \"${file}\""
+			cd "${BISERVER_HOME}" && "${file}"
+			;;
 		# Extract zip files
-		*.zip) unzip -od "${BISERVER_HOME}" "${file}" ;;
+		*.zip|*.kar)
+			case "${file}" in
+				*.root.*)
+					logInfo "Uncompressing archive \"${file}\""
+					unzip -qod "${ROOT_DIR}" "${file}"
+					;;
+				*)
+					logInfo "Installing plugin \"${file}\""
+					unzip -qod "${PLUGINS_DIR}" "${file}"
+					;;
+			esac
+			;;
 		# Extract tar files
 		*.tar\
 		|*.tar.gz|*.tgz|*.taz\
@@ -21,8 +38,20 @@ for file in "${BISERVER_INITD}"/*; do
 		|*.tar.lz\
 		|*.tar.lzma|*.tlz\
 		|*.tar.lzo\
-		|*.tar.xz|*.txz\
-		) tar -C "${BISERVER_HOME}" -xvf "${file}" ;;
-		*) logWarn "$0: ignoring ${file}" ;;
+		|*.tar.xz|*.txz)
+			case "${file}" in
+				*.root.*)
+					logInfo "Uncompressing archive \"${file}\""
+					tar -C "${ROOT_DIR}" -xf "${file}"
+					;;
+				*)
+					logInfo "Installing plugin \"${file}\""
+					tar -C "${PLUGINS_DIR}" -xf "${file}"
+					;;
+			esac
+			;;
+		*)
+			logWarn "Ignoring file \"${file}\""
+			;;
 	esac
 done
