@@ -37,7 +37,7 @@
 			<Realm className="org.apache.catalina.realm.LockOutRealm">
 				<Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
 			</Realm>
-			<Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false">
+			<Host name="localhost" appBase="webapps" unpackWARs="false" autoDeploy="false" copyXML="false">
 				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
 					prefix="localhost_access_log" suffix=".txt"
 					pattern="%h %l %u %t &quot;%r&quot; %s %b" />

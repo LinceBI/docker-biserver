@@ -59,9 +59,9 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& mkdir -p "${CATALINA_HOME}" "${CATALINA_BASE}" \
 	&& (cd /tmp/tomcat/ \
 		&& mv ./bin/ "${CATALINA_HOME}" \
-		&& mv ./conf/ "${CATALINA_BASE}" \
 		&& mv ./lib/ "${CATALINA_HOME}" \
-		# Skip logs, temp, webapps and work
+		&& mv ./conf/ "${CATALINA_BASE}" \
+		&& mkdir "${CATALINA_BASE}"/conf/Catalina/ \
 		&& mkdir "${CATALINA_BASE}"/logs/ \
 		&& mkdir "${CATALINA_BASE}"/temp/ \
 		&& mkdir "${CATALINA_BASE}"/webapps/ \
@@ -86,6 +86,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 		-exec chown root:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
 	&& chown -R tomcat:tomcat \
+		"${CATALINA_BASE}"/conf/Catalina/ \
 		"${CATALINA_BASE}"/logs/ \
 		"${CATALINA_BASE}"/temp/ \
 		"${CATALINA_BASE}"/webapps/ \
