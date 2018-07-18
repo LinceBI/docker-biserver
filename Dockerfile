@@ -169,6 +169,8 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 		-exec chown tomcat:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
+	# Create Tomcat symlink for compatibility reasons
+	&& ln -rs "${CATALINA_BASE}" "${BISERVER_HOME}"/tomcat \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
