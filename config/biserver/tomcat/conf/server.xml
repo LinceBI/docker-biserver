@@ -23,15 +23,15 @@
 			connectionTimeout="20000"
 			redirectPort="8443"
 			URIEncoding="UTF-8"
-			xpoweredBy="false"
-			server="Apache Tomcat" />
+			server="Apache Tomcat"
+			xpoweredBy="false" />
 
 		<Connector
 			port="8009"
 			protocol="AJP/1.3"
 			redirectPort="8443"
 			URIEncoding="UTF-8"
-			server="Apache Tomcat" />
+			xpoweredBy="false" />
 
 		<Engine name="Catalina" defaultHost="localhost">
 			<Realm className="org.apache.catalina.realm.LockOutRealm">

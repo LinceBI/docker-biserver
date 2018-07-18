@@ -41,7 +41,4 @@ exec docker run --detach \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--publish '8009:8009/tcp' \
-	--mount type=volume,src="${DOCKER_BISERVER_VOLUME_HSQLDB}",dst='/opt/biserver/data/hsqldb/' \
-	--mount type=volume,src="${DOCKER_BISERVER_VOLUME_JACKRABBIT}",dst='/opt/biserver/pentaho-solutions/system/jackrabbit/repository/' \
-	--mount type=volume,src="${DOCKER_BISERVER_VOLUME_LOGS}",dst='/opt/biserver/tomcat/logs/' \
 	"${DOCKER_BISERVER_IMAGE}" "$@"

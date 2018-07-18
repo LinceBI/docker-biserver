@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="refresh" content="0; URL=/%BISERVER_WEBAPP_PENTAHO_DIRNAME%">
+		<meta http-equiv="refresh" content="0; URL=/%ROOT_WEBAPP_DIRNAME%">
 		<title>Pentaho Business Analytics</title>
 	</head>
 </html>

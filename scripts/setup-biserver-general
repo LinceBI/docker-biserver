@@ -8,7 +8,7 @@ export LC_ALL=C
 ########
 
 sed -r \
-	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
+	-e "s|%ROOT_WEBAPP_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
 	"${CATALINA_BASE}"/webapps/ROOT/index.html.template \
 	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
@@ -50,7 +50,7 @@ sed -r \
 ########
 
 sed -r \
-	-e "s|%FULLY_QUALIFIED_SERVER_URL%|${FULLY_QUALIFIED_SERVER_URL_SUBST}|g" \
+	-e "s|%FQSU%|${FQSU_SUBST}|g" \
 	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties.template \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties
 
@@ -75,8 +75,6 @@ sed -r \
 	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml.template \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml
 
-########
-
 sed -r \
 	-e "s|%BISERVER_HOME%|${BISERVER_HOME_SUBST}|g" \
 	-e "s|%BISERVER_SOLUTIONS_DIRNAME%|${BISERVER_SOLUTIONS_DIRNAME_SUBST}|g" \
@@ -98,3 +96,11 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
 	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties.template \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties
+
+######
+
+sed -r \
+	-e "s|%CATALINA_BASE%|${CATALINA_BASE_SUBST}|g" \
+	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml

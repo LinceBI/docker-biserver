@@ -9,7 +9,12 @@ export LC_ALL=C
 
 if [ ! -f "${HOME}"/.biserver.firstrun.lock ]; then
 	touch "${HOME}"/.biserver.firstrun.lock
-	/usr/local/bin/setup-biserver
+
+	if [ -n "${BISERVER_SETUP_JSON}" ]; then
+		/usr/local/bin/setup-biserver-multi
+	else
+		/usr/local/bin/setup-biserver
+	fi
 fi
 
 ########

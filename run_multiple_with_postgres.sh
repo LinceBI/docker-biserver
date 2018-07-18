@@ -82,6 +82,74 @@ if containerExists "${DOCKER_BISERVER_CONTAINER}"; then
 	docker rm "${DOCKER_BISERVER_CONTAINER}" >/dev/null
 fi
 
+BISERVER_SETUP_JSON="$(cat <<-EOF
+	{
+		"root": "helium",
+		"servers": [
+			{
+				"name": "pentaho",
+				"enabled": false,
+				"env": {}
+			},
+			{
+				"name": "helium",
+				"enabled": true,
+				"env": {
+					"BISERVER_STORAGE": "postgres",
+					"DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+					"DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+					"DBCON_JACKRABBIT_USER": "helium_jackrabbit",
+					"DBCON_JACKRABBIT_PASSWORD": "helium_jackrabbit",
+					"DBCON_JACKRABBIT_DATABASE": "helium_jackrabbit",
+					"DBCON_HIBERNATE_USER": "helium_hibernate",
+					"DBCON_HIBERNATE_PASSWORD": "helium_hibernate",
+					"DBCON_HIBERNATE_DATABASE": "helium_hibernate",
+					"DBCON_QUARTZ_USER": "helium_quartz",
+					"DBCON_QUARTZ_PASSWORD": "helium_quartz",
+					"DBCON_QUARTZ_DATABASE": "helium_quartz"
+				}
+			},
+			{
+				"name": "neon",
+				"enabled": true,
+				"env": {
+					"BISERVER_STORAGE": "postgres",
+					"DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+					"DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+					"DBCON_JACKRABBIT_USER": "neon_jackrabbit",
+					"DBCON_JACKRABBIT_PASSWORD": "neon_jackrabbit",
+					"DBCON_JACKRABBIT_DATABASE": "neon_jackrabbit",
+					"DBCON_HIBERNATE_USER": "neon_hibernate",
+					"DBCON_HIBERNATE_PASSWORD": "neon_hibernate",
+					"DBCON_HIBERNATE_DATABASE": "neon_hibernate",
+					"DBCON_QUARTZ_USER": "neon_quartz",
+					"DBCON_QUARTZ_PASSWORD": "neon_quartz",
+					"DBCON_QUARTZ_DATABASE": "neon_quartz"
+				}
+			},
+			{
+				"name": "argon",
+				"enabled": true,
+				"env": {
+					"BISERVER_STORAGE": "postgres",
+					"DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+					"DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+					"DBCON_JACKRABBIT_USER": "argon_jackrabbit",
+					"DBCON_JACKRABBIT_PASSWORD": "argon_jackrabbit",
+					"DBCON_JACKRABBIT_DATABASE": "argon_jackrabbit",
+					"DBCON_HIBERNATE_USER": "argon_hibernate",
+					"DBCON_HIBERNATE_PASSWORD": "argon_hibernate",
+					"DBCON_HIBERNATE_DATABASE": "argon_hibernate",
+					"DBCON_QUARTZ_USER": "argon_quartz",
+					"DBCON_QUARTZ_PASSWORD": "argon_quartz",
+					"DBCON_QUARTZ_DATABASE": "argon_quartz"
+				}
+			}
+		]
+	}
+EOF
+)"
+
 printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
 exec docker run --detach \
 	--name "${DOCKER_BISERVER_CONTAINER}" \
@@ -91,7 +159,5 @@ exec docker run --detach \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--publish '8009:8009/tcp' \
-	--env BISERVER_STORAGE='postgres' \
-	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
-	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
+	--env BISERVER_SETUP_JSON="${BISERVER_SETUP_JSON}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"
