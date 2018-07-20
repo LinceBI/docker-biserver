@@ -1,0 +1,37 @@
+# ===========================================================================
+# Configure Main Scheduler Properties  ======================================
+# ===========================================================================
+
+org.quartz.scheduler.instanceName = PentahoQuartzScheduler
+org.quartz.scheduler.instanceId = %INSTANCE_ID%
+org.quartz.scheduler.rmi.export = false
+org.quartz.scheduler.rmi.proxy = false
+org.quartz.scheduler.wrapJobExecutionInUserTransaction = false
+
+# ===========================================================================
+# Configure ThreadPool  =====================================================
+# ===========================================================================
+
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 10
+org.quartz.threadPool.threadPriority = 5
+org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
+
+# ===========================================================================
+# Configure JobStore  =======================================================
+# ===========================================================================
+
+org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.misfireThreshold = 60000
+org.quartz.jobStore.driverDelegateClass = %DBCON_DRIVERDELEGATE_CLASS%
+org.quartz.jobStore.useProperties = false
+org.quartz.jobStore.dataSource = myDS
+org.quartz.jobStore.tablePrefix = QRTZ5_
+org.quartz.jobStore.isClustered = false
+org.quartz.jobStore.clusterCheckinInterval = 20000
+
+# ===========================================================================
+# Configure Datasources  ====================================================
+# ===========================================================================
+
+org.quartz.dataSource.myDS.jndiURL = Quartz

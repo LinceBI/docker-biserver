@@ -59,33 +59,62 @@ docker run --detach \
 printf -- '%s\n' 'Waiting for database server...'
 until nc -zv 127.0.0.1 5432; do sleep 1; done && sleep 10
 
-# Pentaho BI Server container
-#############################
+# Pentaho BI Server container A
+###############################
 
 if ! imageExists "${DOCKER_BISERVER_IMAGE}"; then
 	>&2 printf -- '%s\n' "${DOCKER_BISERVER_IMAGE} image doesn't exist!"
 	exit 1
 fi
 
-if containerIsRunning "${DOCKER_BISERVER_CONTAINER}"; then
-	printf -- '%s\n' "Stopping \"${DOCKER_BISERVER_CONTAINER}\" container..."
-	docker stop "${DOCKER_BISERVER_CONTAINER}" >/dev/null
+if containerIsRunning "${DOCKER_BISERVER_CONTAINER}-a"; then
+	printf -- '%s\n' "Stopping \"${DOCKER_BISERVER_CONTAINER}-a\" container..."
+	docker stop "${DOCKER_BISERVER_CONTAINER}-a" >/dev/null
 fi
 
-if containerExists "${DOCKER_BISERVER_CONTAINER}"; then
-	printf -- '%s\n' "Removing \"${DOCKER_BISERVER_CONTAINER}\" container..."
-	docker rm "${DOCKER_BISERVER_CONTAINER}" >/dev/null
+if containerExists "${DOCKER_BISERVER_CONTAINER}-a"; then
+	printf -- '%s\n' "Removing \"${DOCKER_BISERVER_CONTAINER}-a\" container..."
+	docker rm "${DOCKER_BISERVER_CONTAINER}-a" >/dev/null
 fi
 
-printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
+printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}-a\" container..."
 docker run --detach \
-	--name "${DOCKER_BISERVER_CONTAINER}" \
-	--hostname "${DOCKER_BISERVER_CONTAINER}" \
+	--name "${DOCKER_BISERVER_CONTAINER}-a" \
+	--hostname "${DOCKER_BISERVER_CONTAINER}-a" \
 	--network "${DOCKER_NETWORK}" \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--publish '8009:8009/tcp' \
+	--env BISERVER_STORAGE='postgres' \
+	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
+	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
+	"${DOCKER_BISERVER_IMAGE}" "$@"
+
+sleep 20
+
+# Pentaho BI Server container B
+###############################
+
+if containerIsRunning "${DOCKER_BISERVER_CONTAINER}-b"; then
+	printf -- '%s\n' "Stopping \"${DOCKER_BISERVER_CONTAINER}-b\" container..."
+	docker stop "${DOCKER_BISERVER_CONTAINER}-b" >/dev/null
+fi
+
+if containerExists "${DOCKER_BISERVER_CONTAINER}-b"; then
+	printf -- '%s\n' "Removing \"${DOCKER_BISERVER_CONTAINER}-b\" container..."
+	docker rm "${DOCKER_BISERVER_CONTAINER}-b" >/dev/null
+fi
+
+printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}-b\" container..."
+docker run --detach \
+	--name "${DOCKER_BISERVER_CONTAINER}-b" \
+	--hostname "${DOCKER_BISERVER_CONTAINER}-b" \
+	--network "${DOCKER_NETWORK}" \
+	--restart on-failure:3 \
+	--log-opt max-size=32m \
+	--publish '8081:8080/tcp' \
+	--publish '8010:8009/tcp' \
 	--env BISERVER_STORAGE='postgres' \
 	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
 	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \

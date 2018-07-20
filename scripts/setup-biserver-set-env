@@ -7,6 +7,8 @@ export LC_ALL=C
 
 ########
 
+[ -z "${INSTANCE_ID:-}" ]   && export INSTANCE_ID="$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)"
+
 [ -z "${FQSU_PROTOCOL:-}" ] && export FQSU_PROTOCOL="http"
 [ -z "${FQSU_DOMAIN:-}" ]   && export FQSU_DOMAIN="localhost"
 [ -z "${FQSU_PORT:-}" ]     && export FQSU_PORT="8080"
@@ -26,6 +28,7 @@ if [ "${BISERVER_STORAGE}" = 'local' ]; then
 	[ -z "${DBCON_FILESYSTEM_CLASS:-}" ]         && export DBCON_FILESYSTEM_CLASS='org.apache.jackrabbit.core.fs.local.LocalFileSystem'
 	[ -z "${DBCON_DATASTORE_CLASS:-}" ]          && export DBCON_DATASTORE_CLASS='org.apache.jackrabbit.core.data.FileDataStore'
 	[ -z "${DBCON_PERSISTENCEMANAGER_CLASS:-}" ] && export DBCON_PERSISTENCEMANAGER_CLASS='org.apache.jackrabbit.core.persistence.pool.H2PersistenceManager'
+	[ -z "${DBCON_DRIVERDELEGATE_CLASS:-}" ]     && export DBCON_DRIVERDELEGATE_CLASS='org.quartz.impl.jdbcjobstore.PostgreSQLDelegate'
 	[ -z "${DBCON_VALIDATIONQUERY:-}" ]          && export DBCON_VALIDATIONQUERY='select count(*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES'
 
 	[ -z "${DBCON_JACKRABBIT_USER:-}" ]          && export DBCON_JACKRABBIT_USER='jcr_user'
@@ -58,6 +61,7 @@ elif [ "${BISERVER_STORAGE}" = 'postgres' ]; then
 	[ -z "${DBCON_FILESYSTEM_CLASS:-}" ]         && export DBCON_FILESYSTEM_CLASS='org.apache.jackrabbit.core.fs.db.DbFileSystem'
 	[ -z "${DBCON_DATASTORE_CLASS:-}" ]          && export DBCON_DATASTORE_CLASS='org.apache.jackrabbit.core.data.db.DbDataStore'
 	[ -z "${DBCON_PERSISTENCEMANAGER_CLASS:-}" ] && export DBCON_PERSISTENCEMANAGER_CLASS='org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager'
+	[ -z "${DBCON_DRIVERDELEGATE_CLASS:-}" ]     && export DBCON_DRIVERDELEGATE_CLASS='org.quartz.impl.jdbcjobstore.PostgreSQLDelegate'
 	[ -z "${DBCON_VALIDATIONQUERY:-}" ]          && export DBCON_VALIDATIONQUERY='select 1'
 
 	[ -z "${DBCON_JACKRABBIT_USER:-}" ]          && export DBCON_JACKRABBIT_USER='jcr_user'
@@ -96,6 +100,8 @@ export BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST="$(quoteSubst "${BISERVER_WEB
 export BISERVER_WEBAPP_PENTAHO_DEFAULT_DIRNAME_RE="$(quoteRe "${BISERVER_WEBAPP_PENTAHO_DEFAULT_DIRNAME}")"
 export BISERVER_WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME_RE="$(quoteRe "${BISERVER_WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}")"
 
+export INSTANCE_ID_SUBST="$(quoteSubst "${INSTANCE_ID}")"
+
 export FQSU_PROTOCOL_SUBST="$(quoteSubst "${FQSU_PROTOCOL}")"
 export FQSU_DOMAIN_SUBST="$(quoteSubst "${FQSU_DOMAIN}")"
 export FQSU_PORT_SUBST="$(quoteSubst "${FQSU_PORT}")"
@@ -113,6 +119,7 @@ export DBCON_DIALECT_CLASS_SUBST="$(quoteSubst "${DBCON_DIALECT_CLASS}")"
 export DBCON_FILESYSTEM_CLASS_SUBST="$(quoteSubst "${DBCON_FILESYSTEM_CLASS}")"
 export DBCON_DATASTORE_CLASS_SUBST="$(quoteSubst "${DBCON_DATASTORE_CLASS}")"
 export DBCON_PERSISTENCEMANAGER_CLASS_SUBST="$(quoteSubst "${DBCON_PERSISTENCEMANAGER_CLASS}")"
+export DBCON_DRIVERDELEGATE_CLASS_SUBST="$(quoteSubst "${DBCON_DRIVERDELEGATE_CLASS}")"
 export DBCON_VALIDATIONQUERY_SUBST="$(quoteSubst "${DBCON_VALIDATIONQUERY}")"
 
 export DBCON_JACKRABBIT_USER_SUBST="$(quoteSubst "${DBCON_JACKRABBIT_USER}")"

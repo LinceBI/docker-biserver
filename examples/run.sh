@@ -9,9 +9,6 @@ containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq
 
 DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:latest
 DOCKER_BISERVER_CONTAINER=pentaho-biserver
-DOCKER_BISERVER_VOLUME_HSQLDB="${DOCKER_BISERVER_CONTAINER}-hsqldb"
-DOCKER_BISERVER_VOLUME_JACKRABBIT="${DOCKER_BISERVER_CONTAINER}-jackrabbit"
-DOCKER_BISERVER_VOLUME_LOGS="${DOCKER_BISERVER_CONTAINER}-logs"
 
 # Pentaho BI Server container
 #############################
@@ -32,7 +29,7 @@ if containerExists "${DOCKER_BISERVER_CONTAINER}"; then
 fi
 
 printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
-exec docker run --detach \
+docker run --detach \
 	--name "${DOCKER_BISERVER_CONTAINER}" \
 	--hostname "${DOCKER_BISERVER_CONTAINER}" \
 	--cpus 1 \

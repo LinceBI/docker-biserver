@@ -51,7 +51,7 @@
 			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
 			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
 			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
-			<param name="schemaObjectPrefix" value="fs_ws_" />
+			<param name="schemaObjectPrefix" value="fs_ws_%INSTANCE_ID%_" />
 		</FileSystem>
 
 		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
@@ -80,7 +80,7 @@
 			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
 			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
 			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
-			<param name="schemaObjectPrefix" value="fs_ver_" />
+			<param name="schemaObjectPrefix" value="fs_ver_%INSTANCE_ID%_" />
 		</FileSystem>
 
 		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
@@ -93,8 +93,18 @@
 		</PersistenceManager>
 	</Versioning>
 
-	<Cluster id="node1">
-		<Journal class="org.apache.jackrabbit.core.journal.MemoryJournal" />
+	<Cluster id="%INSTANCE_ID%">
+		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
+			<param name="revision" value="${rep.home}/revision.log" />
+			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
+			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
+			<param name="user" value="%DBCON_JACKRABBIT_USER%"/>
+			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
+			<param name="databaseType" value="%DBCON_DATABASE_TYPE%" />
+			<param name="janitorEnabled" value="true" />
+			<param name="janitorSleep" value="86400" />
+			<param name="janitorFirstRunHourOfDay" value="3" />
+		</Journal>
 	</Cluster>
 
 </Repository>

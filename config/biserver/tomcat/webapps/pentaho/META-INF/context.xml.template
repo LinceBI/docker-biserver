@@ -2,13 +2,13 @@
 <Context path="/%BISERVER_WEBAPP_PENTAHO_DIRNAME%" docBase="webapps/%BISERVER_WEBAPP_PENTAHO_DIRNAME%">
 
 	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
-		factory="org.apache.commons.dbcp.BasicDataSourceFactory" maxTotal="20" maxIdle="5"
+		factory="org.apache.commons.dbcp.BasicDataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
 		maxWaitMillis="10000" username="%DBCON_HIBERNATE_USER%" password="%DBCON_HIBERNATE_PASSWORD%"
 		driverClassName="%DBCON_DRIVER_CLASS%" url="%DBCON_HIBERNATE_URL%"
 		validationQuery="%DBCON_VALIDATIONQUERY%" />
 
 	<Resource name="jdbc/Quartz" auth="Container" type="javax.sql.DataSource"
-		factory="org.apache.commons.dbcp.BasicDataSourceFactory" maxTotal="20" maxIdle="5"
+		factory="org.apache.commons.dbcp.BasicDataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
 		maxWaitMillis="10000" username="%DBCON_QUARTZ_USER%" password="%DBCON_QUARTZ_PASSWORD%"
 		driverClassName="%DBCON_DRIVER_CLASS%" url="%DBCON_QUARTZ_URL%"
 		validationQuery="%DBCON_VALIDATIONQUERY%" />

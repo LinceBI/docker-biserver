@@ -69,6 +69,7 @@ fi
 ########
 
 sed -r \
+	-e "s|%INSTANCE_ID%|${INSTANCE_ID_SUBST}|g" \
 	-e "s|%DBCON_DATABASE_TYPE%|${DBCON_DATABASE_TYPE_SUBST}|g" \
 	-e "s|%DBCON_FILESYSTEM_CLASS%|${DBCON_FILESYSTEM_CLASS_SUBST}|g" \
 	-e "s|%DBCON_DATASTORE_CLASS%|${DBCON_DATASTORE_CLASS_SUBST}|g" \
@@ -90,3 +91,11 @@ sed -r \
 	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
 	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/postgresql.hibernate.cfg.xml.template \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/postgresql.hibernate.cfg.xml
+
+########
+
+sed -r \
+	-e "s|%INSTANCE_ID%|${INSTANCE_ID_SUBST}|g" \
+	-e "s|%DBCON_DRIVERDELEGATE_CLASS%|${DBCON_DRIVERDELEGATE_CLASS_SUBST}|g" \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties.db.template \
+	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties

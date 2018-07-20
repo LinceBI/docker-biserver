@@ -10,13 +10,9 @@ networkExists() { docker network ls -qf name="$1" --format '{{.Name}}' | grep -F
 
 DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:latest
 DOCKER_BISERVER_CONTAINER=pentaho-biserver
-DOCKER_BISERVER_VOLUME_HSQLDB="${DOCKER_BISERVER_CONTAINER}-hsqldb"
-DOCKER_BISERVER_VOLUME_JACKRABBIT="${DOCKER_BISERVER_CONTAINER}-jackrabbit"
-DOCKER_BISERVER_VOLUME_LOGS="${DOCKER_BISERVER_CONTAINER}-logs"
 
 DOCKER_POSTGRES_IMAGE=postgres:10
 DOCKER_POSTGRES_CONTAINER="${DOCKER_BISERVER_CONTAINER}-postgres"
-DOCKER_POSTGRES_VOLUME="${DOCKER_BISERVER_CONTAINER}-postgres"
 DOCKER_POSTGRES_PASSWORD='H4!b5at+kWls-8yh4Guq' # CHANGE ME!
 
 DOCKER_NETWORK=${DOCKER_BISERVER_CONTAINER}
@@ -58,7 +54,6 @@ docker run --detach \
 	--publish '127.0.0.1:5432:5432/tcp' --publish '[::1]:5432:5432/tcp' \
 	--env PGDATA='/var/lib/postgresql/data/pgdata' \
 	--env POSTGRES_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
-	--mount type=volume,src="${DOCKER_POSTGRES_VOLUME}",dst='/var/lib/postgresql/data/' \
 	"${DOCKER_POSTGRES_IMAGE}"
 
 printf -- '%s\n' 'Waiting for database server...'
@@ -151,7 +146,7 @@ EOF
 )"
 
 printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
-exec docker run --detach \
+docker run --detach \
 	--name "${DOCKER_BISERVER_CONTAINER}" \
 	--hostname "${DOCKER_BISERVER_CONTAINER}" \
 	--network "${DOCKER_NETWORK}" \

@@ -49,7 +49,6 @@
 	</Workspace>
 
 	<Versioning rootPath="${rep.home}/version">
-
 		<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
 			<param name="path" value="${rep.home}/version" />
 		</FileSystem>
@@ -58,10 +57,9 @@
 			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
 			<param name="schemaObjectPrefix" value="version_" />
 		</PersistenceManager>
-
 	</Versioning>
 
-	<Cluster id="node1">
+	<Cluster id="%INSTANCE_ID%">
 		<Journal class="org.apache.jackrabbit.core.journal.MemoryJournal" />
 	</Cluster>
 
