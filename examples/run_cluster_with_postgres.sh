@@ -57,7 +57,9 @@ docker run --detach \
 	"${DOCKER_POSTGRES_IMAGE}"
 
 printf -- '%s\n' 'Waiting for database server...'
-until nc -zv 127.0.0.1 5432; do sleep 1; done && sleep 10
+until nc -zv 127.0.0.1 5432 >/dev/null 2>&1
+do sleep 1 && printf '.'
+done && sleep 10 && printf '\n'
 
 # Pentaho BI Server container A
 ###############################
@@ -91,7 +93,18 @@ docker run --detach \
 	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"
 
-sleep 20
+printf -- '%s\n' 'Waiting for first node...'
+(
+	LOG_FILE='tomcat/logs/pentaho.log'
+	LOG_MSG='PurRepository - Connected to the enterprise repository'
+	LOG_COUNT=2
+	until docker exec "${DOCKER_BISERVER_CONTAINER}-a" sh -c "$(cat <<-EOF
+		[ "\$(grep -F '${LOG_MSG}' '${LOG_FILE}' 2>/dev/null | wc -l)" -ge '${LOG_COUNT}' ]
+	EOF
+	)"
+	do sleep 5 && printf '.'
+	done && sleep 30 && printf '\n'
+)
 
 # Pentaho BI Server container B
 ###############################
@@ -115,6 +128,7 @@ docker run --detach \
 	--log-opt max-size=32m \
 	--publish '8081:8080/tcp' \
 	--publish '8010:8009/tcp' \
+	--env FQSU_PORT='8010' \
 	--env BISERVER_STORAGE='postgres' \
 	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
 	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
