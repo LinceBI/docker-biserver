@@ -3,22 +3,21 @@
 set -eu
 export LC_ALL=C
 
-. /usr/local/bin/setup-biserver-set-utils
+. /opt/scripts/set-utils.sh
 
 ########
 
 sed -r \
 	-e "s|%ROOT_WEBAPP_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/ROOT/index.html.template \
+	"${CATALINA_BASE}"/webapps/ROOT/index.html.tmpl \
 	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
 ########
 
 sed -r \
-	-e "s|%BISERVER_HOME%|${BISERVER_HOME_SUBST}|g" \
 	-e "s|%BISERVER_SOLUTIONS_DIRNAME%|${BISERVER_SOLUTIONS_DIRNAME_SUBST}|g" \
 	-e "s|%BISERVER_DATA_DIRNAME%|${BISERVER_DATA_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml.template \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml.tmpl \
 	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml
 
 sed -r \
@@ -31,27 +30,26 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml.template \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml.tmpl \
 	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml
 
 sed -r \
-	-e "s|%CATALINA_BASE%|${CATALINA_BASE_SUBST}|g" \
 	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/classes/log4j.xml.template \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/classes/log4j.xml.tmpl \
 	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/classes/log4j.xml
 
 ########
 
 sed -r \
 	-e "s|%BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/META-INF/context.xml.template \
+	"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/META-INF/context.xml.tmpl \
 	> "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/META-INF/context.xml
 
 ########
 
 sed -r \
 	-e "s|%FQSU%|${FQSU_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/server.properties
 
 ########
@@ -66,23 +64,22 @@ sed -r \
 	-e "s|%DBCON_JACKRABBIT_URL%|${DBCON_JACKRABBIT_URL_SUBST}|g" \
 	-e "s|%DBCON_JACKRABBIT_USER%|${DBCON_JACKRABBIT_USER_SUBST}|g" \
 	-e "s|%DBCON_JACKRABBIT_PASSWORD%|${DBCON_JACKRABBIT_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml.local.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml.local.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml
 
 ########
 
 sed -r \
 	-e "s|%DBCON_HIBERNATE_CONFIG_FILE%|${DBCON_HIBERNATE_CONFIG_FILE_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/hibernate-settings.xml
 
 sed -r \
-	-e "s|%BISERVER_HOME%|${BISERVER_HOME_SUBST}|g" \
 	-e "s|%BISERVER_SOLUTIONS_DIRNAME%|${BISERVER_SOLUTIONS_DIRNAME_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_USER%|${DBCON_HIBERNATE_USER_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_PASSWORD%|${DBCON_HIBERNATE_PASSWORD_SUBST}|g" \
 	-e "s|%DBCON_HIBERNATE_DATABASE%|${DBCON_HIBERNATE_DATABASE_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/h2.hibernate.cfg.xml.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/h2.hibernate.cfg.xml.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/hibernate/h2.hibernate.cfg.xml
 
 ########
@@ -90,7 +87,7 @@ sed -r \
 sed -r \
 	-e "s|%INSTANCE_ID%|${INSTANCE_ID_SUBST}|g" \
 	-e "s|%DBCON_DRIVERDELEGATE_CLASS%|${DBCON_DRIVERDELEGATE_CLASS_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties.local.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties.local.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties
 
 ########
@@ -103,13 +100,12 @@ sed -r \
 	-e "s|%DBCON_QUARTZ_URL%|${DBCON_QUARTZ_URL_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_USER%|${DBCON_QUARTZ_USER_SUBST}|g" \
 	-e "s|%DBCON_QUARTZ_PASSWORD%|${DBCON_QUARTZ_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties
 
 ######
 
 sed -r \
-	-e "s|%CATALINA_BASE%|${CATALINA_BASE_SUBST}|g" \
 	-e "s|%BISERVER_WEBAPP_PENTAHO_DIRNAME%|${BISERVER_WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
-	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml.template \
+	"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml.tmpl \
 	> "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml

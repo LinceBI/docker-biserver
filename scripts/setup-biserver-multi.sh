@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-. /usr/local/bin/setup-biserver-set-utils
+. /opt/scripts/set-utils.sh
 
 ########
 
@@ -50,7 +50,7 @@ for server_index in $(seq 0 "${BISERVER_COUNT}"); do
 			export "${env_key}=${env_value}"
 		done
 
-		/usr/local/bin/setup-biserver
+		/opt/scripts/setup-biserver.sh
 	)
 done
 IFS=${_IFS}
@@ -59,7 +59,7 @@ IFS=${_IFS}
 
 sed -r \
 	-e "s|%ROOT_WEBAPP_DIRNAME%|${ROOT_WEBAPP_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/ROOT/index.html.template \
+	"${CATALINA_BASE}"/webapps/ROOT/index.html.tmpl \
 	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
 ########

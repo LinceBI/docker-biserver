@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-. /usr/local/bin/setup-biserver-set-utils
+. /opt/scripts/set-utils.sh
 
 ########
 

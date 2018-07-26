@@ -20,12 +20,12 @@ ENV JDK_HOME="${JAVA_HOME}"
 ENV JRE_HOME="${JAVA_HOME}/jre"
 
 # Tomcat environment
-ENV CATALINA_HOME="/usr/share/tomcat"
-ENV CATALINA_BASE="/var/lib/tomcat"
+ENV CATALINA_HOME="/var/lib/biserver/tomcat"
+ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
 
 # Copy build scripts
-COPY --chown=root:root scripts/build-* /usr/local/bin/
+COPY --chown=root:root build-scripts/ /opt/build-scripts/
 
 ENV TOMCAT_GID=5000
 ENV TOMCAT_UID=5000
@@ -50,7 +50,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& apt-get install -y --no-install-recommends \
 		${RUN_PKGS} ${BUILD_PKGS} \
 	# Download Tomcat
-	&& /usr/local/bin/build-tomcat-dl \
+	&& /opt/build-scripts/download-tomcat.sh \
 		"${TOMCAT_MAJOR_VERSION}" \
 		"${TOMCAT_MINOR_VERSION}" \
 		"${TOMCAT_PATCH_VERSION}" \
@@ -83,14 +83,9 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& find \
 		"${CATALINA_HOME}" \
 		"${CATALINA_BASE}" \
-		-exec chown root:tomcat '{}' \; \
+		-exec chown tomcat:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
-	&& chown -R tomcat:tomcat \
-		"${CATALINA_BASE}"/conf/Catalina/ \
-		"${CATALINA_BASE}"/logs/ \
-		"${CATALINA_BASE}"/temp/ \
-		"${CATALINA_BASE}"/webapps/ \
-		"${CATALINA_BASE}"/work/ \
+	&& chmod 755 "${CATALINA_HOME}"/bin/*.sh \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS} \
 	&& apt-get autoremove -y \
@@ -98,7 +93,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& find /tmp/ -mindepth 1 -delete
 
 # Copy Tomcat libraries and placeholders
-COPY --chown=root:tomcat config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
 
 # Download Tomcat libraries
 RUN printf '%s\n' 'Downloading Tomcat libraries...' \
@@ -107,7 +102,7 @@ RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 		file=$(basename "${placeholder}" .download); \
 		printf '%s\n' "Downloading \"${file}\"..."; \
 		curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}"; \
-		chown root:tomcat "${CATALINA_BASE}"/lib/"${file}"; \
+		chown tomcat:tomcat "${CATALINA_BASE}"/lib/"${file}"; \
 		rm "${placeholder}"; \
 	done
 
@@ -145,7 +140,7 @@ ARG BISERVER_VERSION='7.1.0.0-12'
 ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
-	&& /usr/local/bin/build-biserver-dl \
+	&& /opt/build-scripts/download-biserver.sh \
 		"${BISERVER_VERSION}" \
 		"${BISERVER_MAVEN_REPO}" \
 		/tmp/biserver/ \
@@ -164,19 +159,20 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
 	) \
 	# Set permissions
+	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
-		"${BISERVER_HOME}" \
+		"${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}" \
+		"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}" \
+		"${BISERVER_HOME}"/"${BISERVER_DATA_DIRNAME}" \
 		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}" \
 		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 		-exec chown tomcat:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
-	# Create Tomcat symlink for compatibility reasons
-	&& ln -rs "${CATALINA_BASE}" "${BISERVER_HOME}"/tomcat \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
 # Copy Tomcat config
-COPY --chown=root:tomcat config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=tomcat:tomcat config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
 COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
 COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DIRNAME}"/
 COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DIRNAME}"/
@@ -187,8 +183,7 @@ COPY --chown=tomcat:tomcat config/biserver/data/ "${BISERVER_HOME}"/"${BISERVER_
 COPY --chown=root:root config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy runtime scripts
-COPY --chown=root:root scripts/setup-* /usr/local/bin/
-COPY --chown=root:root scripts/start-* /usr/local/bin/
+COPY --chown=root:root scripts/ /opt/scripts/
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
@@ -202,4 +197,4 @@ EXPOSE 8009/tcp
 
 USER tomcat:tomcat
 
-CMD ["/usr/local/bin/start-biserver"]
+CMD ["/opt/scripts/start.sh"]
