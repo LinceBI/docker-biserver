@@ -77,7 +77,7 @@ if containerExists "${DOCKER_BISERVER_CONTAINER}"; then
 	docker rm "${DOCKER_BISERVER_CONTAINER}" >/dev/null
 fi
 
-BISERVER_SETUP_JSON="$(cat <<-EOF
+SETUP_JSON="$(cat <<-EOF
   {
     "root": "helium",
     "servers": [
@@ -90,7 +90,7 @@ BISERVER_SETUP_JSON="$(cat <<-EOF
         "name": "helium",
         "enabled": true,
         "env": {
-          "BISERVER_STORAGE": "postgres",
+          "STORAGE_TYPE": "postgres",
           "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
           "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
           "DBCON_JACKRABBIT_USER": "helium_jackrabbit",
@@ -108,7 +108,7 @@ BISERVER_SETUP_JSON="$(cat <<-EOF
         "name": "neon",
         "enabled": true,
         "env": {
-          "BISERVER_STORAGE": "postgres",
+          "STORAGE_TYPE": "postgres",
           "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
           "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
           "DBCON_JACKRABBIT_USER": "neon_jackrabbit",
@@ -126,7 +126,7 @@ BISERVER_SETUP_JSON="$(cat <<-EOF
         "name": "argon",
         "enabled": true,
         "env": {
-          "BISERVER_STORAGE": "postgres",
+          "STORAGE_TYPE": "postgres",
           "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
           "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
           "DBCON_JACKRABBIT_USER": "argon_jackrabbit",
@@ -154,5 +154,5 @@ docker run --detach \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--publish '8009:8009/tcp' \
-	--env BISERVER_SETUP_JSON="${BISERVER_SETUP_JSON}" \
+	--env SETUP_JSON="${SETUP_JSON}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"

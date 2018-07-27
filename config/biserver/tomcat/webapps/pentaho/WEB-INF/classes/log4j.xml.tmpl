@@ -22,7 +22,7 @@
 
 	<!-- A time/date based rolling appender -->
 	<appender name="PENTAHOFILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="../logs/%BISERVER_WEBAPP_PENTAHO_DIRNAME%.log" />
+		<param name="File" value="../logs/%WEBAPP_PENTAHO_DIRNAME%.log" />
 		<param name="Append" value="false" />
 		<!-- Rollover at midnight each day -->
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
@@ -137,7 +137,7 @@
 
 	<!--
 	<appender name="MONDRIAN" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="../logs/%BISERVER_WEBAPP_PENTAHO_DIRNAME%_mondrian.log" />
+		<param name="File" value="../logs/%WEBAPP_PENTAHO_DIRNAME%_mondrian.log" />
 		<param name="Append" value="false" />
 		<param name="MaxFileSize" value="500KB" />
 		<param name="MaxBackupIndex" value="1" />
@@ -158,7 +158,7 @@
 
 	<!--
 	<appender name="MDXLOG" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="../logs/%BISERVER_WEBAPP_PENTAHO_DIRNAME%_mondrian_mdx.log" />
+		<param name="File" value="../logs/%WEBAPP_PENTAHO_DIRNAME%_mondrian_mdx.log" />
 		<param name="Append" value="false" />
 		<param name="MaxFileSize" value="500KB" />
 		<param name="MaxBackupIndex" value="1" />
@@ -179,7 +179,7 @@
 
 	<!--
 	<appender name="SQLLOG" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="../logs/%BISERVER_WEBAPP_PENTAHO_DIRNAME%_mondrian_sql.log" />
+		<param name="File" value="../logs/%WEBAPP_PENTAHO_DIRNAME%_mondrian_sql.log" />
 		<param name="Append" value="false" />
 		<param name="MaxFileSize" value="500KB" />
 		<param name="MaxBackupIndex" value="1" />

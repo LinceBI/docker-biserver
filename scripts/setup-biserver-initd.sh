@@ -8,7 +8,7 @@ export LC_ALL=C
 ########
 
 ROOT_DIR="${BISERVER_HOME}"
-PLUGINS_DIR="${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DIRNAME}"/system
+PLUGINS_DIR="${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system
 
 for file in "${BISERVER_INITD}"/*; do
 	[ -e "${file}" ] || continue

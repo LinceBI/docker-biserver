@@ -20,7 +20,7 @@ export CATALINA_OPTS="$(cat <<-EOF
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
 	-Dfile.encoding=utf8
-	-DDI_HOME="${BISERVER_HOME}"/"${BISERVER_KETTLE_DIRNAME}"
+	-DDI_HOME="${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
 	${CATALINA_OPTS_EXTRA-
 		-Xms1024m
 		-Xmx4096m

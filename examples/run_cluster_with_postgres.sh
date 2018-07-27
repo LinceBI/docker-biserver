@@ -88,7 +88,7 @@ docker run --detach \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--publish '8009:8009/tcp' \
-	--env BISERVER_STORAGE='postgres' \
+	--env STORAGE_TYPE='postgres' \
 	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
 	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"
@@ -129,7 +129,7 @@ docker run --detach \
 	--publish '8081:8080/tcp' \
 	--publish '8010:8009/tcp' \
 	--env FQSU_PORT='8010' \
-	--env BISERVER_STORAGE='postgres' \
+	--env STORAGE_TYPE='postgres' \
 	--env DBCON_HOST="${DOCKER_POSTGRES_CONTAINER}" \
 	--env DBCON_PASSWORD="${DOCKER_POSTGRES_PASSWORD}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"

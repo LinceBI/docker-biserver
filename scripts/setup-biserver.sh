@@ -16,11 +16,11 @@ fi
 [ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
 [ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
 [ -z "${FQSU_PORT-}" ]     && export FQSU_PORT='8080'
-[ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${BISERVER_WEBAPP_PENTAHO_DIRNAME}/"
+[ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
-[ -z "${BISERVER_MULTI_SETUP_ENABLED-}" ] && export BISERVER_MULTI_SETUP_ENABLED='false'
+[ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
 
-if [ "${BISERVER_STORAGE}" = 'local' ]; then
+if [ "${STORAGE_TYPE}" = 'local' ]; then
 
 	[ -z "${DBCON_HOST-}" ]     && export DBCON_HOST=
 	[ -z "${DBCON_PORT-}" ]     && export DBCON_PORT=
@@ -53,7 +53,7 @@ if [ "${BISERVER_STORAGE}" = 'local' ]; then
 	[ -z "${DBCON_QUARTZ_DATABASE-}" ] && export DBCON_QUARTZ_DATABASE='quartz'
 	[ -z "${DBCON_QUARTZ_URL-}" ]      && export DBCON_QUARTZ_URL="jdbc:hsqldb:hsql://localhost/${DBCON_QUARTZ_DATABASE}"
 
-elif [ "${BISERVER_STORAGE}" = 'postgres' ]; then
+elif [ "${STORAGE_TYPE}" = 'postgres' ]; then
 
 	[ -z "${DBCON_HOST-}" ]     && export DBCON_HOST='localhost'
 	[ -z "${DBCON_PORT-}" ]     && export DBCON_PORT='5432'
@@ -87,14 +87,13 @@ elif [ "${BISERVER_STORAGE}" = 'postgres' ]; then
 	[ -z "${DBCON_QUARTZ_URL-}" ]      && export DBCON_QUARTZ_URL="jdbc:postgresql://${DBCON_HOST}:${DBCON_PORT}/${DBCON_QUARTZ_DATABASE}"
 
 else
-	logFail "Unknown storage type: ${BISERVER_STORAGE}"
+	logFail "Unknown storage type: ${STORAGE_TYPE}"
 	exit 1
 fi
 
 ########
 
 # Export all environment variables escaped so they can be used as a replacement in sed
-
 ENVIRON="$(awk 'BEGIN {
   for (v in ENVIRON) {
     if (v !~ /^(HOME|PWD|SHELL|USER|GROUP|UID|GID)$/) {
@@ -104,7 +103,6 @@ ENVIRON="$(awk 'BEGIN {
     }
   }
 }')"
-
 _IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 for env in ${ENVIRON}; do
 	env_key="$(printf -- '%s' "${env}" | cut -f1)"
@@ -123,7 +121,7 @@ IFS=$_IFS
 /opt/scripts/setup-biserver-general.sh
 
 # PostgreSQL setup
-if [ "${BISERVER_STORAGE}" = 'postgres' ]; then
+if [ "${STORAGE_TYPE}" = 'postgres' ]; then
 	/opt/scripts/setup-biserver-postgres.sh
 fi
 
