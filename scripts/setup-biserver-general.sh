@@ -109,3 +109,8 @@ sed -r \
 	-e "s|%WEBAPP_PENTAHO_DIRNAME%|${WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
 	"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml.tmpl \
 	> "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/osgi/log4j.xml
+
+######
+
+sed -ri "s|^(DI_HOME)=.*$|\1=\"\$DIR/${KETTLE_DIRNAME_SUBST}\"|" "${BISERVER_HOME}"/start-pentaho.sh
+sed -ri "s|^(SET DI_HOME)=.*$|\1=\"%~dp0${KETTLE_DIRNAME_SUBST}\"|" "${BISERVER_HOME}"/start-pentaho.bat

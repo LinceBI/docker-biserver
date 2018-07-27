@@ -26,7 +26,6 @@ build: save-image export-tgz
 build-image:
 	docker build \
 		--tag '$(DOCKER_IMAGE):latest' \
-		--tag '$(DOCKER_IMAGE):$(BISERVER_VERSION)' \
 		--build-arg BISERVER_VERSION='$(BISERVER_VERSION)' \
 		--build-arg BISERVER_MAVEN_REPO='$(BISERVER_MAVEN_REPO)' \
 		--file '$(DOCKERFILE)' \
@@ -34,16 +33,16 @@ build-image:
 
 save-image: build-image
 	mkdir -p -- '$(DIST_DIR)'
-	docker save -- '$(DOCKER_IMAGE)' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)-$(BISERVER_VERSION).tgz'
+	docker save -- '$(DOCKER_IMAGE):latest' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)-$(BISERVER_VERSION).tgz'
 
 export-tgz: build-image
 	mkdir -p -- '$(DIST_DIR)'
-	docker run --rm -- '$(DOCKER_IMAGE)' /opt/scripts/export.sh > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)-$(BISERVER_VERSION)-standalone.tgz'
+	docker run --rm -- '$(DOCKER_IMAGE):latest' /opt/scripts/export.sh > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)-$(BISERVER_VERSION)-standalone.tgz'
 
 clean: clean-image clean-dist
 
 clean-image: clean-container
-	-docker rmi -- '$(DOCKER_IMAGE)'
+	-docker rmi -- '$(DOCKER_IMAGE):latest'
 
 clean-container:
 	-docker stop -- '$(DOCKER_CONTAINER)'

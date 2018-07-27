@@ -158,6 +158,10 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" -xvf ./pentaho.war \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
 	) \
+	# Download Pentaho BI Server resources
+	&& /opt/build-scripts/download-biserver-resources.sh \
+		"${BISERVER_VERSION}" \
+		"${BISERVER_HOME}" \
 	# Set permissions
 	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
@@ -168,6 +172,7 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 		-exec chown tomcat:tomcat '{}' \; \
 		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
+	&& chmod 755 "${BISERVER_HOME}"/*.sh \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
