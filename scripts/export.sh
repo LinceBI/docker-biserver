@@ -16,4 +16,5 @@ GZIP=-4n tar \
 	--xattrs --acls --selinux \
 	--create --gzip --file=- \
 	--exclude '*.tmpl' \
+	--exclude '.placeholder' \
 	--directory "${BISERVER_HOME}" .
