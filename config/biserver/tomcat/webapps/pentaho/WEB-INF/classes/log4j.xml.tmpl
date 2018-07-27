@@ -38,6 +38,16 @@
 		</layout>
 	</appender>
 
+	<appender name="pdi-execution-appender" class="org.apache.log4j.rolling.RollingFileAppender">
+		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+			<param name="ActiveFileName"  value="../logs/%WEBAPP_PENTAHO_DIRNAME%_pdi.log" />
+			<param name="FileNamePattern" value="../logs/%WEBAPP_PENTAHO_DIRNAME%_pdi.%d{yyyy-MM-dd}.log" />
+		</rollingPolicy>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p &lt;%t&gt; %m%n" />
+		</layout>
+	</appender>
+
 	<!-- ============================== -->
 	<!-- Append messages to the console -->
 	<!-- ============================== -->
@@ -54,6 +64,10 @@
 	<!-- ================ -->
 	<!-- Limit categories -->
 	<!-- ================ -->
+
+	<category name="org.apache.hadoop.io.retry">
+		<priority value="INFO" />
+	</category>
 
 	<category name="org.hibernate">
 		<priority value="ERROR" />
@@ -118,6 +132,16 @@
 	<category name="RepositoryImportLog">
 		<priority value="INFO" />
 	</category>
+
+	<logger name="org.pentaho.di.trans.Trans" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="pdi-execution-appender" />
+	</logger>
+
+	<logger name="org.pentaho.di.job.Job" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="pdi-execution-appender" />
+	</logger>
 
 	<!-- ======================= -->
 	<!-- Setup the Root category -->

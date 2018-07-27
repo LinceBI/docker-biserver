@@ -136,7 +136,7 @@ ENV STORAGE_TYPE="${STORAGE_TYPE}"
 ARG SETUP_JSON=
 ENV SETUP_JSON="${SETUP_JSON}"
 
-ARG BISERVER_VERSION='7.1.0.0-12'
+ARG BISERVER_VERSION='8.1.0.0-365'
 ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
