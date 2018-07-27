@@ -17,7 +17,7 @@ WAS_DEFAULT_NAME_FOUND=false
 
 _IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 for server_index in $(seq 0 "${BISERVER_COUNT}"); do
-	server=$(printf -- '%s' "${BISERVER_LIST}" | jq --arg i "${server_index}" '.[$i|tonumber]')
+	server=$(printf -- '%s' "${BISERVER_LIST}" | jq --arg i "${server_index}" ".[\$i|tonumber]")
 	name=$(printf -- '%s' "${server}" | jq -r '.name')
 	env_map=$(printf -- '%s' "${server}" | jq '.env')
 	env_keys=$(printf -- '%s' "${env_map}" | jq -r 'keys[]')
@@ -46,7 +46,7 @@ for server_index in $(seq 0 "${BISERVER_COUNT}"); do
 		fi
 
 		for env_key in ${env_keys}; do
-			env_value=$(printf -- '%s' "${env_map}" | jq -r --arg k "${env_key}" '.[$k]')
+			env_value=$(printf -- '%s' "${env_map}" | jq -r --arg k "${env_key}" ".[\$k]")
 			export "${env_key}=${env_value}"
 		done
 
@@ -66,8 +66,8 @@ sed -r \
 
 if [ "${WAS_DEFAULT_NAME_FOUND}" != true ]; then
 	rm -rf \
-		"${BISERVER_HOME}"/"${BISERVER_SOLUTIONS_DEFAULT_DIRNAME}"/ \
-		"${BISERVER_HOME}"/"${BISERVER_DATA_DEFAULT_DIRNAME}"/ \
-		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/ \
-		"${CATALINA_BASE}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/
+		"${BISERVER_HOME:?}"/"${BISERVER_SOLUTIONS_DEFAULT_DIRNAME}"/ \
+		"${BISERVER_HOME:?}"/"${BISERVER_DATA_DEFAULT_DIRNAME}"/ \
+		"${CATALINA_BASE:?}"/webapps/"${BISERVER_WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/ \
+		"${CATALINA_BASE:?}"/webapps/"${BISERVER_WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/
 fi

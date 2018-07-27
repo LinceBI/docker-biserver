@@ -15,6 +15,7 @@ fi
 ########
 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME}/lib"
+# shellcheck disable=SC2155
 export CATALINA_OPTS="$(cat <<-EOF
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
