@@ -32,8 +32,6 @@ printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
 docker run --detach \
 	--name "${DOCKER_BISERVER_CONTAINER}" \
 	--hostname "${DOCKER_BISERVER_CONTAINER}" \
-	--cpus 1 \
-	--memory 2048mb \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
