@@ -7,6 +7,8 @@ export LC_ALL=C
 
 ########
 
+[ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
+
 if [ -z "${INSTANCE_ID-}" ]; then
 	# Each instance has a random 12 characters alphanumeric string
 	INSTANCE_ID="$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)"
@@ -18,7 +20,7 @@ fi
 [ -z "${FQSU_PORT-}" ]     && export FQSU_PORT='8080'
 [ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
-[ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
+[ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
 if [ "${STORAGE_TYPE}" = 'local' ]; then
 
