@@ -17,12 +17,12 @@ DOCKER_CONTAINER := $(DOCKER_IMAGE_NAME)
 DOCKERFILE := $(MKFILE_DIR)/Dockerfile
 
 .PHONY: all \
-	build build-image save-image export-tgz \
+	build build-image save-image save-standalone \
 	clean clean-image clean-container clean-dist
 
 all: build
 
-build: save-image export-tgz
+build: save-image save-standalone
 
 build-image:
 	docker build \
@@ -36,7 +36,7 @@ save-image: build-image
 	mkdir -p -- '$(DIST_DIR)'
 	docker save -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG).tgz'
 
-export-tgz: build-image
+save-standalone: build-image
 	mkdir -p -- '$(DIST_DIR)'
 	docker run --rm -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' /opt/scripts/export.sh > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG)_standalone.tgz'
 
