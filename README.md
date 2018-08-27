@@ -4,11 +4,13 @@ Imagen de Docker para Pentaho BI Server.
 
 ## Construcción de la imagen
 
-La construcción de esta imagen sigue el procedimiento estándar de Docker con el comando `docker build`, no obstante para facilitar el proceso se dispone de un Makefile con las siguientes tareas:
+La construcción de esta imagen sigue el procedimiento estándar de Docker con el comando `docker build`, no obstante, para facilitar el proceso se
+dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguientes tareas:
 
  * **`make build-image`**: construye la imagen.
  * **`make save-image`**: exporta en el directorio `./dist/` un tarball de la imagen.
- * **`make save-standalone`**: exporta en el directorio `./dist/` un tarball de la instalación con una estructura similar a la que podemos encontrar en los ZIP de Pentaho BI Server en Sourceforge.
+ * **`make save-standalone`**: exporta en el directorio `./dist/` un tarball de la instalación con una estructura similar a la que podemos encontrar
+   en los ZIP de Pentaho BI Server en Sourceforge.
  * **`make build`**: ejecuta las tareas `build-image`, `save-image` y `save-standalone`.
 
 ## Argumentos del Dockerfile
@@ -17,7 +19,8 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
  * **`TOMCAT_MINOR_VERSION` (`5` por defecto)**: versión menor de Tomcat.
  * **`TOMCAT_PATCH_VERSION` (`latest` por defecto)**: versión parche de Tomcat.
  * **`BISERVER_VERSION` (`8.1.0.0-365` por defecto)**: versión de Pentaho BI Server.
- * **`BISERVER_MAVEN_REPO` (`https://nexus.pentaho.org/content/groups/omni/` por defecto)**: repositorio de Maven del que se descargan las dependencias necesarias para la instalación de Pentaho BI Server.
+ * **`BISERVER_MAVEN_REPO` (`https://nexus.pentaho.org/content/groups/omni/` por defecto)**: repositorio de Maven del que se descargan las
+   dependencias necesarias para la instalación de Pentaho BI Server.
  * **`KETTLE_DIRNAME` (`kettle` por defecto)**: nombre que tendrá el directorio `./kettle/`.
  * **`SOLUTIONS_DIRNAME` (`pentaho-solutions` por defecto)**: nombre que tendrá el directorio `./pentaho-solutions/`.
  * **`DATA_DIRNAME` (`data` por defecto)**: nombre que tendrá el directorio `./data/`.
@@ -30,7 +33,8 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
  * **`SOLUTIONS_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
  * **`DATA_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
  * **`WEBAPP_PENTAHO_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
- * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
+ * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será
+   renombrado.
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`8080` por defecto)**: puerto del Fully Qualified Server URL.
@@ -52,7 +56,8 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 
 ## JSON de configuración (múltiples Pentaho BI Server en el mismo Tomcat)
 
-Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo Tomcat. Si se desea una configuración más compleja, es posible definir la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estructura:
+Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo Tomcat. Si se desea una configuración más compleja, es posible definir
+la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estructura:
 
 ```json
 {
@@ -82,7 +87,8 @@ Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo T
 
 ## Instalación de plugins y ejecución de scripts personalizados
 
-Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos contenidos en el directorio `./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
+Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos contenidos en el directorio
+`./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
 
  * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`.
  * **`*.zip`, `*.tgz`, `*.kar` y múltiples formatos de compresión más:** son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
