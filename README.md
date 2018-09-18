@@ -90,9 +90,14 @@ la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estru
 Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos contenidos en el directorio
 `./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
 
- * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`.
- * **`*.zip`, `*.tgz`, `*.kar` y múltiples formatos de compresión más:** son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
- * **`*.root.zip`, `*.root.tgz`, `*.root.kar` y múltiples formatos de compresión más:** son extraídos en `${BISERVER_HOME}`.
+ * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
+   anteriormente documentadas.
+ * **`*.tar`, `*.tar.gz`, `*.tar.bz2`, `*.tar.xz`, `*.zip`, `*.kar`**:
+   * **`*.__webapp__.*`**: son extraídos en `"${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
+   * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
+   * **`*.__solutions__.*`**: son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
+   * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
+   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`. 
 
 Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
 

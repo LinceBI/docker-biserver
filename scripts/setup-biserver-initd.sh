@@ -7,7 +7,18 @@ export LC_ALL=C
 
 ########
 
-PLUGINS_DIR="${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system
+extractArchive() {
+	source="${1:?}"
+	target="${2:?}"
+	case "${source}" in
+		*.tar|*.tar.gz|*.tar.bz2|*.tar.xz)
+			tar -C "${target}" -xf "${source}"
+			;;
+		*.zip|*.kar)
+			unzip -qod "${target}" "${source}"
+			;;
+	esac
+}
 
 initdFromDir() {
 	directory="${1:?}"
@@ -19,21 +30,30 @@ initdFromDir() {
 				logInfo "Executing script \"${file}\""
 				cd "${BISERVER_HOME}" && "${file}"
 				;;
-			# Extract zip files
-			*.zip|*.kar)
-				logInfo "Installing plugin \"${file}\""
-				unzip -qod "${PLUGINS_DIR}" "${file}"
-				;;
-			# Extract tar files
-			*.tar\
-			|*.tar.gz|*.tgz|*.taz\
-			|*.tar.bz2|*.tbz|*.tbz2|*.tz2\
-			|*.tar.lz\
-			|*.tar.lzma|*.tlz\
-			|*.tar.lzo\
-			|*.tar.xz|*.txz)
-				logInfo "Installing plugin \"${file}\""
-				tar -C "${PLUGINS_DIR}" -xf "${file}"
+			# Extract archives
+			*.tar|*.tar.gz|*.tar.bz2|*.tar.xz|*.zip|*.kar)
+				case "${file}" in
+					*.__webapp__.*)
+						logInfo "Extracting file \"${file}\" to Pentaho webapp directory ..."
+						extractArchive "${file}" "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"
+						;;
+					*.__style_webapp__.*)
+						logInfo "Extracting file \"${file}\" to Pentaho Style webapp directory ..."
+						extractArchive "${file}" "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"
+						;;
+					*.__solutions__.*)
+						logInfo "Extracting file \"${file}\" to solutions directory ..."
+						extractArchive "${file}" "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"
+						;;
+					*.__data__.*)
+						logInfo "Extracting file \"${file}\" to data directory ..."
+						extractArchive "${file}" "${BISERVER_HOME}"/"${DATA_DIRNAME}"
+						;;
+					*)
+						logInfo "Installing plugin \"${file}\"..."
+						extractArchive "${file}" "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system
+						;;
+				esac
 				;;
 			*)
 				logWarn "Ignoring file \"${file}\""
