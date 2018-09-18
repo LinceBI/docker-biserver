@@ -98,7 +98,10 @@ Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar T
    * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
    * **`*.__solutions__.*`**: son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
    * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
-   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`. 
+   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+
+Los archivos posicionados directamente en `./config/biserver.init.d/` son aplicados a todas las instancias de Pentaho BI Server, es posible aplicar un
+archivo a una sola instancia creando un subdirectorio con el nombre de esta y colocando en él los archivos.
 
 Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
 
