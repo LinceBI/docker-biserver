@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/%WEBAPP_PENTAHO_DIRNAME%" docBase="webapps/%WEBAPP_PENTAHO_DIRNAME%">
+
+	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="%POSTGRES_HIBERNATE_USER%" password="%POSTGRES_HIBERNATE_PASSWORD%"
+		driverClassName="org.postgresql.Driver" url="%POSTGRES_HIBERNATE_URL%"
+		validationQuery="select 1" />
+
+	<Resource name="jdbc/Quartz" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="%POSTGRES_QUARTZ_USER%" password="%POSTGRES_QUARTZ_PASSWORD%"
+		driverClassName="org.postgresql.Driver" url="%POSTGRES_QUARTZ_URL%"
+		validationQuery="select 1" />
+
+</Context>

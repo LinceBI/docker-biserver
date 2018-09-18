@@ -20,73 +20,46 @@ fi
 [ -z "${FQSU_PORT-}" ]     && export FQSU_PORT='8080'
 [ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
+[ -z "${HSQLDB_PORT-}" ]     && export HSQLDB_PORT='9001'
+[ -z "${KARAF_STARTPORT-}" ] && export KARAF_STARTPORT='8801'
+[ -z "${KARAF_ENDPORT-}" ] && export KARAF_ENDPORT='8899'
+[ -z "${OSGI_SERVICE_STARTPORT-}" ] && export OSGI_SERVICE_STARTPORT='9050'
+[ -z "${OSGI_SERVICE_ENDPORT-}" ] && export OSGI_SERVICE_ENDPORT='9149'
+[ -z "${RMI_SERVER_STARTPORT-}" ] && export RMI_SERVER_STARTPORT='44444'
+[ -z "${RMI_SERVER_ENDPORT-}" ] && export RMI_SERVER_ENDPORT='44499'
+[ -z "${RMI_REGISTRY_STARTPORT-}" ] && export RMI_REGISTRY_STARTPORT='11098'
+[ -z "${RMI_REGISTRY_ENDPORT-}" ] && export RMI_REGISTRY_ENDPORT='11190'
+
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
 if [ "${STORAGE_TYPE}" = 'local' ]; then
 
-	[ -z "${DBCON_HOST-}" ]     && export DBCON_HOST=
-	[ -z "${DBCON_PORT-}" ]     && export DBCON_PORT=
-	[ -z "${DBCON_USER-}" ]     && export DBCON_USER=
-	[ -z "${DBCON_PASSWORD-}" ] && export DBCON_PASSWORD='password'
-	[ -z "${DBCON_DATABASE-}" ] && export DBCON_DATABASE=
-
-	[ -z "${DBCON_DATABASE_TYPE-}" ]            && export DBCON_DATABASE_TYPE='hsqldb'
-	[ -z "${DBCON_DRIVER_CLASS-}" ]             && export DBCON_DRIVER_CLASS='org.hsqldb.jdbcDriver'
-	[ -z "${DBCON_DIALECT_CLASS-}" ]            && export DBCON_DIALECT_CLASS='org.hibernate.dialect.HSQLDialect'
-	[ -z "${DBCON_FILESYSTEM_CLASS-}" ]         && export DBCON_FILESYSTEM_CLASS='org.apache.jackrabbit.core.fs.local.LocalFileSystem'
-	[ -z "${DBCON_DATASTORE_CLASS-}" ]          && export DBCON_DATASTORE_CLASS='org.apache.jackrabbit.core.data.FileDataStore'
-	[ -z "${DBCON_PERSISTENCEMANAGER_CLASS-}" ] && export DBCON_PERSISTENCEMANAGER_CLASS='org.apache.jackrabbit.core.persistence.pool.H2PersistenceManager'
-	[ -z "${DBCON_DRIVERDELEGATE_CLASS-}" ]     && export DBCON_DRIVERDELEGATE_CLASS='org.quartz.impl.jdbcjobstore.PostgreSQLDelegate'
-	[ -z "${DBCON_VALIDATIONQUERY-}" ]          && export DBCON_VALIDATIONQUERY='select count(*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES'
-
-	[ -z "${DBCON_JACKRABBIT_USER-}" ]     && export DBCON_JACKRABBIT_USER='jcr_user'
-	[ -z "${DBCON_JACKRABBIT_PASSWORD-}" ] && export DBCON_JACKRABBIT_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_JACKRABBIT_DATABASE-}" ] && export DBCON_JACKRABBIT_DATABASE='jackrabbit'
-	[ -z "${DBCON_JACKRABBIT_URL-}" ]      && export DBCON_JACKRABBIT_URL="jdbc:h2:\${rep.home}/version/db"
-
-	[ -z "${DBCON_HIBERNATE_USER-}" ]        && export DBCON_HIBERNATE_USER='hibuser'
-	[ -z "${DBCON_HIBERNATE_PASSWORD-}" ]    && export DBCON_HIBERNATE_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_HIBERNATE_DATABASE-}" ]    && export DBCON_HIBERNATE_DATABASE='hibernate'
-	[ -z "${DBCON_HIBERNATE_URL-}" ]         && export DBCON_HIBERNATE_URL="jdbc:hsqldb:hsql://localhost/${DBCON_HIBERNATE_DATABASE}"
-	[ -z "${DBCON_HIBERNATE_CONFIG_FILE-}" ] && export DBCON_HIBERNATE_CONFIG_FILE='system/hibernate/hsql.hibernate.cfg.xml'
-
-	[ -z "${DBCON_QUARTZ_USER-}" ]     && export DBCON_QUARTZ_USER='pentaho_user'
-	[ -z "${DBCON_QUARTZ_PASSWORD-}" ] && export DBCON_QUARTZ_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_QUARTZ_DATABASE-}" ] && export DBCON_QUARTZ_DATABASE='quartz'
-	[ -z "${DBCON_QUARTZ_URL-}" ]      && export DBCON_QUARTZ_URL="jdbc:hsqldb:hsql://localhost/${DBCON_QUARTZ_DATABASE}"
+	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/hsql.hibernate.cfg.xml'
 
 elif [ "${STORAGE_TYPE}" = 'postgres' ]; then
 
-	[ -z "${DBCON_HOST-}" ]     && export DBCON_HOST='localhost'
-	[ -z "${DBCON_PORT-}" ]     && export DBCON_PORT='5432'
-	[ -z "${DBCON_USER-}" ]     && export DBCON_USER='postgres'
-	[ -z "${DBCON_PASSWORD-}" ] && export DBCON_PASSWORD="${DBCON_USER}"
-	[ -z "${DBCON_DATABASE-}" ] && export DBCON_DATABASE="${DBCON_USER}"
+	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
 
-	[ -z "${DBCON_DATABASE_TYPE-}" ]            && export DBCON_DATABASE_TYPE='postgresql'
-	[ -z "${DBCON_DRIVER_CLASS-}" ]             && export DBCON_DRIVER_CLASS='org.postgresql.Driver'
-	[ -z "${DBCON_DIALECT_CLASS-}" ]            && export DBCON_DIALECT_CLASS='org.hibernate.dialect.PostgreSQLDialect'
-	[ -z "${DBCON_FILESYSTEM_CLASS-}" ]         && export DBCON_FILESYSTEM_CLASS='org.apache.jackrabbit.core.fs.db.DbFileSystem'
-	[ -z "${DBCON_DATASTORE_CLASS-}" ]          && export DBCON_DATASTORE_CLASS='org.apache.jackrabbit.core.data.db.DbDataStore'
-	[ -z "${DBCON_PERSISTENCEMANAGER_CLASS-}" ] && export DBCON_PERSISTENCEMANAGER_CLASS='org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager'
-	[ -z "${DBCON_DRIVERDELEGATE_CLASS-}" ]     && export DBCON_DRIVERDELEGATE_CLASS='org.quartz.impl.jdbcjobstore.PostgreSQLDelegate'
-	[ -z "${DBCON_VALIDATIONQUERY-}" ]          && export DBCON_VALIDATIONQUERY='select 1'
+	[ -z "${POSTGRES_HOST-}" ]     && export POSTGRES_HOST='localhost'
+	[ -z "${POSTGRES_PORT-}" ]     && export POSTGRES_PORT='5432'
+	[ -z "${POSTGRES_USER-}" ]     && export POSTGRES_USER='postgres'
+	[ -z "${POSTGRES_PASSWORD-}" ] && export POSTGRES_PASSWORD="${POSTGRES_USER}"
+	[ -z "${POSTGRES_DATABASE-}" ] && export POSTGRES_DATABASE="${POSTGRES_USER}"
 
-	[ -z "${DBCON_JACKRABBIT_USER-}" ]     && export DBCON_JACKRABBIT_USER='jcr_user'
-	[ -z "${DBCON_JACKRABBIT_PASSWORD-}" ] && export DBCON_JACKRABBIT_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_JACKRABBIT_DATABASE-}" ] && export DBCON_JACKRABBIT_DATABASE='jackrabbit'
-	[ -z "${DBCON_JACKRABBIT_URL-}" ]      && export DBCON_JACKRABBIT_URL="jdbc:postgresql://${DBCON_HOST}:${DBCON_PORT}/${DBCON_JACKRABBIT_DATABASE}"
+	[ -z "${POSTGRES_JACKRABBIT_USER-}" ]     && export POSTGRES_JACKRABBIT_USER='jcr_user'
+	[ -z "${POSTGRES_JACKRABBIT_PASSWORD-}" ] && export POSTGRES_JACKRABBIT_PASSWORD="${POSTGRES_PASSWORD}"
+	[ -z "${POSTGRES_JACKRABBIT_DATABASE-}" ] && export POSTGRES_JACKRABBIT_DATABASE='jackrabbit'
+	[ -z "${POSTGRES_JACKRABBIT_URL-}" ]      && export POSTGRES_JACKRABBIT_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_JACKRABBIT_DATABASE}"
 
-	[ -z "${DBCON_HIBERNATE_USER-}" ]        && export DBCON_HIBERNATE_USER='hibuser'
-	[ -z "${DBCON_HIBERNATE_PASSWORD-}" ]    && export DBCON_HIBERNATE_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_HIBERNATE_DATABASE-}" ]    && export DBCON_HIBERNATE_DATABASE='hibernate'
-	[ -z "${DBCON_HIBERNATE_URL-}" ]         && export DBCON_HIBERNATE_URL="jdbc:postgresql://${DBCON_HOST}:${DBCON_PORT}/${DBCON_HIBERNATE_DATABASE}"
-	[ -z "${DBCON_HIBERNATE_CONFIG_FILE-}" ] && export DBCON_HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
+	[ -z "${POSTGRES_HIBERNATE_USER-}" ]        && export POSTGRES_HIBERNATE_USER='hibuser'
+	[ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ]    && export POSTGRES_HIBERNATE_PASSWORD="${POSTGRES_PASSWORD}"
+	[ -z "${POSTGRES_HIBERNATE_DATABASE-}" ]    && export POSTGRES_HIBERNATE_DATABASE='hibernate'
+	[ -z "${POSTGRES_HIBERNATE_URL-}" ]         && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
 
-	[ -z "${DBCON_QUARTZ_USER-}" ]     && export DBCON_QUARTZ_USER='pentaho_user'
-	[ -z "${DBCON_QUARTZ_PASSWORD-}" ] && export DBCON_QUARTZ_PASSWORD="${DBCON_PASSWORD}"
-	[ -z "${DBCON_QUARTZ_DATABASE-}" ] && export DBCON_QUARTZ_DATABASE='quartz'
-	[ -z "${DBCON_QUARTZ_URL-}" ]      && export DBCON_QUARTZ_URL="jdbc:postgresql://${DBCON_HOST}:${DBCON_PORT}/${DBCON_QUARTZ_DATABASE}"
+	[ -z "${POSTGRES_QUARTZ_USER-}" ]     && export POSTGRES_QUARTZ_USER='pentaho_user'
+	[ -z "${POSTGRES_QUARTZ_PASSWORD-}" ] && export POSTGRES_QUARTZ_PASSWORD="${POSTGRES_PASSWORD}"
+	[ -z "${POSTGRES_QUARTZ_DATABASE-}" ] && export POSTGRES_QUARTZ_DATABASE='quartz'
+	[ -z "${POSTGRES_QUARTZ_URL-}" ]      && export POSTGRES_QUARTZ_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_QUARTZ_DATABASE}"
 
 else
 	logFail "Unknown storage type: ${STORAGE_TYPE}"
@@ -124,7 +97,9 @@ IFS=$_IFS
 
 # PostgreSQL setup
 if [ "${STORAGE_TYPE}" = 'postgres' ]; then
-	/opt/scripts/setup-biserver-postgres.sh
+	/opt/scripts/setup-biserver-storage-postgres.sh
+else
+	/opt/scripts/setup-biserver-storage-local.sh
 fi
 
 # biserver.init.d setup

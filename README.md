@@ -38,21 +38,22 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`8080` por defecto)**: puerto del Fully Qualified Server URL.
+ * **`HSQLDB_PORT` (`9001` por defecto)**: puerto de HSQLDB.
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local` o `postgres`.
- * **`DBCON_HOST`**: host para la conexión con la BBDD.
- * **`DBCON_PORT`**: puerto para la conexión con la BBDD.
- * **`DBCON_USER`**: usuario para la conexión con la BBDD.
- * **`DBCON_PASSWORD`**: contraseña para la conexión con la BBDD.
- * **`DBCON_DATABASE`**: nombre de la BBDD inicial (no se realizará ninguna operación sobre ella).
- * **`DBCON_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit.
- * **`DBCON_JACKRABBIT_PASSWORD` (`${DBCON_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
- * **`DBCON_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
- * **`DBCON_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate.
- * **`DBCON_HIBERNATE_PASSWORD` (`${DBCON_PASSWORD}` por defecto)**: contraseña del usuario de Hibernate.
- * **`DBCON_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
- * **`DBCON_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
- * **`DBCON_QUARTZ_PASSWORD` (`${DBCON_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
- * **`DBCON_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
+ * **`POSTGRES_HOST`**: host para la conexión con la BBDD.
+ * **`POSTGRES_PORT`**: puerto para la conexión con la BBDD.
+ * **`POSTGRES_USER`**: usuario para la conexión con la BBDD.
+ * **`POSTGRES_PASSWORD`**: contraseña para la conexión con la BBDD.
+ * **`POSTGRES_DATABASE`**: nombre de la BBDD inicial (no se realizará ninguna operación sobre ella).
+ * **`POSTGRES_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit.
+ * **`POSTGRES_JACKRABBIT_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
+ * **`POSTGRES_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
+ * **`POSTGRES_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate.
+ * **`POSTGRES_HIBERNATE_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Hibernate.
+ * **`POSTGRES_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
+ * **`POSTGRES_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
+ * **`POSTGRES_QUARTZ_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
+ * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
 
 ## JSON de configuración (múltiples Pentaho BI Server en el mismo Tomcat)
 
@@ -68,10 +69,10 @@ la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estru
       "enabled": true, // Si el valor es "false", la instancia no será configurada.
       "env": { // Variables de entorno para configurar la instancia.
           "STORAGE_TYPE": "postgres",
-          "DBCON_HOST": "postgres.local",
-          "DBCON_USER": "postgres",
-          "DBCON_PASSWORD": "1234",
-          "DBCON_DATABASE": "postgres",
+          "POSTGRES_HOST": "postgres.local",
+          "POSTGRES_USER": "postgres",
+          "POSTGRES_PASSWORD": "1234",
+          "POSTGRES_DATABASE": "postgres",
           // ...
       }
     },

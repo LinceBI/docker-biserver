@@ -91,17 +91,17 @@ SETUP_JSON="$(cat <<-EOF
         "enabled": true,
         "env": {
           "STORAGE_TYPE": "postgres",
-          "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
-          "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
-          "DBCON_JACKRABBIT_USER": "helium_jackrabbit",
-          "DBCON_JACKRABBIT_PASSWORD": "helium_jackrabbit",
-          "DBCON_JACKRABBIT_DATABASE": "helium_jackrabbit",
-          "DBCON_HIBERNATE_USER": "helium_hibernate",
-          "DBCON_HIBERNATE_PASSWORD": "helium_hibernate",
-          "DBCON_HIBERNATE_DATABASE": "helium_hibernate",
-          "DBCON_QUARTZ_USER": "helium_quartz",
-          "DBCON_QUARTZ_PASSWORD": "helium_quartz",
-          "DBCON_QUARTZ_DATABASE": "helium_quartz"
+          "POSTGRES_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+          "POSTGRES_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+          "POSTGRES_JACKRABBIT_USER": "helium_jackrabbit",
+          "POSTGRES_JACKRABBIT_PASSWORD": "helium_jackrabbit",
+          "POSTGRES_JACKRABBIT_DATABASE": "helium_jackrabbit",
+          "POSTGRES_HIBERNATE_USER": "helium_hibernate",
+          "POSTGRES_HIBERNATE_PASSWORD": "helium_hibernate",
+          "POSTGRES_HIBERNATE_DATABASE": "helium_hibernate",
+          "POSTGRES_QUARTZ_USER": "helium_quartz",
+          "POSTGRES_QUARTZ_PASSWORD": "helium_quartz",
+          "POSTGRES_QUARTZ_DATABASE": "helium_quartz"
         }
       },
       {
@@ -109,17 +109,17 @@ SETUP_JSON="$(cat <<-EOF
         "enabled": true,
         "env": {
           "STORAGE_TYPE": "postgres",
-          "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
-          "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
-          "DBCON_JACKRABBIT_USER": "neon_jackrabbit",
-          "DBCON_JACKRABBIT_PASSWORD": "neon_jackrabbit",
-          "DBCON_JACKRABBIT_DATABASE": "neon_jackrabbit",
-          "DBCON_HIBERNATE_USER": "neon_hibernate",
-          "DBCON_HIBERNATE_PASSWORD": "neon_hibernate",
-          "DBCON_HIBERNATE_DATABASE": "neon_hibernate",
-          "DBCON_QUARTZ_USER": "neon_quartz",
-          "DBCON_QUARTZ_PASSWORD": "neon_quartz",
-          "DBCON_QUARTZ_DATABASE": "neon_quartz"
+          "POSTGRES_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+          "POSTGRES_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+          "POSTGRES_JACKRABBIT_USER": "neon_jackrabbit",
+          "POSTGRES_JACKRABBIT_PASSWORD": "neon_jackrabbit",
+          "POSTGRES_JACKRABBIT_DATABASE": "neon_jackrabbit",
+          "POSTGRES_HIBERNATE_USER": "neon_hibernate",
+          "POSTGRES_HIBERNATE_PASSWORD": "neon_hibernate",
+          "POSTGRES_HIBERNATE_DATABASE": "neon_hibernate",
+          "POSTGRES_QUARTZ_USER": "neon_quartz",
+          "POSTGRES_QUARTZ_PASSWORD": "neon_quartz",
+          "POSTGRES_QUARTZ_DATABASE": "neon_quartz"
         }
       },
       {
@@ -127,17 +127,17 @@ SETUP_JSON="$(cat <<-EOF
         "enabled": true,
         "env": {
           "STORAGE_TYPE": "postgres",
-          "DBCON_HOST": "${DOCKER_POSTGRES_CONTAINER}",
-          "DBCON_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
-          "DBCON_JACKRABBIT_USER": "argon_jackrabbit",
-          "DBCON_JACKRABBIT_PASSWORD": "argon_jackrabbit",
-          "DBCON_JACKRABBIT_DATABASE": "argon_jackrabbit",
-          "DBCON_HIBERNATE_USER": "argon_hibernate",
-          "DBCON_HIBERNATE_PASSWORD": "argon_hibernate",
-          "DBCON_HIBERNATE_DATABASE": "argon_hibernate",
-          "DBCON_QUARTZ_USER": "argon_quartz",
-          "DBCON_QUARTZ_PASSWORD": "argon_quartz",
-          "DBCON_QUARTZ_DATABASE": "argon_quartz"
+          "POSTGRES_HOST": "${DOCKER_POSTGRES_CONTAINER}",
+          "POSTGRES_PASSWORD": "${DOCKER_POSTGRES_PASSWORD}",
+          "POSTGRES_JACKRABBIT_USER": "argon_jackrabbit",
+          "POSTGRES_JACKRABBIT_PASSWORD": "argon_jackrabbit",
+          "POSTGRES_JACKRABBIT_DATABASE": "argon_jackrabbit",
+          "POSTGRES_HIBERNATE_USER": "argon_hibernate",
+          "POSTGRES_HIBERNATE_PASSWORD": "argon_hibernate",
+          "POSTGRES_HIBERNATE_DATABASE": "argon_hibernate",
+          "POSTGRES_QUARTZ_USER": "argon_quartz",
+          "POSTGRES_QUARTZ_PASSWORD": "argon_quartz",
+          "POSTGRES_QUARTZ_DATABASE": "argon_quartz"
         }
       }
     ]

@@ -24,8 +24,13 @@
 
 	<!-- [BEGIN HSQLDB DATABASES] -->
 	<context-param>
+		<param-name>hsqldb-port</param-name>
+		<param-value>%HSQLDB_PORT%</param-value>
+	</context-param>
+
+	<context-param>
 		<param-name>hsqldb-databases</param-name>
-		<param-value>sampledata@../../%DATA_DIRNAME%/hsqldb/sampledata,hibernate@../../%DATA_DIRNAME%/hsqldb/hibernate,quartz@../../%DATA_DIRNAME%/hsqldb/quartz</param-value>
+		<param-value>sampledata@../../%DATA_DIRNAME%/hsqldb/sampledata</param-value>
 	</context-param>
 	<!-- [END HSQLDB DATABASES] -->
 

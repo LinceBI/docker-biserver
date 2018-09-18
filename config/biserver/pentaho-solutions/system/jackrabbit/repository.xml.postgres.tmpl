@@ -4,21 +4,21 @@
 	"http://jackrabbit.apache.org/dtd/repository-2.0.dtd">
 <Repository>
 
-	<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
-		<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-		<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-		<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-		<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-		<param name="schema" value="%DBCON_DATABASE_TYPE%" />
+	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+		<param name="driver" value="org.postgresql.Driver" />
+		<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+		<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+		<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+		<param name="schema" value="postgresql" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
 
-	<DataStore class="%DBCON_DATASTORE_CLASS%">
-		<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-		<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-		<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-		<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-		<param name="databaseType" value="%DBCON_DATABASE_TYPE%" />
+	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
+		<param name="driver" value="org.postgresql.Driver" />
+		<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+		<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+		<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+		<param name="databaseType" value="postgresql" />
 		<param name="minRecordLength" value="1024" />
 		<param name="maxConnections" value="3" />
 		<param name="copyWhenReading" value="true" />
@@ -45,21 +45,21 @@
 	<Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
 
 	<Workspace name="${wsp.name}">
-		<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
-			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+			<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+			<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="fs_ws_%INSTANCE_ID%_" />
 		</FileSystem>
 
-		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
-			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+			<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+			<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
 
@@ -74,21 +74,21 @@
 	</Workspace>
 
 	<Versioning rootPath="${rep.home}/version">
-		<FileSystem class="%DBCON_FILESYSTEM_CLASS%">
-			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+			<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+			<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="fs_ver_%INSTANCE_ID%_" />
 		</FileSystem>
 
-		<PersistenceManager class="%DBCON_PERSISTENCEMANAGER_CLASS%">
-			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-			<param name="user" value="%DBCON_JACKRABBIT_USER%" />
-			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="schema" value="%DBCON_DATABASE_TYPE%" />
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+			<param name="user" value="%POSTGRES_JACKRABBIT_USER%" />
+			<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
 	</Versioning>
@@ -96,11 +96,11 @@
 	<Cluster id="%INSTANCE_ID%">
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
-			<param name="url" value="%DBCON_JACKRABBIT_URL%" />
-			<param name="driver" value="%DBCON_DRIVER_CLASS%" />
-			<param name="user" value="%DBCON_JACKRABBIT_USER%"/>
-			<param name="password" value="%DBCON_JACKRABBIT_PASSWORD%" />
-			<param name="databaseType" value="%DBCON_DATABASE_TYPE%" />
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="%POSTGRES_JACKRABBIT_URL%" />
+			<param name="user" value="%POSTGRES_JACKRABBIT_USER%"/>
+			<param name="password" value="%POSTGRES_JACKRABBIT_PASSWORD%" />
+			<param name="databaseType" value="postgresql" />
 			<param name="janitorEnabled" value="true" />
 			<param name="janitorSleep" value="86400" />
 			<param name="janitorFirstRunHourOfDay" value="3" />
