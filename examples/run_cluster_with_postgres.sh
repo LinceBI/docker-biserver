@@ -8,7 +8,7 @@ containerExists() { docker ps -aqf name="$1" --format '{{.Names}}' | grep -Fxq "
 containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 networkExists() { docker network ls -qf name="$1" --format '{{.Name}}' | grep -Fxq "$1"; }
 
-DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:latest
+DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:8.1.0.0-365
 DOCKER_BISERVER_CONTAINER=pentaho-biserver
 
 DOCKER_POSTGRES_IMAGE=postgres:10

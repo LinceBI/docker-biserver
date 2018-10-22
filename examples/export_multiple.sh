@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:latest
+DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:8.1.0.0-365
 SETUP_JSON="$(cat <<-EOF
   {
     "root": "helium",

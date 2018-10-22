@@ -4,14 +4,14 @@ MKFILE_RELPATH := $(shell printf -- '%s' '$(MAKEFILE_LIST)' | sed 's|^\ ||')
 MKFILE_ABSPATH := $(shell readlink -f -- '$(MKFILE_RELPATH)')
 MKFILE_DIR := $(shell dirname -- '$(MKFILE_ABSPATH)')
 
-BISERVER_VERSION := 7.1.0.0-12
+BISERVER_VERSION := 8.1.0.0-365
 BISERVER_MAVEN_REPO := https://repo.stratebi.com/repository/pentaho-mvn/
 
 DIST_DIR := $(MKFILE_DIR)/dist
 
 DOCKER_IMAGE_NAMESPACE := stratebi
 DOCKER_IMAGE_NAME := pentaho-biserver
-DOCKER_IMAGE_TAG := latest
+DOCKER_IMAGE_TAG := $(BISERVER_VERSION)
 DOCKER_IMAGE := $(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME)
 DOCKER_CONTAINER := $(DOCKER_IMAGE_NAME)
 DOCKERFILE := $(MKFILE_DIR)/Dockerfile
