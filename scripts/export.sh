@@ -3,6 +3,8 @@
 set -eu
 export LC_ALL=C
 
+export EXPORT_ENABLED='true'
+
 # Execute setup scripts
 /opt/scripts/setup.sh >/dev/null
 

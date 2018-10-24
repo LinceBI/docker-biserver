@@ -7,6 +7,7 @@ export LC_ALL=C
 
 ########
 
+[ -z "${EXPORT_ENABLED-}" ] && export EXPORT_ENABLED='false'
 [ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
 
 if [ -z "${INSTANCE_ID-}" ]; then
