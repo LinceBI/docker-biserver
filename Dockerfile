@@ -100,10 +100,10 @@ RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 	&& for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
 		url=$(cat "${placeholder}" | tr -d '\n'); \
 		file=$(basename "${placeholder}" .download); \
-		printf '%s\n' "Downloading \"${file}\"..."; \
-		curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}"; \
-		chown tomcat:tomcat "${CATALINA_BASE}"/lib/"${file}"; \
-		rm "${placeholder}"; \
+		printf '%s\n' "Downloading \"${file}\"..." \
+		&& curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}" \
+		&& chown tomcat:tomcat "${CATALINA_BASE}"/lib/"${file}" \
+		&& rm "${placeholder}"; \
 	done
 
 # Pentaho BI Server environment
