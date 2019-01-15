@@ -16,14 +16,13 @@ DOCKER_IMAGE := $(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME)
 DOCKER_CONTAINER := $(DOCKER_IMAGE_NAME)
 DOCKERFILE := $(MKFILE_DIR)/Dockerfile
 
-.PHONY: all \
-	build build-image save-image save-standalone \
-	clean clean-image clean-container clean-dist
+.PHONY: all
+all: build save
 
-all: build
+.PHONY: build
+build: build-image
 
-build: save-image save-standalone
-
+.PHONY: build-image
 build-image:
 	docker build \
 		--tag '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' \
@@ -32,22 +31,31 @@ build-image:
 		--file '$(DOCKERFILE)' \
 		-- '$(MKFILE_DIR)'
 
+.PHONY: save
+save: save-image save-standalone
+
+.PHONY: save-image
 save-image: build-image
 	mkdir -p -- '$(DIST_DIR)'
 	docker save -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG).tgz'
 
+.PHONY: save-standalone
 save-standalone: build-image
 	mkdir -p -- '$(DIST_DIR)'
 	docker run --rm -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' /opt/scripts/export.sh > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG)_standalone.tgz'
 
-clean: clean-image clean-dist
+.PHONY: clean
+clean: clean-image clean-container clean-dist
 
+.PHONY: clean-image
 clean-image: clean-container
 	-docker rmi -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)'
 
+.PHONY: clean-container
 clean-container:
 	-docker stop -- '$(DOCKER_CONTAINER)'
 	-docker rm -- '$(DOCKER_CONTAINER)'
 
+.PHONY: clean-dist
 clean-dist:
 	rm -rf -- '$(DIST_DIR)'
