@@ -55,7 +55,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`POSTGRES_QUARTZ_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
  * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
 
-## JSON de configuración (múltiples Pentaho BI Server en el mismo Tomcat)
+## Múltiples Pentaho BI Server en el mismo Tomcat (**experimental**)
 
 Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo Tomcat. Si se desea una configuración más compleja, es posible definir
 la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estructura:
