@@ -1,8 +1,5 @@
 image: docker:stable
 
-services:
-  - docker:dind
-
 stages:
   - build
   - deploy
