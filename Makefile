@@ -37,7 +37,7 @@ save: save-image save-standalone
 .PHONY: save-image
 save-image: build-image
 	mkdir -p -- '$(DIST_DIR)'
-	docker save -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG).tgz'
+	docker save -- '$(DOCKER_IMAGE):$(DOCKER_IMAGE_TAG)' | gzip > '$(DIST_DIR)/$(DOCKER_IMAGE_NAME)_$(DOCKER_IMAGE_TAG)_docker.tgz'
 
 .PHONY: save-standalone
 save-standalone: build-image
