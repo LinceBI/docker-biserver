@@ -2,7 +2,7 @@
 <pentaho-system>
 
 	<!--
-	The kiosk-mode setting when set to true, will cause the platform to ignore some aspects of security 
+	The kiosk-mode setting when set to true, will cause the platform to ignore some aspects of security
 	to allow/enable behavior. For example,	disable saving in WAQR.
 	-->
 	<kiosk-mode>false</kiosk-mode>
@@ -13,7 +13,7 @@
 	<waitSeconds>30</waitSeconds>
 
 	<!--
-	The login-show-users-list setting when set to true, will show a drop-down list of the default 
+	The login-show-users-list setting when set to true, will show a drop-down list of the default
 	sample pentaho users (admin,suzy,pat,tiffany) in the login dialog which is shown when a user attemps
 	to login to the Pentaho User Console (PUC).
 	-->
@@ -57,7 +57,7 @@
 
 	<!--
 	The configuration of publishers, system listeners, and session actions has been moved to
-	the systemListeners.xml, adminPlugins.xml, and sessionStartupActions.xml files which 
+	the systemListeners.xml, adminPlugins.xml, and sessionStartupActions.xml files which
 	can be found in the "system" folder within your configured pentaho solution directory.
 
 	If you're looking for the objects node, this functionality
@@ -82,7 +82,7 @@
 		<class>net.sf.ehcache.hibernate.SingletonEhCacheProvider</class>
 		<region>pentahoCache</region>
 		<!--
-		Uncomment this block to specify some parameters for your cache provider. EHCache has no parameters 
+		Uncomment this block to specify some parameters for your cache provider. EHCache has no parameters
 		other than what are provided in the ehcache.xml.
 		<properties>
 			<property name="someProperty">someValue</property>
@@ -123,7 +123,7 @@
 	<!--
 	This element, and any of its child elements are optional. These elements are used to explicitly identify
 	the xml transformer, sax parser, and dom parser implementations used by the platform. If any of these
-	elements are missing, default implementations will be supplied. For more information, see: 
+	elements are missing, default implementations will be supplied. For more information, see:
 	http://xml.apache.org/xalan-j/usagepatterns.html#plug
 	-->
 	<!--
