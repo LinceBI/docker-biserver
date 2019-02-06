@@ -11,7 +11,7 @@ networkExists() { docker network ls -qf name="$1" --format '{{.Name}}' | grep -F
 DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:8.2.0.0-342
 DOCKER_BISERVER_CONTAINER=pentaho-biserver
 
-DOCKER_POSTGRES_IMAGE=postgres:10
+DOCKER_POSTGRES_IMAGE=postgres:11
 DOCKER_POSTGRES_CONTAINER="${DOCKER_BISERVER_CONTAINER}-postgres"
 DOCKER_POSTGRES_PASSWORD='H4!b5at+kWls-8yh4Guq' # CHANGE ME!
 
