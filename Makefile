@@ -4,7 +4,7 @@ MKFILE_RELPATH := $(shell printf -- '%s' '$(MAKEFILE_LIST)' | sed 's|^\ ||')
 MKFILE_ABSPATH := $(shell readlink -f -- '$(MKFILE_RELPATH)')
 MKFILE_DIR := $(shell dirname -- '$(MKFILE_ABSPATH)')
 
-BISERVER_VERSION := 8.1.0.0-365
+BISERVER_VERSION := 8.2.0.0-342
 BISERVER_MAVEN_REPO := https://repo.stratebi.com/repository/pentaho-mvn/
 
 DIST_DIR := $(MKFILE_DIR)/dist
