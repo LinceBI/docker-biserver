@@ -11,6 +11,10 @@ services:
       - 0.0.0.0:80:80/tcp
     volumes:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+    logging:
+      driver: journald
+      options:
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   pentaho-biserver-postgres:
     image: postgres:11
@@ -25,6 +29,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
+    logging:
+      driver: journald
+      options:
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   pentaho-biserver-instance-helium:
     image: stratebi/pentaho-biserver:8.2.0.0-342
@@ -52,6 +60,10 @@ services:
     depends_on:
       - "pentaho-biserver-nginx"
       - "pentaho-biserver-postgres"
+    logging:
+      driver: journald
+      options:
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   pentaho-biserver-instance-argon:
     image: stratebi/pentaho-biserver:8.2.0.0-342
@@ -79,6 +91,10 @@ services:
     depends_on:
       - "pentaho-biserver-nginx"
       - "pentaho-biserver-postgres"
+    logging:
+      driver: journald
+      options:
+        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 networks:
 
