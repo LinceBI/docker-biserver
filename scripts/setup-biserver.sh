@@ -7,7 +7,7 @@ export LC_ALL=C
 
 ########
 
-[ -z "${EXPORT_ENABLED-}" ] && export EXPORT_ENABLED='false'
+[ -z "${EXPORT_ENABLED-}" ]      && export EXPORT_ENABLED='false'
 [ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
 
 if [ -z "${INSTANCE_ID-}" ]; then
@@ -21,15 +21,15 @@ fi
 [ -z "${FQSU_PORT-}" ]     && export FQSU_PORT='8080'
 [ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
-[ -z "${HSQLDB_PORT-}" ]     && export HSQLDB_PORT='9001'
-[ -z "${KARAF_STARTPORT-}" ] && export KARAF_STARTPORT='8801'
-[ -z "${KARAF_ENDPORT-}" ] && export KARAF_ENDPORT='8899'
+[ -z "${HSQLDB_PORT-}" ]            && export HSQLDB_PORT='9001'
+[ -z "${KARAF_STARTPORT-}" ]        && export KARAF_STARTPORT='8801'
+[ -z "${KARAF_ENDPORT-}" ]          && export KARAF_ENDPORT='8899'
 [ -z "${OSGI_SERVICE_STARTPORT-}" ] && export OSGI_SERVICE_STARTPORT='9050'
-[ -z "${OSGI_SERVICE_ENDPORT-}" ] && export OSGI_SERVICE_ENDPORT='9149'
-[ -z "${RMI_SERVER_STARTPORT-}" ] && export RMI_SERVER_STARTPORT='44444'
-[ -z "${RMI_SERVER_ENDPORT-}" ] && export RMI_SERVER_ENDPORT='44499'
+[ -z "${OSGI_SERVICE_ENDPORT-}" ]   && export OSGI_SERVICE_ENDPORT='9149'
+[ -z "${RMI_SERVER_STARTPORT-}" ]   && export RMI_SERVER_STARTPORT='44444'
+[ -z "${RMI_SERVER_ENDPORT-}" ]     && export RMI_SERVER_ENDPORT='44499'
 [ -z "${RMI_REGISTRY_STARTPORT-}" ] && export RMI_REGISTRY_STARTPORT='11098'
-[ -z "${RMI_REGISTRY_ENDPORT-}" ] && export RMI_REGISTRY_ENDPORT='11190'
+[ -z "${RMI_REGISTRY_ENDPORT-}" ]   && export RMI_REGISTRY_ENDPORT='11190'
 
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
@@ -52,10 +52,10 @@ elif [ "${STORAGE_TYPE}" = 'postgres' ]; then
 	[ -z "${POSTGRES_JACKRABBIT_DATABASE-}" ] && export POSTGRES_JACKRABBIT_DATABASE='jackrabbit'
 	[ -z "${POSTGRES_JACKRABBIT_URL-}" ]      && export POSTGRES_JACKRABBIT_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_JACKRABBIT_DATABASE}"
 
-	[ -z "${POSTGRES_HIBERNATE_USER-}" ]        && export POSTGRES_HIBERNATE_USER='hibuser'
-	[ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ]    && export POSTGRES_HIBERNATE_PASSWORD="${POSTGRES_PASSWORD}"
-	[ -z "${POSTGRES_HIBERNATE_DATABASE-}" ]    && export POSTGRES_HIBERNATE_DATABASE='hibernate'
-	[ -z "${POSTGRES_HIBERNATE_URL-}" ]         && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
+	[ -z "${POSTGRES_HIBERNATE_USER-}" ]     && export POSTGRES_HIBERNATE_USER='hibuser'
+	[ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ] && export POSTGRES_HIBERNATE_PASSWORD="${POSTGRES_PASSWORD}"
+	[ -z "${POSTGRES_HIBERNATE_DATABASE-}" ] && export POSTGRES_HIBERNATE_DATABASE='hibernate'
+	[ -z "${POSTGRES_HIBERNATE_URL-}" ]      && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
 
 	[ -z "${POSTGRES_QUARTZ_USER-}" ]     && export POSTGRES_QUARTZ_USER='pentaho_user'
 	[ -z "${POSTGRES_QUARTZ_PASSWORD-}" ] && export POSTGRES_QUARTZ_PASSWORD="${POSTGRES_PASSWORD}"
