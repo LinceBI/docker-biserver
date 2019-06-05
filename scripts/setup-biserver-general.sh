@@ -10,7 +10,7 @@ export LC_ALL=C
 # shellcheck disable=SC2016
 find "${BISERVER_HOME}" -type f -name '*.erb' \
 	-exec printf 'Replacing ERB file: %s\n' '{}' ';' \
-	-exec sh -c 'erb "$1" > "$(dirname "$1")"/"$(basename "$1" .erb)"' _ '{}' ';'
+	-exec sh -c 'erb -T - "$1" > "$(dirname "$1")"/"$(basename "$1" .erb)"' _ '{}' ';'
 
 ########
 

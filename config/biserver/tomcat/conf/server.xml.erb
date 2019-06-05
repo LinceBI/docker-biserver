@@ -22,10 +22,10 @@
 			protocol="HTTP/1.1"
 			connectionTimeout="20000"
 			redirectPort="8443"
-			<% if ENV['IS_PROXIED'] == 'true' %>
+			<%- if ENV['IS_PROXIED'] == 'true' -%>
 			scheme="<%= ENV['PROXY_SCHEME'] %>"
 			proxyPort="<%= ENV['PROXY_PORT'] %>"
-			<% end %>
+			<%- end -%>
 			URIEncoding="UTF-8"
 			server="Apache Tomcat"
 			xpoweredBy="false" />

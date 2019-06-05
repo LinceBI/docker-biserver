@@ -27,12 +27,12 @@ org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQ
 org.quartz.jobStore.useProperties = false
 org.quartz.jobStore.dataSource = myDS
 org.quartz.jobStore.tablePrefix = QRTZ5_
-<% if ENV['STORAGE_TYPE'] == 'local' %>
+<%- if ENV['STORAGE_TYPE'] == 'local' -%>
 org.quartz.jobStore.isClustered = false
-<% else %>
+<%- else -%>
 org.quartz.jobStore.isClustered = true
 org.quartz.jobStore.clusterCheckinInterval = 20000
-<% end %>
+<%- end -%>
 
 # ===========================================================================
 # Configure Datasources  ====================================================
