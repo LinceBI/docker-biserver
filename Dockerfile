@@ -4,13 +4,22 @@ FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
+		bzip2 \
 		ca-certificates \
 		curl \
+		gzip \
 		jq \
+		libarchive-tools \
+		lzip \
+		lzma \
+		lzop \
 		netcat-traditional \
 		openjdk-8-jdk \
 		postgresql-client \
-		unzip tar bzip2 gzip libarchive-tools lzip lzma lzop xz-utils \
+		ruby \
+		tar \
+		unzip \
+		xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Java environment

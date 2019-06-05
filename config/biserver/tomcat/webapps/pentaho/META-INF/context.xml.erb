@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>" docBase="webapps/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>">
+
+	<% if ENV['STORAGE_TYPE'] == 'local' %>
+	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="hibuser" password="password"
+		driverClassName="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/hibernate"
+		validationQuery="select count(*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES" />
+	<% elsif ENV['STORAGE_TYPE'] == 'postgres' %>
+	<Resource name="jdbc/Hibernate" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="<%= ENV['POSTGRES_HIBERNATE_USER'] %>" password="<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>"
+		driverClassName="org.postgresql.Driver" url="<%= ENV['POSTGRES_HIBERNATE_URL'] %>"
+		validationQuery="select 1" />
+	<% end %>
+
+	<% if ENV['STORAGE_TYPE'] == 'local' %>
+	<Resource name="jdbc/Quartz" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="pentaho_user" password="password"
+		driverClassName="org.hsqldb.jdbcDriver" url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/quartz"
+		validationQuery="select count(*) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES" />
+	<% elsif ENV['STORAGE_TYPE'] == 'postgres' %>
+	<Resource name="jdbc/Quartz" auth="Container" type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" minIdle="0" maxIdle="5" initialSize="0"
+		maxWaitMillis="10000" username="<%= ENV['POSTGRES_QUARTZ_USER'] %>" password="<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>"
+		driverClassName="org.postgresql.Driver" url="<%= ENV['POSTGRES_QUARTZ_URL'] %>"
+		validationQuery="select 1" />
+	<% end %>
+
+</Context>

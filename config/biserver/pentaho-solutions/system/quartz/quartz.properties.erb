@@ -3,7 +3,7 @@
 # ===========================================================================
 
 org.quartz.scheduler.instanceName = PentahoQuartzScheduler
-org.quartz.scheduler.instanceId = %INSTANCE_ID%
+org.quartz.scheduler.instanceId = <%= ENV['INSTANCE_ID'] %>
 org.quartz.scheduler.rmi.export = false
 org.quartz.scheduler.rmi.proxy = false
 org.quartz.scheduler.wrapJobExecutionInUserTransaction = false
@@ -27,7 +27,12 @@ org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQ
 org.quartz.jobStore.useProperties = false
 org.quartz.jobStore.dataSource = myDS
 org.quartz.jobStore.tablePrefix = QRTZ5_
+<% if ENV['STORAGE_TYPE'] == 'local' %>
 org.quartz.jobStore.isClustered = false
+<% else %>
+org.quartz.jobStore.isClustered = true
+org.quartz.jobStore.clusterCheckinInterval = 20000
+<% end %>
 
 # ===========================================================================
 # Configure Datasources  ====================================================

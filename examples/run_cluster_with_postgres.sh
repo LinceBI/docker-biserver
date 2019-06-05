@@ -97,7 +97,7 @@ printf -- '%s\n' 'Waiting for first node...'
 (
 	LOG_FILE='tomcat/logs/pentaho.log'
 	LOG_MSG='PurRepository - Connected to the enterprise repository'
-	LOG_COUNT=2
+	LOG_COUNT=1
 	until docker exec "${DOCKER_BISERVER_CONTAINER}-a" sh -c "$(cat <<-EOF
 		[ "\$(grep -F '${LOG_MSG}' '${LOG_FILE}' 2>/dev/null | wc -l)" -ge '${LOG_COUNT}' ]
 	EOF

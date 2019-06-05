@@ -22,14 +22,6 @@ fi
 
 ########
 
-sed -r \
-	-e "s|%POSTGRES_USER%|${POSTGRES_USER_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_USER%|${POSTGRES_JACKRABBIT_USER_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_PASSWORD%|${POSTGRES_JACKRABBIT_PASSWORD_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_DATABASE%|${POSTGRES_JACKRABBIT_DATABASE_SUBST}|g" \
-	"${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_jcr_postgresql.sql.tmpl \
-	> "${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_jcr_postgresql.sql
-
 if [ "${EXPORT_ENABLED}" = 'false' ]; then
 	logInfo "Checking \"${POSTGRES_JACKRABBIT_DATABASE}\" database..."
 	if ! psqlDbExists "${POSTGRES_JACKRABBIT_DATABASE}"; then
@@ -39,14 +31,6 @@ if [ "${EXPORT_ENABLED}" = 'false' ]; then
 fi
 
 ########
-
-sed -r \
-	-e "s|%POSTGRES_USER%|${POSTGRES_USER_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_USER%|${POSTGRES_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_PASSWORD%|${POSTGRES_HIBERNATE_PASSWORD_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_DATABASE%|${POSTGRES_HIBERNATE_DATABASE_SUBST}|g" \
-	"${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_repository_postgresql.sql.tmpl \
-	> "${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_repository_postgresql.sql
 
 if [ "${EXPORT_ENABLED}" = 'false' ]; then
 	logInfo "Checking \"${POSTGRES_HIBERNATE_DATABASE}\" database..."
@@ -58,14 +42,6 @@ fi
 
 ########
 
-sed -r \
-	-e "s|%POSTGRES_USER%|${POSTGRES_USER_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_USER%|${POSTGRES_QUARTZ_USER_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_PASSWORD%|${POSTGRES_QUARTZ_PASSWORD_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_DATABASE%|${POSTGRES_QUARTZ_DATABASE_SUBST}|g" \
-	"${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_quartz_postgresql.sql.tmpl \
-	> "${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_quartz_postgresql.sql
-
 if [ "${EXPORT_ENABLED}" = 'false' ]; then
 	logInfo "Checking \"${POSTGRES_QUARTZ_DATABASE}\" database..."
 	if ! psqlDbExists "${POSTGRES_QUARTZ_DATABASE}"; then
@@ -73,62 +49,3 @@ if [ "${EXPORT_ENABLED}" = 'false' ]; then
 		psqlRun -f "${BISERVER_HOME}"/"${DATA_DIRNAME}"/postgresql/create_quartz_postgresql.sql
 	fi
 fi
-
-########
-
-sed -r \
-	-e "s|%INSTANCE_ID%|${INSTANCE_ID_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_URL%|${POSTGRES_JACKRABBIT_URL_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_USER%|${POSTGRES_JACKRABBIT_USER_SUBST}|g" \
-	-e "s|%POSTGRES_JACKRABBIT_PASSWORD%|${POSTGRES_JACKRABBIT_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml.postgres.tmpl \
-	> "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository.xml
-
-########
-
-sed -r \
-	-e "s|%POSTGRES_HIBERNATE_URL%|${POSTGRES_HIBERNATE_URL_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_USER%|${POSTGRES_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_PASSWORD%|${POSTGRES_HIBERNATE_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/hibernate/postgresql.hibernate.cfg.xml.tmpl \
-	> "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/hibernate/postgresql.hibernate.cfg.xml
-
-########
-
-sed -r \
-	-e "s|%INSTANCE_ID%|${INSTANCE_ID_SUBST}|g" \
-	"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties.postgres.tmpl \
-	> "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/quartz/quartz.properties
-
-########
-
-sed -r \
-	-e "s|%HSQLDB_PORT%|${HSQLDB_PORT_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_URL%|${POSTGRES_HIBERNATE_URL_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_USER%|${POSTGRES_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_PASSWORD%|${POSTGRES_HIBERNATE_PASSWORD_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_URL%|${POSTGRES_QUARTZ_URL_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_USER%|${POSTGRES_QUARTZ_USER_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_PASSWORD%|${POSTGRES_QUARTZ_PASSWORD_SUBST}|g" \
-	"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties.postgres.tmpl \
-	> "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/simple-jndi/jdbc.properties
-
-########
-
-sed -r \
-	-e "s|%SOLUTIONS_DIRNAME%|${SOLUTIONS_DIRNAME_SUBST}|g" \
-	-e "s|%DATA_DIRNAME%|${DATA_DIRNAME_SUBST}|g" \
-	-e "s|%HSQLDB_PORT%|${HSQLDB_PORT_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml.postgres.tmpl \
-	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/WEB-INF/web.xml
-
-sed -r \
-	-e "s|%WEBAPP_PENTAHO_DIRNAME%|${WEBAPP_PENTAHO_DIRNAME_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_URL%|${POSTGRES_HIBERNATE_URL_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_USER%|${POSTGRES_HIBERNATE_USER_SUBST}|g" \
-	-e "s|%POSTGRES_HIBERNATE_PASSWORD%|${POSTGRES_HIBERNATE_PASSWORD_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_URL%|${POSTGRES_QUARTZ_URL_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_USER%|${POSTGRES_QUARTZ_USER_SUBST}|g" \
-	-e "s|%POSTGRES_QUARTZ_PASSWORD%|${POSTGRES_QUARTZ_PASSWORD_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml.postgres.tmpl \
-	> "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/META-INF/context.xml

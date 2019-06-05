@@ -1,0 +1,39 @@
+<% if ENV['STORAGE_TYPE'] == 'local' %>
+Hibernate/type=javax.sql.DataSource
+Hibernate/driver=org.hsqldb.jdbcDriver
+Hibernate/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/hibernate
+Hibernate/user=hibuser
+Hibernate/password=password
+<% elsif ENV['STORAGE_TYPE'] == 'postgres' %>
+Hibernate/type=javax.sql.DataSource
+Hibernate/driver=org.postgresql.Driver
+Hibernate/url=<%= ENV['POSTGRES_HIBERNATE_URL'] %>
+Hibernate/user=<%= ENV['POSTGRES_HIBERNATE_USER'] %>
+Hibernate/password=<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>
+<% end %>
+
+<% if ENV['STORAGE_TYPE'] == 'local' %>
+Quartz/type=javax.sql.DataSource
+Quartz/driver=org.hsqldb.jdbcDriver
+Quartz/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/quartz
+Quartz/user=pentaho_user
+Quartz/password=password
+<% elsif ENV['STORAGE_TYPE'] == 'postgres' %>
+Quartz/type=javax.sql.DataSource
+Quartz/driver=org.postgresql.Driver
+Quartz/url=<%= ENV['POSTGRES_QUARTZ_URL'] %>
+Quartz/user=<%= ENV['POSTGRES_QUARTZ_USER'] %>
+Quartz/password=<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>
+<% end %>
+
+SampleData/type=javax.sql.DataSource
+SampleData/driver=org.hsqldb.jdbcDriver
+SampleData/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/sampledata
+SampleData/user=pentaho_user
+SampleData/password=password
+
+SampleDataAdmin/type=javax.sql.DataSource
+SampleDataAdmin/driver=org.hsqldb.jdbcDriver
+SampleDataAdmin/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/sampledata
+SampleDataAdmin/user=pentaho_admin
+SampleDataAdmin/password=password

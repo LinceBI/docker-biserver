@@ -7,14 +7,15 @@ export LC_ALL=C
 
 ########
 
-[ -z "${EXPORT_ENABLED-}" ]      && export EXPORT_ENABLED='false'
-[ -z "${MULTI_SETUP_ENABLED-}" ] && export MULTI_SETUP_ENABLED='false'
-
 if [ -z "${INSTANCE_ID-}" ]; then
 	# Each instance has a random 12 characters alphanumeric string
 	INSTANCE_ID="$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)"
 	export INSTANCE_ID
 fi
+
+[ -z "${EXPORT_ENABLED-}" ]                 && export EXPORT_ENABLED='false'
+[ -z "${MULTI_SETUP_ENABLED-}" ]            && export MULTI_SETUP_ENABLED='false'
+[ -z "${DEFAULT_WEBAPP_PENTAHO_DIRNAME-}" ] && export DEFAULT_WEBAPP_PENTAHO_DIRNAME="${WEBAPP_PENTAHO_DIRNAME}"
 
 [ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
 [ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
@@ -33,39 +34,29 @@ fi
 
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
-if [ "${STORAGE_TYPE}" = 'local' ]; then
-
-	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/hsql.hibernate.cfg.xml'
-
-elif [ "${STORAGE_TYPE}" = 'postgres' ]; then
-
+if [ "${STORAGE_TYPE}" = 'postgres' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
-
-	[ -z "${POSTGRES_HOST-}" ]     && export POSTGRES_HOST='localhost'
-	[ -z "${POSTGRES_PORT-}" ]     && export POSTGRES_PORT='5432'
-	[ -z "${POSTGRES_USER-}" ]     && export POSTGRES_USER='postgres'
-	[ -z "${POSTGRES_PASSWORD-}" ] && export POSTGRES_PASSWORD="${POSTGRES_USER}"
-	[ -z "${POSTGRES_DATABASE-}" ] && export POSTGRES_DATABASE="${POSTGRES_USER}"
-
-	[ -z "${POSTGRES_JACKRABBIT_USER-}" ]     && export POSTGRES_JACKRABBIT_USER='jcr_user'
-	[ -z "${POSTGRES_JACKRABBIT_PASSWORD-}" ] && export POSTGRES_JACKRABBIT_PASSWORD="${POSTGRES_PASSWORD}"
-	[ -z "${POSTGRES_JACKRABBIT_DATABASE-}" ] && export POSTGRES_JACKRABBIT_DATABASE='jackrabbit'
-	[ -z "${POSTGRES_JACKRABBIT_URL-}" ]      && export POSTGRES_JACKRABBIT_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_JACKRABBIT_DATABASE}"
-
-	[ -z "${POSTGRES_HIBERNATE_USER-}" ]     && export POSTGRES_HIBERNATE_USER='hibuser'
-	[ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ] && export POSTGRES_HIBERNATE_PASSWORD="${POSTGRES_PASSWORD}"
-	[ -z "${POSTGRES_HIBERNATE_DATABASE-}" ] && export POSTGRES_HIBERNATE_DATABASE='hibernate'
-	[ -z "${POSTGRES_HIBERNATE_URL-}" ]      && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
-
-	[ -z "${POSTGRES_QUARTZ_USER-}" ]     && export POSTGRES_QUARTZ_USER='pentaho_user'
-	[ -z "${POSTGRES_QUARTZ_PASSWORD-}" ] && export POSTGRES_QUARTZ_PASSWORD="${POSTGRES_PASSWORD}"
-	[ -z "${POSTGRES_QUARTZ_DATABASE-}" ] && export POSTGRES_QUARTZ_DATABASE='quartz'
-	[ -z "${POSTGRES_QUARTZ_URL-}" ]      && export POSTGRES_QUARTZ_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_QUARTZ_DATABASE}"
-
 else
-	logFail "Unknown storage type: ${STORAGE_TYPE}"
-	exit 1
+	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/hsql.hibernate.cfg.xml'
 fi
+
+[ -z "${POSTGRES_HOST-}" ]                && export POSTGRES_HOST='localhost'
+[ -z "${POSTGRES_PORT-}" ]                && export POSTGRES_PORT='5432'
+[ -z "${POSTGRES_USER-}" ]                && export POSTGRES_USER='postgres'
+[ -z "${POSTGRES_PASSWORD-}" ]            && export POSTGRES_PASSWORD="${POSTGRES_USER}"
+[ -z "${POSTGRES_DATABASE-}" ]            && export POSTGRES_DATABASE="${POSTGRES_USER}"
+[ -z "${POSTGRES_JACKRABBIT_USER-}" ]     && export POSTGRES_JACKRABBIT_USER='jcr_user'
+[ -z "${POSTGRES_JACKRABBIT_PASSWORD-}" ] && export POSTGRES_JACKRABBIT_PASSWORD="${POSTGRES_PASSWORD}"
+[ -z "${POSTGRES_JACKRABBIT_DATABASE-}" ] && export POSTGRES_JACKRABBIT_DATABASE='jackrabbit'
+[ -z "${POSTGRES_JACKRABBIT_URL-}" ]      && export POSTGRES_JACKRABBIT_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_JACKRABBIT_DATABASE}"
+[ -z "${POSTGRES_HIBERNATE_USER-}" ]      && export POSTGRES_HIBERNATE_USER='hibuser'
+[ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ]  && export POSTGRES_HIBERNATE_PASSWORD="${POSTGRES_PASSWORD}"
+[ -z "${POSTGRES_HIBERNATE_DATABASE-}" ]  && export POSTGRES_HIBERNATE_DATABASE='hibernate'
+[ -z "${POSTGRES_HIBERNATE_URL-}" ]       && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
+[ -z "${POSTGRES_QUARTZ_USER-}" ]         && export POSTGRES_QUARTZ_USER='pentaho_user'
+[ -z "${POSTGRES_QUARTZ_PASSWORD-}" ]     && export POSTGRES_QUARTZ_PASSWORD="${POSTGRES_PASSWORD}"
+[ -z "${POSTGRES_QUARTZ_DATABASE-}" ]     && export POSTGRES_QUARTZ_DATABASE='quartz'
+[ -z "${POSTGRES_QUARTZ_URL-}" ]          && export POSTGRES_QUARTZ_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_QUARTZ_DATABASE}"
 
 ########
 
@@ -99,8 +90,6 @@ IFS=$_IFS
 # PostgreSQL setup
 if [ "${STORAGE_TYPE}" = 'postgres' ]; then
 	/opt/scripts/setup-biserver-storage-postgres.sh
-else
-	/opt/scripts/setup-biserver-storage-local.sh
 fi
 
 # biserver.init.d setup

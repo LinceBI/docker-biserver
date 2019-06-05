@@ -147,7 +147,7 @@
 		<name>SampleData</name>
 		<host>localhost</host>
 		<type>Hypersonic</type>
-		<port>%HSQLDB_PORT%</port>
+		<port><%= ENV['HSQLDB_PORT'] %></port>
 		<access>NATIVE</access>
 		<username>pentaho_user</username>
 		<password>password</password>

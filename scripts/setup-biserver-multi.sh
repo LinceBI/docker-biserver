@@ -7,8 +7,8 @@ export LC_ALL=C
 
 ########
 
-ROOT_WEBAPP_DIRNAME=$(printf -- '%s' "${SETUP_JSON}" | jq -r '.root')
-ROOT_WEBAPP_DIRNAME_SUBST=$(quoteSubst "${ROOT_WEBAPP_DIRNAME}")
+DEFAULT_WEBAPP_PENTAHO_DIRNAME=$(printf -- '%s' "${SETUP_JSON}" | jq -r '.root')
+export DEFAULT_WEBAPP_PENTAHO_DIRNAME
 
 SERVER_LIST=$(printf -- '%s' "${SETUP_JSON}" | jq -c '.servers|map(select(.enabled))')
 SERVER_COUNT=$(printf -- '%s' "${SERVER_LIST}" | jq -r '.|length-1')
@@ -17,9 +17,9 @@ WAS_DEFAULT_NAME_FOUND=false
 
 _IFS=${IFS}; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 for server_index in $(seq 0 "${SERVER_COUNT}"); do
-	server=$(printf -- '%s' "${SERVER_LIST}" | jq --arg i "${server_index}" ".[\$i|tonumber]")
+	server=$(printf -- '%s' "${SERVER_LIST}" | jq -r --arg i "${server_index}" ".[\$i|tonumber]")
 	name=$(printf -- '%s' "${server}" | jq -r '.name')
-	env_map=$(printf -- '%s' "${server}" | jq '.env')
+	env_map=$(printf -- '%s' "${server}" | jq -r '.env')
 	env_keys=$(printf -- '%s' "${env_map}" | jq -r 'keys[]')
 
 	if [ "${name}" = "${WEBAPP_PENTAHO_DEFAULT_DIRNAME}" ]; then
@@ -54,13 +54,6 @@ for server_index in $(seq 0 "${SERVER_COUNT}"); do
 	)
 done
 IFS=${_IFS}
-
-########
-
-sed -r \
-	-e "s|%ROOT_WEBAPP_DIRNAME%|${ROOT_WEBAPP_DIRNAME_SUBST}|g" \
-	"${CATALINA_BASE}"/webapps/ROOT/index.html.tmpl \
-	> "${CATALINA_BASE}"/webapps/ROOT/index.html
 
 ########
 
