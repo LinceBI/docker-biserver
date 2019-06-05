@@ -35,10 +35,11 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`WEBAPP_PENTAHO_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
  * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será
    renombrado.
+ * **`TOMCAT_HTTP_PORT` (`8080` por defecto)**: puerto en el que escuchará el conector HTTP de Tomcat.
+ * **`TOMCAT_AJP_PORT` (`8009` por defecto)**: puerto en el que escuchará el conector AJP de Tomcat.
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
- * **`FQSU_PORT` (`8080` por defecto)**: puerto del Fully Qualified Server URL.
- * **`HSQLDB_PORT` (`9001` por defecto)**: puerto de HSQLDB.
+ * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local` o `postgres`.
  * **`POSTGRES_HOST`**: host para la conexión con la BBDD.
  * **`POSTGRES_PORT`**: puerto para la conexión con la BBDD.
@@ -120,7 +121,6 @@ El ejemplo más simple es el despliegue de un contenedor con almacenamiento loca
 docker run --detach \
   --name pentaho-biserver \
   --publish '8080:8080/tcp' \
-  --publish '8009:8009/tcp' \
   --mount type=volume,src=pentaho-biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=pentaho-biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=pentaho-biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \

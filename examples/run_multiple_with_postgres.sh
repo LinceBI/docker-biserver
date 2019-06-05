@@ -153,6 +153,5 @@ docker run --detach \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
-	--publish '8009:8009/tcp' \
 	--env SETUP_JSON="${SETUP_JSON}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"

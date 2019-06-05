@@ -17,11 +17,8 @@ fi
 [ -z "${MULTI_SETUP_ENABLED-}" ]            && export MULTI_SETUP_ENABLED='false'
 [ -z "${DEFAULT_WEBAPP_PENTAHO_DIRNAME-}" ] && export DEFAULT_WEBAPP_PENTAHO_DIRNAME="${WEBAPP_PENTAHO_DIRNAME}"
 
-[ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
-[ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
-[ -z "${FQSU_PORT-}" ]     && export FQSU_PORT='8080'
-[ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
-
+[ -z "${TOMCAT_HTTP_PORT-}" ]       && export TOMCAT_HTTP_PORT='8080'
+[ -z "${TOMCAT_AJP_PORT-}" ]        && export TOMCAT_AJP_PORT='8009'
 [ -z "${HSQLDB_PORT-}" ]            && export HSQLDB_PORT='9001'
 [ -z "${KARAF_STARTPORT-}" ]        && export KARAF_STARTPORT='8801'
 [ -z "${KARAF_ENDPORT-}" ]          && export KARAF_ENDPORT='8899'
@@ -31,6 +28,11 @@ fi
 [ -z "${RMI_SERVER_ENDPORT-}" ]     && export RMI_SERVER_ENDPORT='44499'
 [ -z "${RMI_REGISTRY_STARTPORT-}" ] && export RMI_REGISTRY_STARTPORT='11098'
 [ -z "${RMI_REGISTRY_ENDPORT-}" ]   && export RMI_REGISTRY_ENDPORT='11190'
+
+[ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
+[ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
+[ -z "${FQSU_PORT-}" ]     && export FQSU_PORT="${TOMCAT_HTTP_PORT}"
+[ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 

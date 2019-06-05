@@ -200,9 +200,6 @@ COPY --chown=root:root scripts/ /opt/scripts/
 
 WORKDIR "${BISERVER_HOME}"
 
-EXPOSE 8080/tcp
-EXPOSE 8009/tcp
-
 USER tomcat:tomcat
 
 CMD ["/opt/scripts/start.sh"]
