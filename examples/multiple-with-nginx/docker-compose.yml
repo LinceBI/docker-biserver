@@ -42,21 +42,24 @@ services:
     volumes:
       - "./biserver.init.d:/etc/biserver.init.d:ro"
     environment:
-      WEBAPP_PENTAHO_DIRNAME: helium
-      WEBAPP_PENTAHO_STYLE_DIRNAME: helium-style
-      STORAGE_TYPE: postgres
-      POSTGRES_HOST: pentaho-biserver-postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_JACKRABBIT_DATABASE: helium_jackrabbit
-      POSTGRES_JACKRABBIT_USER: helium_jackrabbit
-      POSTGRES_JACKRABBIT_PASSWORD: helium_jackrabbit
-      POSTGRES_HIBERNATE_DATABASE: helium_hibernate
-      POSTGRES_HIBERNATE_USER: helium_hibernate
-      POSTGRES_HIBERNATE_PASSWORD: helium_hibernate
-      POSTGRES_QUARTZ_DATABASE: helium_quartz
-      POSTGRES_QUARTZ_USER: helium_quartz
-      POSTGRES_QUARTZ_PASSWORD: helium_quartz
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "http"
+      PROXY_PORT: "80"
+      WEBAPP_PENTAHO_DIRNAME: "helium"
+      WEBAPP_PENTAHO_STYLE_DIRNAME: "helium-style"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "pentaho-biserver-postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_JACKRABBIT_DATABASE: "helium_jackrabbit"
+      POSTGRES_JACKRABBIT_USER: "helium_jackrabbit"
+      POSTGRES_JACKRABBIT_PASSWORD: "helium_jackrabbit"
+      POSTGRES_HIBERNATE_DATABASE: "helium_hibernate"
+      POSTGRES_HIBERNATE_USER: "helium_hibernate"
+      POSTGRES_HIBERNATE_PASSWORD: "helium_hibernate"
+      POSTGRES_QUARTZ_DATABASE: "helium_quartz"
+      POSTGRES_QUARTZ_USER: "helium_quartz"
+      POSTGRES_QUARTZ_PASSWORD: "helium_quartz"
     depends_on:
       - "pentaho-biserver-nginx"
       - "pentaho-biserver-postgres"
@@ -73,21 +76,24 @@ services:
     volumes:
       - "./biserver.init.d:/etc/biserver.init.d:ro"
     environment:
-      WEBAPP_PENTAHO_DIRNAME: argon
-      WEBAPP_PENTAHO_STYLE_DIRNAME: argon-style
-      STORAGE_TYPE: postgres
-      POSTGRES_HOST: pentaho-biserver-postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_JACKRABBIT_DATABASE: argon_jackrabbit
-      POSTGRES_JACKRABBIT_USER: argon_jackrabbit
-      POSTGRES_JACKRABBIT_PASSWORD: argon_jackrabbit
-      POSTGRES_HIBERNATE_DATABASE: argon_hibernate
-      POSTGRES_HIBERNATE_USER: argon_hibernate
-      POSTGRES_HIBERNATE_PASSWORD: argon_hibernate
-      POSTGRES_QUARTZ_DATABASE: argon_quartz
-      POSTGRES_QUARTZ_USER: argon_quartz
-      POSTGRES_QUARTZ_PASSWORD: argon_quartz
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "http"
+      PROXY_PORT: "80"
+      WEBAPP_PENTAHO_DIRNAME: "argon"
+      WEBAPP_PENTAHO_STYLE_DIRNAME: "argon-style"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "pentaho-biserver-postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_JACKRABBIT_DATABASE: "argon_jackrabbit"
+      POSTGRES_JACKRABBIT_USER: "argon_jackrabbit"
+      POSTGRES_JACKRABBIT_PASSWORD: "argon_jackrabbit"
+      POSTGRES_HIBERNATE_DATABASE: "argon_hibernate"
+      POSTGRES_HIBERNATE_USER: "argon_hibernate"
+      POSTGRES_HIBERNATE_PASSWORD: "argon_hibernate"
+      POSTGRES_QUARTZ_DATABASE: "argon_quartz"
+      POSTGRES_QUARTZ_USER: "argon_quartz"
+      POSTGRES_QUARTZ_PASSWORD: "argon_quartz"
     depends_on:
       - "pentaho-biserver-nginx"
       - "pentaho-biserver-postgres"
