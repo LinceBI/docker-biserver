@@ -35,6 +35,9 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`WEBAPP_PENTAHO_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
  * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será
    renombrado.
+ * **`IS_PROXIED` (`false` por defecto)**: establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.
+ * **`PROXY_SCHEME` (`https` por defecto)**: protocolo del proxy inverso.
+ * **`PROXY_PORT` (`443` por defecto)**: puerto del proxy inverso.
  * **`TOMCAT_HTTP_PORT` (`8080` por defecto)**: puerto en el que escuchará el conector HTTP de Tomcat.
  * **`TOMCAT_AJP_PORT` (`8009` por defecto)**: puerto en el que escuchará el conector AJP de Tomcat.
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
