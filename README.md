@@ -44,7 +44,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
- * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local` o `postgres`.
+ * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres` o `mysql`.
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con la BBDD.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con la BBDD.
  * **`POSTGRES_USER` (`postgres` por defecto)**: usuario para la conexión con la BBDD.
