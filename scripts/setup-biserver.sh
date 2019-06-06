@@ -21,6 +21,7 @@ fi
 [ -z "${PROXY_SCHEME-}" ] && export PROXY_SCHEME='https'
 [ -z "${PROXY_PORT-}" ]   && export PROXY_PORT='443'
 
+[ -z "${TOMCAT_SHUTDOWN_PORT-}" ]   && export TOMCAT_SHUTDOWN_PORT='8005'
 [ -z "${TOMCAT_HTTP_PORT-}" ]       && export TOMCAT_HTTP_PORT='8080'
 [ -z "${TOMCAT_AJP_PORT-}" ]        && export TOMCAT_AJP_PORT='8009'
 [ -z "${HSQLDB_PORT-}" ]            && export HSQLDB_PORT='9001'
