@@ -70,6 +70,8 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
  * **`MYSQL_QUARTZ_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
+ * **`DEFAULT_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
+ * **`DEFAULT_NON_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
 
 ## Múltiples Pentaho BI Server en el mismo Tomcat (**experimental**)
 

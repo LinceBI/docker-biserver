@@ -87,6 +87,14 @@ if [ "${STORAGE_TYPE}" = 'mysql' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/mysql5.hibernate.cfg.xml'
 fi
 
+[ -z "${DEFAULT_ADMIN_USER_PASSWORD-}" ]     && export DEFAULT_ADMIN_USER_PASSWORD='password'
+[ -z "${DEFAULT_NON_ADMIN_USER_PASSWORD-}" ] && export DEFAULT_NON_ADMIN_USER_PASSWORD='password'
+
+# Encrypt default passwords with "org.pentaho.di.core.encryption.Encr"
+DEFAULT_ADMIN_USER_PASSWORD=$(/opt/scripts/encr.sh -kettle "${DEFAULT_ADMIN_USER_PASSWORD}")
+DEFAULT_NON_ADMIN_USER_PASSWORD=$(/opt/scripts/encr.sh -kettle "${DEFAULT_NON_ADMIN_USER_PASSWORD}")
+export DEFAULT_ADMIN_USER_PASSWORD DEFAULT_NON_ADMIN_USER_PASSWORD
+
 ########
 
 # Export all environment variables escaped so they can be used as a replacement in sed
