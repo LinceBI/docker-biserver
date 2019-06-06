@@ -2,15 +2,25 @@ version: "3.7"
 
 services:
 
-  nginx:
-    image: nginx:1
+  caddy:
+    image: hectormolinero/caddy:latest
     restart: on-failure:3
     networks:
       - "biserver"
     ports:
       - "0.0.0.0:80:80/tcp"
+      - "0.0.0.0:443:443/tcp"
+    environment:
+      ROOT_REDIRECT: "${ROOT_REDIRECT}"
+      CERT_CA_SERVER: "${CERT_CA_SERVER}"
+      CERT_DOMAIN: "${CERT_DOMAIN}"
+      CERT_EMAIL: "${CERT_EMAIL}"
+      CERT_DNSPROVIDER: "${CERT_DNSPROVIDER}"
+      CLOUDFLARE_EMAIL: "${CLOUDFLARE_EMAIL}"
+      CLOUDFLARE_API_KEY: "${CLOUDFLARE_API_KEY}"
     volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/var/lib/caddy"
     logging:
       driver: journald
       options:
@@ -42,8 +52,11 @@ services:
       - "./biserver.init.d:/etc/biserver.init.d:ro"
     environment:
       IS_PROXIED: "true"
-      PROXY_SCHEME: "http"
-      PROXY_PORT: "80"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${CERT_DOMAIN}"
+      FQSU_PORT: "443"
       WEBAPP_PENTAHO_DIRNAME: "helium"
       WEBAPP_PENTAHO_STYLE_DIRNAME: "helium-style"
       STORAGE_TYPE: "postgres"
@@ -60,7 +73,7 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${HELIUM_POSTGRES_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${HELIUM_POSTGRES_QUARTZ_DATABASE}"
     depends_on:
-      - "nginx"
+      - "caddy"
       - "postgres"
     logging:
       driver: journald
@@ -76,8 +89,11 @@ services:
       - "./biserver.init.d:/etc/biserver.init.d:ro"
     environment:
       IS_PROXIED: "true"
-      PROXY_SCHEME: "http"
-      PROXY_PORT: "80"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${CERT_DOMAIN}"
+      FQSU_PORT: "443"
       WEBAPP_PENTAHO_DIRNAME: "argon"
       WEBAPP_PENTAHO_STYLE_DIRNAME: "argon-style"
       STORAGE_TYPE: "postgres"
@@ -94,7 +110,7 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${ARGON_POSTGRES_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${ARGON_POSTGRES_QUARTZ_DATABASE}"
     depends_on:
-      - "nginx"
+      - "caddy"
       - "postgres"
     logging:
       driver: journald
@@ -109,4 +125,5 @@ networks:
 
 volumes:
 
+  caddy-data:
   postgres-data:

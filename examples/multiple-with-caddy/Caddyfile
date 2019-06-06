@@ -1,0 +1,65 @@
+(common) {
+	limits 100mb
+	gzip {
+		level 4
+		min_length 1000
+	}
+}
+
+(proxy-headers) {
+	header_upstream Host {host}
+	header_upstream X-Real-IP {remote}
+	header_upstream X-Forwarded-For {remote}
+	header_upstream X-Forwarded-Host {host}
+	header_upstream X-Forwarded-Port {server_port}
+	header_upstream X-Forwarded-Proto {scheme}
+	header_upstream Connection {>Connection}
+	header_upstream Upgrade {>Upgrade}
+}
+
+{$CERT_DOMAIN}:80 {
+	import common
+
+	tls off
+
+	root /var/www/default/
+	redir / https://{host}{uri} 301
+
+	log / stdout
+	errors stderr
+}
+
+{$CERT_DOMAIN}:443 {
+	import common
+
+	tls {$CERT_EMAIL} {
+		ca https://{$CERT_CA_SERVER}/directory
+		dns {$CERT_DNSPROVIDER}
+	}
+
+	root /var/www/default/
+	redir 301 {
+		if {path} is /
+		/ {$ROOT_REDIRECT}
+	}
+
+	# TODO: Implement dynamic backends when #1639 is resolved.
+	# (https://github.com/mholt/caddy/issues/1639)
+
+	proxy /helium http://biserver-helium:8080 {
+		import proxy-headers
+	}
+	proxy /helium-style http://biserver-helium:8080 {
+		import proxy-headers
+	}
+
+	proxy /argon http://biserver-argon:8080 {
+		import proxy-headers
+	}
+	proxy /argon-style http://biserver-argon:8080 {
+		import proxy-headers
+	}
+
+	log / stdout
+	errors stderr
+}
