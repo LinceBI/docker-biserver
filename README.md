@@ -44,11 +44,10 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local` o `postgres`.
- * **`POSTGRES_HOST`**: host para la conexión con la BBDD.
- * **`POSTGRES_PORT`**: puerto para la conexión con la BBDD.
- * **`POSTGRES_USER`**: usuario para la conexión con la BBDD.
- * **`POSTGRES_PASSWORD`**: contraseña para la conexión con la BBDD.
- * **`POSTGRES_DATABASE`**: nombre de la BBDD inicial (no se realizará ninguna operación sobre ella).
+ * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con la BBDD.
+ * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con la BBDD.
+ * **`POSTGRES_USER` (`postgres` por defecto)**: usuario para la conexión con la BBDD.
+ * **`POSTGRES_PASSWORD` (`${POSTGRES_USER}` por defecto)**: contraseña para la conexión con la BBDD.
  * **`POSTGRES_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit.
  * **`POSTGRES_JACKRABBIT_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`POSTGRES_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
@@ -58,6 +57,19 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`POSTGRES_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
  * **`POSTGRES_QUARTZ_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
  * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
+ * **`MYSQL_HOST` (`localhost` por defecto)**: host para la conexión con la BBDD.
+ * **`MYSQL_PORT` (`3306` por defecto)**: puerto para la conexión con la BBDD.
+ * **`MYSQL_USER` (`root` por defecto)**: usuario para la conexión con la BBDD.
+ * **`MYSQL_PASSWORD` (`${MYSQL_USER}` por defecto)**: contraseña para la conexión con la BBDD.
+ * **`MYSQL_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit.
+ * **`MYSQL_JACKRABBIT_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
+ * **`MYSQL_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
+ * **`MYSQL_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate.
+ * **`MYSQL_HIBERNATE_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Hibernate.
+ * **`MYSQL_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
+ * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
+ * **`MYSQL_QUARTZ_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
+ * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
 
 ## Múltiples Pentaho BI Server en el mismo Tomcat (**experimental**)
 
@@ -76,7 +88,7 @@ la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estru
           "POSTGRES_HOST": "postgres.local",
           "POSTGRES_USER": "postgres",
           "POSTGRES_PASSWORD": "1234",
-          "POSTGRES_DATABASE": "postgres",
+          "POSTGRES_MAINTENANCE_DATABASE": "postgres",
           // ...
       }
     },

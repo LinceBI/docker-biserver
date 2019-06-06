@@ -4,6 +4,7 @@ FROM ubuntu:18.04
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
+		bash \
 		bzip2 \
 		ca-certificates \
 		curl \
@@ -13,8 +14,10 @@ RUN apt-get update \
 		lzip \
 		lzma \
 		lzop \
-		netcat-traditional \
+		mysql-client \
+		netcat-openbsd \
 		openjdk-8-jdk \
+		openssl \
 		postgresql-client \
 		ruby \
 		tar \
@@ -90,10 +93,10 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 		> "${CATALINA_HOME}"/lib/org/apache/catalina/util/ServerInfo.properties \
 	# Set permissions
 	&& find \
-		"${CATALINA_HOME}" \
-		"${CATALINA_BASE}" \
-		-exec chown tomcat:tomcat '{}' \; \
-		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
+		"${CATALINA_HOME}" "${CATALINA_BASE}" \
+		-exec chown tomcat:tomcat '{}' ';' \
+		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; fi' ';' \
+		-exec sh -c 'if [ -f "{}" ]; then chmod 644 "{}"; fi' ';' \
 	&& chmod 755 "${CATALINA_HOME}"/bin/*.sh \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS} \
@@ -106,14 +109,19 @@ COPY --chown=tomcat:tomcat config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
 
 # Download Tomcat libraries
 RUN printf '%s\n' 'Downloading Tomcat libraries...' \
-	&& for placeholder in "${CATALINA_BASE}"/lib/*.download; do \
-		url=$(cat "${placeholder}" | tr -d '\n'); \
-		file=$(basename "${placeholder}" .download); \
-		printf '%s\n' "Downloading \"${file}\"..." \
-		&& curl -o "${CATALINA_BASE}"/lib/"${file}" "${url}" \
-		&& chown tomcat:tomcat "${CATALINA_BASE}"/lib/"${file}" \
-		&& rm "${placeholder}"; \
-	done
+	&& jsonFile="${CATALINA_BASE}"/lib/jars.json \
+	&& jarsCount="$(jq -r '.|length-1' "${jsonFile}")" \
+	&& for i in $(seq 0 "${jarsCount}"); do \
+		filename=$(jq -r --arg i "${i}" '.[$i|tonumber].filename' "${jsonFile}"); \
+		checksum=$(jq -r --arg i "${i}" '.[$i|tonumber].checksum' "${jsonFile}"); \
+		download=$(jq -r --arg i "${i}" '.[$i|tonumber].download' "${jsonFile}"); \
+		output="${CATALINA_BASE}"/lib/"${filename}" \
+		&& printf '%s\n' "Downloading \"${filename}\"..." \
+		&& curl -Lo "${output}" "${download}" \
+		&& printf '%s\n' "Verifying checksum..." \
+		&& printf '%s\n' "${checksum}  ${output}" | sha256sum -c \
+		&& chown tomcat:tomcat "${output}"; \
+	done && rm -f "${jsonFile}"
 
 # Pentaho BI Server environment
 ENV BISERVER_HOME="/var/lib/biserver"
@@ -143,10 +151,7 @@ ARG BISERVER_VERSION='8.2.0.0-342'
 ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
-	&& /opt/build-scripts/download-biserver.sh \
-		"${BISERVER_VERSION}" \
-		"${BISERVER_MAVEN_REPO}" \
-		/tmp/biserver/ \
+	&& /opt/build-scripts/download-biserver.sh "${BISERVER_VERSION}" "${BISERVER_MAVEN_REPO}" /tmp/biserver/ \
 	# Install Pentaho BI Server
 	&& mkdir -p \
 		"${BISERVER_HOME}"/"${KETTLE_DIRNAME}" \
@@ -162,9 +167,7 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
 	) \
 	# Download Pentaho BI Server resources
-	&& /opt/build-scripts/download-biserver-resources.sh \
-		"${BISERVER_VERSION}" \
-		"${BISERVER_HOME}" \
+	&& /opt/build-scripts/download-biserver-resources.sh "${BISERVER_VERSION}" "${BISERVER_HOME}" \
 	# Set permissions
 	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
@@ -173,8 +176,9 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		"${BISERVER_HOME}"/"${DATA_DIRNAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" \
-		-exec chown tomcat:tomcat '{}' \; \
-		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; else chmod 644 "{}"; fi' \; \
+		-exec chown tomcat:tomcat '{}' ';' \
+		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; fi' ';' \
+		-exec sh -c 'if [ -f "{}" ]; then chmod 644 "{}"; fi' ';' \
 	&& chmod 755 "${BISERVER_HOME}"/*.sh \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
@@ -198,8 +202,8 @@ COPY --chown=root:root scripts/ /opt/scripts/
 #VOLUME "${BISERVER_HOME}"/"${DATA_DIRNAME}/hsqldb/"
 #VOLUME "${CATALINA_BASE}"/logs/
 
-WORKDIR "${BISERVER_HOME}"
-
+# Drop root privileges
 USER tomcat:tomcat
 
+WORKDIR "${BISERVER_HOME}"
 CMD ["/opt/scripts/start.sh"]
