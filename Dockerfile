@@ -148,7 +148,8 @@ ENV WEBAPP_PENTAHO_STYLE_DIRNAME="${WEBAPP_PENTAHO_STYLE_DIRNAME}"
 ENV WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME="${WEBAPP_PENTAHO_STYLE_DIRNAME}"
 
 ARG BISERVER_VERSION='8.2.0.0-342'
-ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
+ARG BISERVER_MAVEN_REPO='https://repo.stratebi.com/repository/pentaho-mvn/'
+#ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
 	&& /opt/build-scripts/download-biserver.sh "${BISERVER_VERSION}" "${BISERVER_MAVEN_REPO}" /tmp/biserver/ \

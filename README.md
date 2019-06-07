@@ -137,12 +137,12 @@ El ejemplo más simple es el despliegue de un contenedor con almacenamiento loca
 
 ```sh
 docker run --detach \
-  --name pentaho-biserver \
+  --name biserver \
   --publish '8080:8080/tcp' \
-  --mount type=volume,src=pentaho-biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
-  --mount type=volume,src=pentaho-biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
-  --mount type=volume,src=pentaho-biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  stratebi/pentaho-biserver:8.2.0.0-342
+  --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
+  --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
+  --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
+  stratebi/biserver:8.2.0.0-342
 ```
 
 Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.

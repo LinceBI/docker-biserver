@@ -10,13 +10,8 @@ export EXPORT_ENABLED='true'
 
 # Print tarball to stdout
 GZIP=-4n tar \
-	--totals \
-	--checkpoint=10000 \
-	--checkpoint-action=echo='%{}T' \
-	--format=posix \
-	--preserve-permissions \
-	--xattrs --acls --selinux \
-	--create --gzip --file=- \
-	--exclude '*.erb' \
-	--exclude '.placeholder' \
-	--directory "${BISERVER_HOME}" .
+	--checkpoint=10000 --checkpoint-action=echo='%{}T' --totals \
+	--preserve-permissions --acls --selinux --xattrs --numeric-owner --sort=name \
+	--format=posix --pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
+	--exclude '*.erb' --exclude '.placeholder' \
+	--create --gzip --file=- --directory "${BISERVER_HOME}" .

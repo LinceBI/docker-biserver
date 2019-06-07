@@ -8,8 +8,8 @@ containerExists() { docker ps -aqf name="$1" --format '{{.Names}}' | grep -Fxq "
 containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 networkExists() { docker network ls -qf name="$1" --format '{{.Name}}' | grep -Fxq "$1"; }
 
-DOCKER_BISERVER_IMAGE=stratebi/pentaho-biserver:8.2.0.0-342
-DOCKER_BISERVER_CONTAINER=pentaho-biserver
+DOCKER_BISERVER_IMAGE=stratebi/biserver:8.2.0.0-342
+DOCKER_BISERVER_CONTAINER=biserver
 
 DOCKER_MYSQL_IMAGE=mysql:5.7
 DOCKER_MYSQL_CONTAINER="${DOCKER_BISERVER_CONTAINER}-mysql"
