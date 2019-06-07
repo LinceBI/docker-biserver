@@ -11,7 +11,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`make save-image`**: exporta en el directorio `./dist/` un tarball de la imagen.
  * **`make save-standalone`**: exporta en el directorio `./dist/` un tarball de la instalación con una estructura similar a la que podemos encontrar
    en los ZIP de Pentaho BI Server en Sourceforge.
- * **`make build`**: ejecuta las tareas `build-image`, `save-image` y `save-standalone`.
+ * **`make all`**: ejecuta las tareas `save-image` y `save-standalone`.
 
 ## Argumentos del Dockerfile
 
@@ -38,7 +38,6 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`IS_PROXIED` (`false` por defecto)**: establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.
  * **`PROXY_SCHEME` (`https` por defecto)**: protocolo del proxy inverso.
  * **`PROXY_PORT` (`443` por defecto)**: puerto del proxy inverso.
- * **`TOMCAT_SHUTDOWN_PORT` (`8005` por defecto)**: puerto de apagado de Tomcat.
  * **`TOMCAT_HTTP_PORT` (`8080` por defecto)**: puerto en el que escuchará el conector HTTP de Tomcat.
  * **`TOMCAT_AJP_PORT` (`8009` por defecto)**: puerto en el que escuchará el conector AJP de Tomcat.
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
@@ -74,10 +73,40 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`DEFAULT_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
  * **`DEFAULT_NON_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
 
+## Instalación de plugins y ejecución de scripts personalizados
+
+Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos situados en el directorio
+`./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
+
+ * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
+   anteriormente documentadas.
+ * **`*.tar`, `*.tar.gz`, `*.tar.bz2`, `*.tar.xz`, `*.zip`, `*.kar`**:
+   * **`*.__webapp__.*`**: son extraídos en `"${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
+   * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
+   * **`*.__solutions__.*`**: son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
+   * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
+   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+
+Los archivos situados directamente en `./config/biserver.init.d/` son aplicados a todas las instancias de Pentaho BI Server, es posible aplicar un
+archivo a una sola instancia creando un subdirectorio con el nombre de esta y colocando en él los archivos.
+
+Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
+
+```sh
+docker run \
+  # ...
+  --mount type=bind,src='/ruta/a/mis/plugins/',dst='/etc/biserver.init.d/',ro \
+  # ...
+```
+
 ## Múltiples Pentaho BI Server en el mismo Tomcat (**experimental**)
 
 Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo Tomcat. Si se desea una configuración más compleja, es posible definir
 la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estructura:
+
+**NOTA:** actualmente esta configuración presenta problemas con algunos componentes de Pentaho BI Server, en especial Karaf. Esta característica está
+todavía en desarrollo y no se recomienda su uso. Si se desean desplegar múltiples Pentaho BI Server es recomendable que cada uno disponga de su propia
+instancia de Tomcat, en el directorio `./examples/` se pueden encontrar ejemplos de esto con Caddy y Nginx.
 
 ```json
 {
@@ -103,32 +132,6 @@ la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estru
     // ...
   ]
 }
-```
-
-## Instalación de plugins y ejecución de scripts personalizados
-
-Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos contenidos en el directorio
-`./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
-
- * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
-   anteriormente documentadas.
- * **`*.tar`, `*.tar.gz`, `*.tar.bz2`, `*.tar.xz`, `*.zip`, `*.kar`**:
-   * **`*.__webapp__.*`**: son extraídos en `"${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
-   * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
-   * **`*.__solutions__.*`**: son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
-   * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
-   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
-
-Los archivos posicionados directamente en `./config/biserver.init.d/` son aplicados a todas las instancias de Pentaho BI Server, es posible aplicar un
-archivo a una sola instancia creando un subdirectorio con el nombre de esta y colocando en él los archivos.
-
-Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
-
-```sh
-docker run \
-  # ...
-  --mount type=bind,src='/ruta/a/mis/plugins/',dst='/etc/biserver.init.d/',ro \
-  # ...
 ```
 
 ## Ejemplos de despliegue
