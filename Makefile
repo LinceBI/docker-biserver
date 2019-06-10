@@ -16,8 +16,8 @@ IMAGE_PROJECT := biserver
 IMAGE_NAME := $(IMAGE_REGISTRY)/$(IMAGE_NAMESPACE)/$(IMAGE_PROJECT)
 IMAGE_VERSION := 8.2.0.0-342
 
-IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_docker.tgz
-STANDALONE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_standalone.tgz
+IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tgz
+STANDALONE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.tgz
 
 ##################################################
 ## "all" target
