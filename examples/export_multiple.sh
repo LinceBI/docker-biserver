@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-DOCKER_BISERVER_IMAGE=stratebi/biserver:8.2.0.0-342
+DOCKER_BISERVER_IMAGE=stratebi/biserver:latest
 SETUP_JSON="$(cat <<-EOF
   {
     "root": "helium",
