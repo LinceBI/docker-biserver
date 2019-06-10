@@ -15,6 +15,7 @@
 	header_upstream X-Forwarded-Proto {scheme}
 	header_upstream Connection {>Connection}
 	header_upstream Upgrade {>Upgrade}
+	timeout 120s
 }
 
 {$CERT_DOMAIN}:80 {
