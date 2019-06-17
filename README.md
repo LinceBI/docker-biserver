@@ -80,9 +80,10 @@ Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar T
 
  * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
    anteriormente documentadas.
- * **`*.tar`, `*.tar.gz`, `*.tar.bz2`, `*.tar.xz`, `*.zip`, `*.kar`**:
-   * **`*.__webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
-   * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
+ * **`*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`**:
+   * **`*.__root__.*`**: son extraídos en `${BISERVER_HOME}`.
+   * **`*.__webapp_pentaho__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
+   * **`*.__webapp_pentaho_style__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
    * **`*.__solutions__.*`**: son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
    * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
    * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.

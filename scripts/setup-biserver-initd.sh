@@ -11,7 +11,7 @@ extractArchive() {
 	source="${1:?}"
 	target="${2:?}"
 	case "${source}" in
-		*.tar|*.tar.gz|*.tar.bz2|*.tar.xz)
+		*.tar|*.tar.gz|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz)
 			tar -C "${target}" -xf "${source}"
 			;;
 		*.zip|*.kar)
@@ -31,13 +31,17 @@ initdFromDir() {
 				cd "${BISERVER_HOME}" && "${file}"
 				;;
 			# Extract archives
-			*.tar|*.tar.gz|*.tar.bz2|*.tar.xz|*.zip|*.kar)
+			*.tar|*.tar.gz|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.zip|*.kar)
 				case "${file}" in
-					*.__webapp__.*)
+					*.__root__.*)
+						logInfo "Extracting file \"${file}\" to root directory ..."
+						extractArchive "${file}" "${BISERVER_HOME}"
+						;;
+					*.__webapp_pentaho__.*)
 						logInfo "Extracting file \"${file}\" to Pentaho webapp directory ..."
 						extractArchive "${file}" "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"
 						;;
-					*.__style_webapp__.*)
+					*.__webapp_pentaho_style__.*)
 						logInfo "Extracting file \"${file}\" to Pentaho Style webapp directory ..."
 						extractArchive "${file}" "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"
 						;;
