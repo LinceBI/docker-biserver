@@ -81,11 +81,11 @@ Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar T
  * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
    anteriormente documentadas.
  * **`*.tar`, `*.tar.gz`, `*.tar.bz2`, `*.tar.xz`, `*.zip`, `*.kar`**:
-   * **`*.__webapp__.*`**: son extraídos en `"${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
+   * **`*.__webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
    * **`*.__style_webapp__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
-   * **`*.__solutions__.*`**: son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
+   * **`*.__solutions__.*`**: son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
    * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
-   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `"${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
 
 Los archivos situados directamente en `./config/biserver.init.d/` son aplicados a todas las instancias de Pentaho BI Server, es posible aplicar un
 archivo a una sola instancia creando un subdirectorio con el nombre de esta y colocando en él los archivos.
