@@ -24,10 +24,15 @@ psqlDbExists() {
 
 if [ "${EXPORT_ENABLED}" = 'false' ]; then
 	logInfo 'Checking PostgreSQL connection...'
-	if ! psqlRun -c '\conninfo'; then
-		logFail 'PostgreSQL connection failed'
-		exit 1
-	fi
+	CONNECTION_RETRIES=0; MAX_CONNECTION_RETRIES=60
+	until psqlRun -c '\conninfo'; do
+		if [ "${CONNECTION_RETRIES}" -gt "${MAX_CONNECTION_RETRIES}" ]; then
+			logFail 'PostgreSQL connection failed'
+			exit 1
+		fi
+		CONNECTION_RETRIES=$(( CONNECTION_RETRIES + 1 ))
+		sleep 1
+	done
 
 	logInfo "Checking \"${POSTGRES_JACKRABBIT_DATABASE}\" database..."
 	if ! psqlDbExists "${POSTGRES_JACKRABBIT_DATABASE}"; then

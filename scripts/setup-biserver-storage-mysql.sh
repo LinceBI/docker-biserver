@@ -23,10 +23,15 @@ mysqlDbExists() {
 
 if [ "${EXPORT_ENABLED}" = 'false' ]; then
 	logInfo 'Checking MySQL connection...'
-	if ! mysqlRun -e '\q'; then
-		logFail 'MySQL connection failed'
-		exit 1
-	fi
+	CONNECTION_RETRIES=0; MAX_CONNECTION_RETRIES=60
+	until mysqlRun -e '\q'; do
+		if [ "${CONNECTION_RETRIES}" -gt "${MAX_CONNECTION_RETRIES}" ]; then
+			logFail 'MySQL connection failed'
+			exit 1
+		fi
+		CONNECTION_RETRIES=$(( CONNECTION_RETRIES + 1 ))
+		sleep 1
+	done
 
 	logInfo "Checking \"${MYSQL_JACKRABBIT_DATABASE}\" database..."
 	if ! mysqlDbExists "${MYSQL_JACKRABBIT_DATABASE}"; then
