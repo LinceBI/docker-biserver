@@ -12,14 +12,9 @@ if [ "${KETTLE_DIRNAME}" != "${KETTLE_DEFAULT_DIRNAME}" ]; then
 	logInfo "Kettle directory was renamed to \"${KETTLE_DIRNAME}\""
 	#KETTLE_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME}"/"${KETTLE_DIRNAME}" ]; then
-		if [ "${MULTI_SETUP_ENABLED}" = true ]; then
-			logInfo 'Creating kettle symlink...'
-			ln -rs "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
-		else
-			logInfo 'Moving kettle directory...'
-			cp -a "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
-			rm -r "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME}"/
-		fi
+		logInfo 'Moving kettle directory...'
+		cp -a "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
+		rm -r "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME}"/
 	fi
 fi
 
@@ -28,14 +23,9 @@ if [ "${SOLUTIONS_DIRNAME}" != "${SOLUTIONS_DEFAULT_DIRNAME}" ]; then
 	logInfo "Solutions directory was renamed to \"${SOLUTIONS_DIRNAME}\""
 	#SOLUTIONS_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}" ]; then
-		if [ "${MULTI_SETUP_ENABLED}" = true ]; then
-			logInfo 'Copying solutions directory...'
-			cp -a "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"
-		else
-			logInfo 'Moving solutions directory...'
-			cp -a "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"
-			rm -r "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME}"/
-		fi
+		logInfo 'Moving solutions directory...'
+		cp -a "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"
+		rm -r "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME}"/
 	fi
 fi
 
@@ -44,14 +34,9 @@ if [ "${DATA_DIRNAME}" != "${DATA_DEFAULT_DIRNAME}" ]; then
 	logInfo "Data directory was renamed to \"${DATA_DIRNAME}\""
 	#DATA_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME}"/"${DATA_DIRNAME}" ]; then
-		if [ "${MULTI_SETUP_ENABLED}" = true ]; then
-			logInfo 'Copying data directory...'
-			cp -a "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"
-		else
-			logInfo 'Moving data directory...'
-			cp -a "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"
-			rm -r "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME}"/
-		fi
+		logInfo 'Moving data directory...'
+		cp -a "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME}"/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"
+		rm -r "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME}"/
 	fi
 fi
 
@@ -62,14 +47,9 @@ if [ "${WEBAPP_PENTAHO_DIRNAME}" != "${WEBAPP_PENTAHO_DEFAULT_DIRNAME}" ]; then
 	logInfo "Pentaho webapp directory was renamed to \"${WEBAPP_PENTAHO_DIRNAME}\""
 	#WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" ]; then
-		if [ "${MULTI_SETUP_ENABLED}" = true ]; then
-			logInfo 'Copying Pentaho webapp directory...'
-			cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"
-		else
-			logInfo 'Moving Pentaho webapp directory...'
-			cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"
-			rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/
-		fi
+		logInfo 'Moving Pentaho webapp directory...'
+		cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"
+		rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME}"/
 	fi
 fi
 
@@ -78,14 +58,9 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME}" != "${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAM
 	logInfo "Pentaho style webapp directory was renamed to \"${WEBAPP_PENTAHO_STYLE_DIRNAME}\""
 	WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" ]; then
-		if [ "${MULTI_SETUP_ENABLED}" = true ]; then
-			logInfo 'Copying Pentaho style webapp directory...'
-			cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"
-		else
-			logInfo 'Moving Pentaho style webapp directory...'
-			cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"
-			rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/
-		fi
+		logInfo 'Moving Pentaho style webapp directory...'
+		cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"
+		rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME}"/
 	fi
 fi
 

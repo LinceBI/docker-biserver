@@ -69,7 +69,3 @@ initdFromDir() {
 if [ -d "${BISERVER_INITD}" ]; then
 	initdFromDir "${BISERVER_INITD}"
 fi
-
-if [ -d "${BISERVER_INITD}"/"${WEBAPP_PENTAHO_DIRNAME}" ]; then
-	initdFromDir "${BISERVER_INITD}"/"${WEBAPP_PENTAHO_DIRNAME}"
-fi

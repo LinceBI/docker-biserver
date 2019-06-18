@@ -7,15 +7,13 @@ export LC_ALL=C
 
 ########
 
+[ -z "${EXPORT_ENABLED-}" ] && export EXPORT_ENABLED='false'
+
 if [ -z "${INSTANCE_ID-}" ]; then
 	# Each instance has a random 12 characters alphanumeric string
 	INSTANCE_ID="$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)"
 	export INSTANCE_ID
 fi
-
-[ -z "${EXPORT_ENABLED-}" ]                 && export EXPORT_ENABLED='false'
-[ -z "${MULTI_SETUP_ENABLED-}" ]            && export MULTI_SETUP_ENABLED='false'
-[ -z "${DEFAULT_WEBAPP_PENTAHO_DIRNAME-}" ] && export DEFAULT_WEBAPP_PENTAHO_DIRNAME="${WEBAPP_PENTAHO_DIRNAME}"
 
 [ -z "${IS_PROXIED-}" ]   && export IS_PROXIED='false'
 [ -z "${PROXY_SCHEME-}" ] && export PROXY_SCHEME='https'

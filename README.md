@@ -88,9 +88,6 @@ Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar T
    * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
    * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
 
-Los archivos situados directamente en `./config/biserver.init.d/` son aplicados a todas las instancias de Pentaho BI Server, es posible aplicar un
-archivo a una sola instancia creando un subdirectorio con el nombre de esta y colocando en él los archivos.
-
 Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
 
 ```sh
@@ -98,41 +95,6 @@ docker run \
   # ...
   --mount type=bind,src='/ruta/a/mis/plugins/',dst='/etc/biserver.init.d/',ro \
   # ...
-```
-
-## Múltiples Pentaho BI Server en el mismo Tomcat (**experimental**)
-
-Por defecto esta imagen despliega únicamente un Pentaho BI Server en el mismo Tomcat. Si se desea una configuración más compleja, es posible definir
-la variable de entorno `SETUP_JSON` con un valor que presente la siguiente estructura:
-
-**NOTA:** actualmente esta configuración presenta problemas con algunos componentes de Pentaho BI Server, en especial Karaf. Esta característica está
-todavía en desarrollo y no se recomienda su uso. Si se desean desplegar múltiples Pentaho BI Server es recomendable que cada uno disponga de su propia
-instancia de Tomcat, en el directorio `./examples/` se pueden encontrar ejemplos de esto con Caddy y Nginx.
-
-```json
-{
-  "root": "pentaho", // El usuario será redireccionado a esta instancia si accede desde la raíz.
-  "servers": [ // Definición de cada instancia.
-    {
-      "name": "pentaho", // Nombre de la instancia.
-      "enabled": true, // Si el valor es "false", la instancia no será configurada.
-      "env": { // Variables de entorno para configurar la instancia.
-          "STORAGE_TYPE": "postgres",
-          "POSTGRES_HOST": "postgres.local",
-          "POSTGRES_USER": "postgres",
-          "POSTGRES_PASSWORD": "1234",
-          "POSTGRES_MAINTENANCE_DATABASE": "postgres",
-          // ...
-      }
-    },
-    {
-      "name": "lincebi",
-      "enabled": false,
-      "env": {}
-    },
-    // ...
-  ]
-}
 ```
 
 ## Ejemplos de despliegue
