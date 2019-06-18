@@ -133,5 +133,5 @@ if [ "${STORAGE_TYPE}" = 'mysql' ]; then
 	/opt/scripts/setup-biserver-storage-mysql.sh
 fi
 
-# biserver.init.d setup
+# biserver.init.d/ setup
 /opt/scripts/setup-biserver-initd.sh

@@ -75,18 +75,27 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
 
 ## Instalación de plugins y ejecución de scripts personalizados
 
-Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos situados en el directorio
-`./config/biserver.init.d/` son tratados de diferentes maneras según su extensión.
+Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos o directorios situados en el
+directorio `./config/biserver.init.d/` son tratados de diferentes maneras.
 
- * **`*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
+ * **Archivos `*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
    anteriormente documentadas.
- * **`*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`**:
+ * **Archivos `*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`:**
    * **`*.__root__.*`**: son extraídos en `${BISERVER_HOME}`.
    * **`*.__webapp_pentaho__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
    * **`*.__webapp_pentaho_style__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
-   * **`*.__solutions__.*`**: son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
+   * **`*.__pentaho_solutions__.*`**: son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
    * **`*.__data__.*`**: son extraídos en `${BISERVER_HOME}/${DATA_DIRNAME}`.
-   * **Todos los demás**: son considerados plugins estándar de Pentaho y son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+   * **`*.__plugin__.*`**: son extraídos en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+   * **Todos los demás**: se autodetectará si tratarse como `*.__root__.*` o `*.__plugin__.*`.
+ * **Directorios:**
+   * **`*.__root__`**: son copiados en `${BISERVER_HOME}`.
+   * **`*.__webapp_pentaho__`**: son copiados en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
+   * **`*.__webapp_pentaho_style__`**: son copiados en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.
+   * **`*.__pentaho_solutions__`**: son copiados en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}`.
+   * **`*.__data__`**: son copiados en `${BISERVER_HOME}/${DATA_DIRNAME}`.
+   * **`*.__plugin__`**: son copiados en `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/`.
+   * **Todos los demás**: se autodetectará si tratarse como `*.__root__` o `*.__plugin__`.
 
 Para añadir estos archivos a una imagen ya construida, se debe montar en el contenedor el directorio `/etc/biserver.init.d/`.
 

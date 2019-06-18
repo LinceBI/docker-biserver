@@ -23,6 +23,7 @@ RUN apt-get update \
 		tar \
 		unzip \
 		xz-utils \
+		zip \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Java environment
