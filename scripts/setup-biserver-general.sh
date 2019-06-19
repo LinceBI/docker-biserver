@@ -8,29 +8,44 @@ export LC_ALL=C
 ########
 
 # Execute ERB files
-find "${BISERVER_HOME}" \
-	-type f \
-	-name '*.erb' \
-	-exec sh -c 'set -eu;
-		for erb in "$@"; do
-			printf "%s\n" "[INFO] Executing ERB file: ${erb}";
-			dirname=${erb%/*}; basename=$(basename "${erb}" .erb);
-			erb -T - "${erb}" > "${dirname}"/"${basename}";
-		done
-	' _ '{}' '+'
+recursiveExecuteErbs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path}" ]; then
+			recursiveExecuteErbs "${path}"
+		elif [ "${path}" != "${path%.erb}" ]; then
+			logInfo "Executing ERB file: ${path}"
+			dirname=${path%/*}; basename=$(basename "${path}" .erb)
+			output=${dirname}/${basename}
+			erb -T - "${output}.erb" > "${output}"
+		fi
+	done
+}
+recursiveExecuteErbs "${BISERVER_HOME}"
 
 # Compress directories ending in .zip, .pfm or .pgus
-find "${BISERVER_HOME}" \
-	-type d \
-	-regex '.*\.\(zip\|pfm\|pgus\)' \
-	-exec sh -c 'set -eu;
-		for dir in "$@"; do
-			printf "%s\n" "[INFO] Compressing directory: ${dir}";
-			dirname=${dir%/*}; basename=${dir##*/};
-			(cd "${dir}"; zip -qmr "../.${basename}" ./);
-			rmdir "${dir}"; mv "${dirname}/.${basename}" "${dir}";
-		done
-	' _ '{}' '+'
+recursiveZipDirs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path}" ]; then
+			# This method must be called in a subshell to avoid
+			# overwriting variables in the current scope
+			(recursiveZipDirs "${path}")
+			if
+				[ "${path}" != "${path%.zip}" ] ||
+				# Pentaho File Metadata plugin
+				[ "${path}" != "${path%.pfm}" ] ||
+				# Pentaho Global User Settings plugin
+				[ "${path}" != "${path%.pgus}" ]
+			then
+				logInfo "Compressing directory: ${path}"
+				dirname=${path%/*}; basename=${path##*/}
+				output=${dirname}/${basename}; tmpOutput=$(mktemp -u)
+				(cd "${output}" || exit; zip -qmr "${tmpOutput}" ./)
+				rmdir "${output}"; mv "${tmpOutput}" "${output}"
+			fi
+		fi
+	done
+}
+recursiveZipDirs "${BISERVER_HOME}"
 
 # Update Kettle directory location
 sed -ri "s|^(DI_HOME)=.*$|\1=\"\$DIR/${KETTLE_DIRNAME_SUBST}\"|" "${BISERVER_HOME}"/start-pentaho.sh

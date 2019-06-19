@@ -11,12 +11,6 @@ execPattern="\.\(sh\|run\)$"
 tarPattern="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
 zipPattern="\.\(zip\|kar\)$"
 
-matches() {
-	string="${1:?}"
-	pattern="${2:?}"
-	printf -- '%s' "${string}" | grep -q "${pattern}"
-}
-
 extractArchive() {
 	source="${1:?}"
 	target="${2:?}"
@@ -37,10 +31,12 @@ copyDirectory() {
 		for path in "${1:?}"/*; do
 			if [ -d "${path}" ]; then
 				recursiveExecuteErbs "${path}"
-			elif matches "${path}" "\.erb$"; then
-				printf "%s\n" "[INFO] Executing ERB file: ${path}"
+			elif [ "${path}" != "${path%.erb}" ]; then
+				logInfo "Executing ERB file: ${path}"
 				dirname=${path%/*}; basename=$(basename "${path}" .erb)
-				output=${target}${dirname##${source}}/${basename}
+				# Substitute source dirname with target dirname
+				dirname=${target}${dirname##${source}}
+				output=${dirname}/${basename}
 				erb -T - "${output}.erb" > "${output}"
 			fi
 		done
@@ -49,16 +45,25 @@ copyDirectory() {
 
 	# Compress directories ending in .zip, .pfm or .pgus
 	recursiveZipDirs() {
-		for zip in "${1:?}"/*; do
-			if [ -d "${zip}" ]; then
-				if matches "${zip}" "\.\(zip\|pfm\|pgus\)$"; then
-					printf "%s\n" "[INFO] Compressing directory: ${zip}"
-					dirname=${zip%/*}; basename=${zip##*/}
-					output=${target}${dirname##${source}}/${basename}
-					(cd "${output}" || exit; zip -qmr ../"${basename}.tmp" ./)
-					rmdir "${output}"; mv "${output}.tmp" "${output}"
-				else
-					recursiveZipDirs "${zip}"
+		for path in "${1:?}"/*; do
+			if [ -d "${path}" ]; then
+				# This method must be called in a subshell to avoid
+				# overwriting variables in the current scope
+				(recursiveZipDirs "${path}")
+				if
+					[ "${path}" != "${path%.zip}" ] ||
+					# Pentaho File Metadata plugin
+					[ "${path}" != "${path%.pfm}" ] ||
+					# Pentaho Global User Settings plugin
+					[ "${path}" != "${path%.pgus}" ]
+				then
+					logInfo "Compressing directory: ${path}"
+					dirname=${path%/*}; basename=${path##*/}
+					# Substitute source dirname with target dirname
+					dirname=${target}${dirname##${source}}
+					output=${dirname}/${basename}; tmpOutput=$(mktemp -u)
+					(cd "${output}" || exit; zip -qmr "${tmpOutput}" ./)
+					rmdir "${output}"; mv "${tmpOutput}" "${output}"
 				fi
 			fi
 		done
