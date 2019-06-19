@@ -29,7 +29,7 @@ copyDirectory() {
 	# Execute ERB files
 	recursiveExecuteErbs() {
 		for path in "${1:?}"/*; do
-			if [ -d "${path}" ]; then
+			if [ -d "${path}" ] && [ ! -L "${path}" ]; then
 				recursiveExecuteErbs "${path}"
 			elif [ "${path}" != "${path%.erb}" ]; then
 				logInfo "Executing ERB file: ${path}"
@@ -37,7 +37,7 @@ copyDirectory() {
 				# Substitute source dirname with target dirname
 				dirname=${target}${dirname##${source}}
 				output=${dirname}/${basename}
-				erb -T - "${output}.erb" > "${output}"
+				erb -T - -- "${output}.erb" > "${output}"
 			fi
 		done
 	}
@@ -46,7 +46,7 @@ copyDirectory() {
 	# Compress directories ending in .zip, .pfm or .pgus
 	recursiveZipDirs() {
 		for path in "${1:?}"/*; do
-			if [ -d "${path}" ]; then
+			if [ -d "${path}" ] && [ ! -L "${path}" ]; then
 				# This method must be called in a subshell to avoid
 				# overwriting variables in the current scope
 				(recursiveZipDirs "${path}")
@@ -62,8 +62,9 @@ copyDirectory() {
 					# Substitute source dirname with target dirname
 					dirname=${target}${dirname##${source}}
 					output=${dirname}/${basename}; tmpOutput=$(mktemp -u)
-					(cd "${output}" || exit; zip -qmr "${tmpOutput}" ./)
-					rmdir "${output}"; mv "${tmpOutput}" "${output}"
+					cd -- "${output}" || exit; zip -qmyr "${tmpOutput}" ./
+					cd -- "${OLDPWD}" || exit; rmdir -- "${output}"
+					[ -f "${tmpOutput}" ] && mv -- "${tmpOutput}" "${output}"
 				fi
 			fi
 		done
