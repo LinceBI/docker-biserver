@@ -12,4 +12,4 @@ java \
 		"${LIBDIR}"/commons-*.jar\
 	)" \
 	org.pentaho.di.core.encryption.Encr \
-	"$@" 2>/dev/null
+	"$@" 2>/dev/null | tr -d '\n'

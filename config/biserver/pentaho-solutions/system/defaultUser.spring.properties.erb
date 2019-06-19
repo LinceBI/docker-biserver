@@ -1,2 +1,2 @@
-defaultAdminUserPassword=<%= ENV['DEFAULT_ADMIN_USER_PASSWORD'] %>
-defaultNonAdminUserPassword=<%= ENV['DEFAULT_NON_ADMIN_USER_PASSWORD'] %>
+defaultAdminUserPassword=<%= %x(/opt/scripts/encr.sh -kettle "${DEFAULT_ADMIN_USER_PASSWORD}") %>
+defaultNonAdminUserPassword=<%= %x(/opt/scripts/encr.sh -kettle "${DEFAULT_NON_ADMIN_USER_PASSWORD}") %>

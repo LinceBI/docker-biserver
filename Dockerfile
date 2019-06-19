@@ -22,6 +22,7 @@ RUN apt-get update \
 		ruby \
 		tar \
 		unzip \
+		xxd \
 		xz-utils \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
