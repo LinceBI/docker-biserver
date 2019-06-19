@@ -97,19 +97,20 @@ export DEFAULT_ADMIN_USER_PASSWORD DEFAULT_NON_ADMIN_USER_PASSWORD
 ########
 
 # Export all environment variables escaped so they can be used as a replacement in sed
-ENVIRON="$(awk 'BEGIN {
-  for (v in ENVIRON) {
-    if (v !~ /^(HOME|PWD|SHELL|USER|GROUP|UID|GID)$/) {
-      gsub(/[^0-9A-Za-z]/, "_", v)
-      gsub(/\n/, " ", ENVIRON[v])
-      print v "\t" ENVIRON[v]
-    }
-  }
-}')"
+ENVIRON=$(awk -f- <<EOF
+	BEGIN {
+		for (v in ENVIRON) {
+			gsub(/[^0-9A-Za-z]/, "_", v)
+			gsub(/\n/, " ", ENVIRON[v])
+			print v "\t" ENVIRON[v]
+		}
+	}
+EOF
+)
 _IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 for env in ${ENVIRON}; do
 	env_key="$(printf -- '%s' "${env}" | cut -f1)"
-	env_value="$(printf -- '%s' "${env}" | cut -f2)"
+	env_value="$(printf -- '%s' "${env}" | cut -f2-)"
 	export "${env_key}_RE=$(quoteRe "${env_value}")"
 	export "${env_key}_SUBST=$(quoteSubst "${env_value}")"
 done
