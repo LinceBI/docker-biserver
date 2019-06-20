@@ -18,11 +18,9 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`TOMCAT_MAJOR_VERSION` (`8` por defecto)**: versión mayor de Tomcat.
  * **`TOMCAT_MINOR_VERSION` (`5` por defecto)**: versión menor de Tomcat.
  * **`TOMCAT_PATCH_VERSION` (`latest` por defecto)**: versión parche de Tomcat.
-
  * **`BISERVER_VERSION` (`8.2.0.0-342` por defecto)**: versión de Pentaho BI Server.
  * **`BISERVER_MAVEN_REPO` (`https://nexus.pentaho.org/content/groups/omni/` por defecto)**: repositorio de Maven del que se descargan las
    dependencias necesarias para la instalación de Pentaho BI Server.
-
  * **`KETTLE_DIRNAME` (`kettle` por defecto)**: nombre que tendrá el directorio `./kettle/`.
  * **`SOLUTIONS_DIRNAME` (`pentaho-solutions` por defecto)**: nombre que tendrá el directorio `./pentaho-solutions/`.
  * **`DATA_DIRNAME` (`data` por defecto)**: nombre que tendrá el directorio `./data/`.
@@ -37,20 +35,15 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`WEBAPP_PENTAHO_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será renombrado.
  * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (por defecto el mismo valor que el argumento)**: si el valor es distinto al argumento, el directorio será
    renombrado.
-
  * **`IS_PROXIED` (`false` por defecto)**: establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.
  * **`PROXY_SCHEME` (`https` por defecto)**: protocolo del proxy inverso.
  * **`PROXY_PORT` (`443` por defecto)**: puerto del proxy inverso.
-
  * **`TOMCAT_HTTP_PORT` (`8080` por defecto)**: puerto en el que escuchará el conector HTTP de Tomcat.
  * **`TOMCAT_AJP_PORT` (`8009` por defecto)**: puerto en el que escuchará el conector AJP de Tomcat.
-
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
-
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres` o `mysql`.
-
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con PostgreSQL.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con PostgreSQL.
  * **`POSTGRES_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
@@ -64,7 +57,6 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`POSTGRES_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
  * **`POSTGRES_QUARTZ_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
  * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
-
  * **`MYSQL_HOST` (`localhost` por defecto)**: host para la conexión con MySQL.
  * **`MYSQL_PORT` (`3306` por defecto)**: puerto para la conexión con MySQL.
  * **`MYSQL_USER` (`root` por defecto)**: usuario para la conexión con MySQL.
@@ -78,7 +70,6 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
  * **`MYSQL_QUARTZ_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
-
  * **`DEFAULT_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
  * **`DEFAULT_NON_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
 
