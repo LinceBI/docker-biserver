@@ -11,10 +11,12 @@ RUN apt-get update \
 		gzip \
 		jq \
 		libarchive-tools \
+		libwebkitgtk-1.0-0 \
 		lzip \
 		lzma \
 		lzop \
 		mysql-client \
+		nano \
 		netcat-openbsd \
 		openjdk-8-jdk \
 		openssl \
