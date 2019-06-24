@@ -10,7 +10,7 @@
 		<property name="hibernate.cache.use_query_cache">true</property>
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="connection.driver_class">org.postgresql.Driver</property>
-		<property name="connection.url"><%= ENV['POSTGRES_HIBERNATE_URL'] %></property>
+		<property name="connection.url">jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_HIBERNATE_DATABASE'] %></property>
 		<property name="connection.username"><%= ENV['POSTGRES_HIBERNATE_USER'] %></property>
 		<property name="connection.password"><%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %></property>
 		<property name="connection.pool_size">10</property>

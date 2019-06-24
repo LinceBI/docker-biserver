@@ -7,13 +7,13 @@ Hibernate/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=org.postgresql.Driver
-Hibernate/url=<%= ENV['POSTGRES_HIBERNATE_URL'] %>
+Hibernate/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_HIBERNATE_DATABASE'] %>
 Hibernate/user=<%= ENV['POSTGRES_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=com.mysql.jdbc.Driver
-Hibernate/url=<%= ENV['MYSQL_HIBERNATE_URL'] %>
+Hibernate/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_HIBERNATE_DATABASE'] %>
 Hibernate/user=<%= ENV['MYSQL_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['MYSQL_HIBERNATE_PASSWORD'] %>
 <%- end -%>
@@ -27,13 +27,13 @@ Quartz/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=org.postgresql.Driver
-Quartz/url=<%= ENV['POSTGRES_QUARTZ_URL'] %>
+Quartz/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_QUARTZ_DATABASE'] %>
 Quartz/user=<%= ENV['POSTGRES_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=com.mysql.jdbc.Driver
-Quartz/url=<%= ENV['MYSQL_QUARTZ_URL'] %>
+Quartz/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_QUARTZ_DATABASE'] %>
 Quartz/user=<%= ENV['MYSQL_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>
 <%- end -%>

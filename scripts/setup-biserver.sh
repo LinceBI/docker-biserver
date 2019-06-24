@@ -35,7 +35,6 @@ fi
 [ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
 [ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
 [ -z "${FQSU_PORT-}" ]     && export FQSU_PORT="${TOMCAT_HTTP_PORT}"
-[ -z "${FQSU-}" ]          && export FQSU="${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/${WEBAPP_PENTAHO_DIRNAME}/"
 
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
@@ -51,15 +50,12 @@ fi
 [ -z "${POSTGRES_JACKRABBIT_USER-}" ]      && export POSTGRES_JACKRABBIT_USER='jcr_user'
 [ -z "${POSTGRES_JACKRABBIT_PASSWORD-}" ]  && export POSTGRES_JACKRABBIT_PASSWORD='jcr_password'
 [ -z "${POSTGRES_JACKRABBIT_DATABASE-}" ]  && export POSTGRES_JACKRABBIT_DATABASE='jackrabbit'
-[ -z "${POSTGRES_JACKRABBIT_URL-}" ]       && export POSTGRES_JACKRABBIT_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_JACKRABBIT_DATABASE}"
 [ -z "${POSTGRES_HIBERNATE_USER-}" ]       && export POSTGRES_HIBERNATE_USER='hibuser'
 [ -z "${POSTGRES_HIBERNATE_PASSWORD-}" ]   && export POSTGRES_HIBERNATE_PASSWORD='hibpassword'
 [ -z "${POSTGRES_HIBERNATE_DATABASE-}" ]   && export POSTGRES_HIBERNATE_DATABASE='hibernate'
-[ -z "${POSTGRES_HIBERNATE_URL-}" ]        && export POSTGRES_HIBERNATE_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HIBERNATE_DATABASE}"
 [ -z "${POSTGRES_QUARTZ_USER-}" ]          && export POSTGRES_QUARTZ_USER='pentaho_user'
 [ -z "${POSTGRES_QUARTZ_PASSWORD-}" ]      && export POSTGRES_QUARTZ_PASSWORD='pentaho_password'
 [ -z "${POSTGRES_QUARTZ_DATABASE-}" ]      && export POSTGRES_QUARTZ_DATABASE='quartz'
-[ -z "${POSTGRES_QUARTZ_URL-}" ]           && export POSTGRES_QUARTZ_URL="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_QUARTZ_DATABASE}"
 
 if [ "${STORAGE_TYPE}" = 'postgres' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
@@ -73,15 +69,12 @@ fi
 [ -z "${MYSQL_JACKRABBIT_USER-}" ]      && export MYSQL_JACKRABBIT_USER='jcr_user'
 [ -z "${MYSQL_JACKRABBIT_PASSWORD-}" ]  && export MYSQL_JACKRABBIT_PASSWORD='jcr_password'
 [ -z "${MYSQL_JACKRABBIT_DATABASE-}" ]  && export MYSQL_JACKRABBIT_DATABASE='jackrabbit'
-[ -z "${MYSQL_JACKRABBIT_URL-}" ]       && export MYSQL_JACKRABBIT_URL="jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_JACKRABBIT_DATABASE}"
 [ -z "${MYSQL_HIBERNATE_USER-}" ]       && export MYSQL_HIBERNATE_USER='hibuser'
 [ -z "${MYSQL_HIBERNATE_PASSWORD-}" ]   && export MYSQL_HIBERNATE_PASSWORD='hibpassword'
 [ -z "${MYSQL_HIBERNATE_DATABASE-}" ]   && export MYSQL_HIBERNATE_DATABASE='hibernate'
-[ -z "${MYSQL_HIBERNATE_URL-}" ]        && export MYSQL_HIBERNATE_URL="jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_HIBERNATE_DATABASE}"
 [ -z "${MYSQL_QUARTZ_USER-}" ]          && export MYSQL_QUARTZ_USER='pentaho_user'
 [ -z "${MYSQL_QUARTZ_PASSWORD-}" ]      && export MYSQL_QUARTZ_PASSWORD='pentaho_password'
 [ -z "${MYSQL_QUARTZ_DATABASE-}" ]      && export MYSQL_QUARTZ_DATABASE='quartz'
-[ -z "${MYSQL_QUARTZ_URL-}" ]           && export MYSQL_QUARTZ_URL="jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_QUARTZ_DATABASE}"
 
 if [ "${STORAGE_TYPE}" = 'mysql' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/mysql5.hibernate.cfg.xml'
