@@ -18,27 +18,28 @@
 	timeout 120s
 }
 
-{$CERT_DOMAIN}:80 {
+{$TLS_DOMAIN}:80 {
 	import common
 
 	tls off
 
-	root /var/www/default/
+	root /var/www/html/
 	redir / https://{host}{uri} 301
 
 	log / stdout
 	errors stderr
 }
 
-{$CERT_DOMAIN}:443 {
+{$TLS_DOMAIN}:443 {
 	import common
 
-	tls {$CERT_EMAIL} {
-		ca https://{$CERT_CA_SERVER}/directory
-		dns {$CERT_DNSPROVIDER}
+	tls {$TLS}
+	tls {$TLS_EMAIL} {
+		ca https://{$TLS_CA_SERVER}/directory
+		dns {$TLS_DNSPROVIDER}
 	}
 
-	root /var/www/default/
+	root /var/www/html/
 	proxy / http://biserver:8080 {
 		import proxy-headers
 	}

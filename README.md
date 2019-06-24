@@ -43,35 +43,37 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
+ * **`DEFAULT_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
+ * **`DEFAULT_NON_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres` o `mysql`.
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con PostgreSQL.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con PostgreSQL.
- * **`POSTGRES_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
- * **`POSTGRES_PASSWORD` (`${POSTGRES_USER}` por defecto)**: contraseña para la conexión con PostgreSQL.
+ * **`POSTGRES_MAINTENANCE_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
+ * **`POSTGRES_MAINTENANCE_PASSWORD` (`postgres` por defecto)**: contraseña para la conexión con PostgreSQL.
+ * **`POSTGRES_MAINTENANCE_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con PostgreSQL.
  * **`POSTGRES_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
- * **`POSTGRES_JACKRABBIT_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
+ * **`POSTGRES_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`POSTGRES_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
  * **`POSTGRES_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate (se creará si no existe).
- * **`POSTGRES_HIBERNATE_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Hibernate.
+ * **`POSTGRES_HIBERNATE_PASSWORD` (`hibpassword` por defecto)**: contraseña del usuario de Hibernate.
  * **`POSTGRES_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
  * **`POSTGRES_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
- * **`POSTGRES_QUARTZ_PASSWORD` (`${POSTGRES_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
+ * **`POSTGRES_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
  * **`MYSQL_HOST` (`localhost` por defecto)**: host para la conexión con MySQL.
  * **`MYSQL_PORT` (`3306` por defecto)**: puerto para la conexión con MySQL.
- * **`MYSQL_USER` (`root` por defecto)**: usuario para la conexión con MySQL.
- * **`MYSQL_PASSWORD` (`${MYSQL_USER}` por defecto)**: contraseña para la conexión con MySQL.
+ * **`MYSQL_MAINTENANCE_USER` (`root` por defecto)**: usuario para la conexión con MySQL.
+ * **`MYSQL_MAINTENANCE_PASSWORD` (`root` por defecto)**: contraseña para la conexión con MySQL.
+ * **`MYSQL_MAINTENANCE_DATABASE` (`mysql` por defecto)**: nombre de la BBDD para la conexión con MySQL.
  * **`MYSQL_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
- * **`MYSQL_JACKRABBIT_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Jackrabbit.
+ * **`MYSQL_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`MYSQL_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
  * **`MYSQL_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate (se creará si no existe).
- * **`MYSQL_HIBERNATE_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Hibernate.
+ * **`MYSQL_HIBERNATE_PASSWORD` (`hibpassword` por defecto)**: contraseña del usuario de Hibernate.
  * **`MYSQL_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
- * **`MYSQL_QUARTZ_PASSWORD` (`${MYSQL_PASSWORD}` por defecto)**: contraseña del usuario de Quartz.
+ * **`MYSQL_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
- * **`DEFAULT_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
- * **`DEFAULT_NON_ADMIN_USER_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
 
 ## Instalación de plugins y ejecución de scripts personalizados
 

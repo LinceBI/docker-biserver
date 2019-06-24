@@ -13,7 +13,7 @@ DOCKER_BISERVER_CONTAINER=biserver
 
 DOCKER_MYSQL_IMAGE=mysql:5.7
 DOCKER_MYSQL_CONTAINER="${DOCKER_BISERVER_CONTAINER}-mysql"
-DOCKER_MYSQL_PASSWORD='H4!b5at+kWls-8yh4Guq' # CHANGE ME!
+DOCKER_MYSQL_MAINTENANCE_PASSWORD='root'
 
 DOCKER_NETWORK=${DOCKER_BISERVER_CONTAINER}
 
@@ -52,7 +52,7 @@ docker run --detach \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '127.0.0.1:3306:3306/tcp' \
-	--env MYSQL_ROOT_PASSWORD="${DOCKER_MYSQL_PASSWORD}" \
+	--env MYSQL_ROOT_PASSWORD="${DOCKER_MYSQL_MAINTENANCE_PASSWORD}" \
 	"${DOCKER_MYSQL_IMAGE}"
 
 printf -- '%s\n' 'Waiting for database server...'
@@ -86,5 +86,5 @@ docker run --detach \
 	--publish '8080:8080/tcp' \
 	--env STORAGE_TYPE='mysql' \
 	--env MYSQL_HOST="${DOCKER_MYSQL_CONTAINER}" \
-	--env MYSQL_PASSWORD="${DOCKER_MYSQL_PASSWORD}" \
+	--env MYSQL_MAINTENANCE_PASSWORD="${DOCKER_MYSQL_MAINTENANCE_PASSWORD}" \
 	"${DOCKER_BISERVER_IMAGE}" "$@"
