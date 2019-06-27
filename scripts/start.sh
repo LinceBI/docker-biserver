@@ -17,14 +17,13 @@ fi
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME}/lib"
 # shellcheck disable=SC2155
 export CATALINA_OPTS="$(cat <<-EOF
+	-DDI_HOME="${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
 	-Dfile.encoding=utf8
-	-DDI_HOME="${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
-	${CATALINA_OPTS_EXTRA-
-		-Xms1024m
-		-Xmx4096m
-	}
+	-Xms${JAVA_XMS-1024m}
+	-Xmx${JAVA_XMX-4096m}
+	${CATALINA_OPTS_EXTRA-}
 EOF
 )"
 
@@ -32,4 +31,4 @@ EOF
 
 logInfo "Starting Pentaho BI Server..."
 cd "${CATALINA_HOME}"/bin
-exec sh catalina.sh run
+exec ./catalina.sh run
