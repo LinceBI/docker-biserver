@@ -8,10 +8,15 @@ RUN apt-get update \
 		bzip2 \
 		ca-certificates \
 		curl \
+		diffutils \
+		file \
+		findutils \
+		gnupg2 \
 		gzip \
 		jq \
 		libarchive-tools \
 		libwebkitgtk-1.0-0 \
+		locales \
 		lzip \
 		lzma \
 		lzop \
@@ -23,11 +28,20 @@ RUN apt-get update \
 		postgresql-client \
 		ruby \
 		tar \
+		tzdata \
 		unzip \
 		xxd \
 		xz-utils \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
+
+# Setup locale
+RUN sed -i 's|^# \(en_US\.UTF-8 UTF-8\)$|\1|' /etc/locale.gen && locale-gen
+ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+# Setup timezone
+ENV TZ=Etc/UTC
+RUN ln -sf /usr/share/zoneinfo/"${TZ}" /etc/localtime
 
 # Java environment
 RUN ln -rs "$(dirname $(dirname $(readlink -f $(which javac))))" /usr/lib/jvm/java
@@ -51,6 +65,7 @@ RUN printf '%s\n' 'Creating users and groups...' \
 	&& useradd \
 		--uid "${TOMCAT_UID}" \
 		--gid "${TOMCAT_GID}" \
+		--shell "$(command -v bash)" \
 		--home-dir /var/cache/tomcat/ \
 		--create-home \
 		tomcat
