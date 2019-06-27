@@ -1,9 +1,11 @@
 FROM ubuntu:18.04
 
 # Install dependencies
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
+RUN export DEBIAN_FRONTEND=noninteractive \
+	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
+		apt-transport-https \
+		apt-utils \
 		bash \
 		bzip2 \
 		ca-certificates \
@@ -11,21 +13,20 @@ RUN apt-get update \
 		diffutils \
 		file \
 		findutils \
-		gnupg2 \
+		gnupg \
 		gzip \
 		jq \
 		libarchive-tools \
 		libwebkitgtk-1.0-0 \
 		locales \
+		lsb-release \
 		lzip \
 		lzma \
 		lzop \
-		mysql-client \
 		nano \
 		netcat-openbsd \
 		openjdk-8-jdk \
 		openssl \
-		postgresql-client \
 		ruby \
 		tar \
 		tzdata \
@@ -33,6 +34,24 @@ RUN apt-get update \
 		xxd \
 		xz-utils \
 		zip \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install PostgreSQL client
+RUN export DEBIAN_FRONTEND=noninteractive \
+	&& printf '%s\n' 'deb https://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		postgresql-client-11 \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install MySQL client
+RUN export DEBIAN_FRONTEND=noninteractive \
+	&& printf '%s\n' 'deb https://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0' > /etc/apt/sources.list.d/mysql.list \
+	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Setup locale
