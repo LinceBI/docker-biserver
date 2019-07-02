@@ -3,10 +3,9 @@
 set -eu
 export LC_ALL=C
 
-export EXPORT_ENABLED='true'
-
 # Execute setup scripts
-/opt/scripts/setup.sh >/dev/null
+export EXPORT_ENABLED='true'
+/opt/scripts/setup.sh 1>&2
 
 # Print tarball to stdout
 GZIP=-4n tar \
