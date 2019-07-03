@@ -41,8 +41,8 @@ build-image:
 build-envfile:
 	mkdir -p '$(DISTDIR)'
 	'$(AWK)' 'BEGIN {for (v in ENVIRON) {\
-		gsub(/\n/, "\\n", ENVIRON[v]); \
-		gsub(/\n/, "\\n", ENVIRON[v]); \
+		gsub(/[^0-9A-Za-z_]/, "_", v); \
+		gsub(/\n/, " ", ENVIRON[v]); \
 		print(v"="ENVIRON[v]); \
 	}}' > '$(ENVFILE)'
 

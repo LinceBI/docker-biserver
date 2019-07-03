@@ -87,13 +87,11 @@ fi
 
 # Export all environment variables escaped so they can be used as a replacement in sed
 ENVIRON=$(awk -f- <<EOF
-	BEGIN {
-		for (v in ENVIRON) {
-			gsub(/[^0-9A-Za-z]/, "_", v)
-			gsub(/\n/, " ", ENVIRON[v])
-			print v "\t" ENVIRON[v]
-		}
-	}
+	BEGIN {for (v in ENVIRON) {
+		gsub(/[^0-9A-Za-z_]/, "_", v);
+		gsub(/\n/, " ", ENVIRON[v]);
+		print(v"\t"ENVIRON[v]);
+	}}
 EOF
 )
 _IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
