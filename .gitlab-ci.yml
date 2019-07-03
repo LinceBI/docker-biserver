@@ -4,32 +4,37 @@ stages:
   - build
   - deploy
 
-build:
+build:image:
   stage: build
-  tags:
-    - nix*
   before_script:
     - docker info
     - apk add --no-cache coreutils make
   script:
-    - make all
+    - make save-image save-standalone
   artifacts:
-    expire_in: 30 mins
+    expire_in: 15 mins
     paths:
-      - dist/*.tgz
+      - dist/
 
-deploy:
+deploy:image:
   stage: deploy
-  tags:
-    - nix*
+  before_script:
+    - apk add --no-cache coreutils make
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}" >/dev/null 2>&1
+  script:
+    - make load-image push-image
+  only:
+    - /^biserver-[0-9]+\.[0-9]+$/
   dependencies:
     - build
+
+deploy:standalone:
+  stage: deploy
   before_script:
     - apk add --no-cache coreutils curl
   script:
-    - >
-      find ./dist/
-      -type f -name '*.tgz'
-      -exec curl -u "${DEPLOY_USER}:${DEPLOY_PASS}" -T '{}' "${DEPLOY_URL}" ';'
+    - curl -u "${HTTP_UPLOAD_USER}:${HTTP_UPLOAD_PASS}" -T ./dist/*_standalone.tgz "${HTTP_UPLOAD_URL}"
   only:
     - /^biserver-[0-9]+\.[0-9]+$/
+  dependencies:
+    - build
