@@ -10,7 +10,7 @@ DISTDIR := ./dist
 DOCKERFILE := ./Dockerfile
 ENVFILE := $(DISTDIR)/env
 
-IMAGE_REGISTRY := docker.io
+IMAGE_REGISTRY := repo.stratebi.com
 IMAGE_NAMESPACE := stratebi
 IMAGE_PROJECT := biserver
 IMAGE_NAME := $(IMAGE_REGISTRY)/$(IMAGE_NAMESPACE)/$(IMAGE_PROJECT)
@@ -34,7 +34,6 @@ all: save-image save-standalone
 build-image:
 	'$(DOCKER)' build \
 		--tag '$(IMAGE_NAME):$(IMAGE_VERSION)' \
-		--tag '$(IMAGE_NAME):latest' \
 		--file '$(DOCKERFILE)' ./
 
 .PHONY: build-envfile
@@ -85,7 +84,6 @@ endef
 .PHONY: load-image
 load-image:
 	$(call load_image,$(IMAGE_TARBALL))
-	$(call tag_image,$(IMAGE_NAME):$(IMAGE_VERSION),$(IMAGE_NAME):latest)
 
 ##################################################
 ## "push-*" targets
@@ -97,7 +95,7 @@ endef
 
 .PHONY: push-image
 push-image:
-	@printf '%s\n' 'Unimplemented'
+	$(call push_image,$(IMAGE_NAME):$(IMAGE_VERSION))
 
 ##################################################
 ## "clean" target
