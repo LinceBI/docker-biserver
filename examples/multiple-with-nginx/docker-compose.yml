@@ -33,7 +33,7 @@ services:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver-helium:
-    image: repo.stratebi.com/stratebi/biserver:8.2.0.0-342
+    image: repo.stratebi.com/stratebi/biserver:8.3.0.0-371
     restart: on-failure:3
     networks:
       - "biserver"
@@ -66,7 +66,7 @@ services:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver-argon:
-    image: repo.stratebi.com/stratebi/biserver:8.2.0.0-342
+    image: repo.stratebi.com/stratebi/biserver:8.3.0.0-371
     restart: on-failure:3
     networks:
       - "biserver"

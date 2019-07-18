@@ -18,7 +18,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`TOMCAT_MAJOR_VERSION` (`8` por defecto)**: versión mayor de Tomcat.
  * **`TOMCAT_MINOR_VERSION` (`5` por defecto)**: versión menor de Tomcat.
  * **`TOMCAT_PATCH_VERSION` (`latest` por defecto)**: versión parche de Tomcat.
- * **`BISERVER_VERSION` (`8.2.0.0-342` por defecto)**: versión de Pentaho BI Server.
+ * **`BISERVER_VERSION` (`8.3.0.0-371` por defecto)**: versión de Pentaho BI Server.
  * **`BISERVER_MAVEN_REPO` (`https://nexus.pentaho.org/content/groups/omni/` por defecto)**: repositorio de Maven del que se descargan las
    dependencias necesarias para la instalación de Pentaho BI Server.
  * **`KETTLE_DIRNAME` (`kettle` por defecto)**: nombre que tendrá el directorio `./kettle/`.
@@ -121,7 +121,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/stratebi/biserver:8.2.0.0-342
+  repo.stratebi.com/stratebi/biserver:8.3.0.0-371
 ```
 
 Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.
