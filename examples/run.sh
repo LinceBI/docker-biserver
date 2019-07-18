@@ -7,7 +7,7 @@ imageExists() { [ -n "$(docker images -q "$1")" ]; }
 containerExists() { docker ps -aqf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
 
-DOCKER_BISERVER_IMAGE=repo.stratebi.com/stratebi/biserver:8.3.0.0-371
+DOCKER_BISERVER_IMAGE=repo.stratebi.com/stratebi/biserver:8.2.0.0-342
 DOCKER_BISERVER_CONTAINER=biserver
 
 # Pentaho BI Server container
