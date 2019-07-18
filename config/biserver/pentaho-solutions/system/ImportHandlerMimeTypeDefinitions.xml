@@ -140,73 +140,73 @@
 			</MimeTypeDefinition>
 			<!-- Microsoft Office -->
 			<MimeTypeDefinition mimeType="application/msword">
-				<extension>.doc</extension>
-				<extension>.dot</extension>
+				<extension>doc</extension>
+				<extension>dot</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-				<extension>.docx</extension>
+				<extension>docx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.template">
-				<extension>.dotx</extension>
+				<extension>dotx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-word.document.macroEnabled.12">
-				<extension>.docm</extension>
+				<extension>docm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-word.template.macroEnabled.12">
-				<extension>.dotm</extension>
+				<extension>dotm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-excel">
-				<extension>.xls</extension>
-				<extension>.xlt</extension>
-				<extension>.xla</extension>
+				<extension>xls</extension>
+				<extension>xlt</extension>
+				<extension>xla</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-				<extension>.xlsx</extension>
+				<extension>xlsx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template">
-				<extension>.xltx</extension>
+				<extension>xltx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-excel.sheet.macroEnabled.12">
-				<extension>.xlsm</extension>
+				<extension>xlsm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-excel.template.macroEnabled.12">
-				<extension>.xltm</extension>
+				<extension>xltm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-excel.addin.macroEnabled.12">
-				<extension>.xlam</extension>
+				<extension>xlam</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-excel.sheet.binary.macroEnabled.12">
-				<extension>.xlsb</extension>
+				<extension>xlsb</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-powerpoint">
-				<extension>.ppt</extension>
-				<extension>.pot</extension>
-				<extension>.pps</extension>
-				<extension>.ppa</extension>
+				<extension>ppt</extension>
+				<extension>pot</extension>
+				<extension>pps</extension>
+				<extension>ppa</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation">
-				<extension>.pptx</extension>
+				<extension>pptx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.presentationml.template">
-				<extension>.potx</extension>
+				<extension>potx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.openxmlformats-officedocument.presentationml.slideshow">
-				<extension>.ppsx</extension>
+				<extension>ppsx</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-powerpoint.addin.macroEnabled.12">
-				<extension>.ppam</extension>
+				<extension>ppam</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-powerpoint.presentation.macroEnabled.12">
-				<extension>.pptm</extension>
+				<extension>pptm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-powerpoint.template.macroEnabled.12">
-				<extension>.potm</extension>
+				<extension>potm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-powerpoint.slideshow.macroEnabled.12">
-				<extension>.ppsm</extension>
+				<extension>ppsm</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.ms-access">
-				<extension>.mdb</extension>
+				<extension>mdb</extension>
 			</MimeTypeDefinition>
 		</MimeTypeDefinitions>
 	</ImportHandler>
