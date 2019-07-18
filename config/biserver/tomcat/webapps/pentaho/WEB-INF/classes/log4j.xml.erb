@@ -40,7 +40,7 @@
 
 	<appender name="pdi-execution-appender" class="org.apache.log4j.rolling.RollingFileAppender">
 		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
-			<param name="ActiveFileName"  value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log" />
+			<param name="ActiveFileName" value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log" />
 			<param name="FileNamePattern" value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.%d{yyyy-MM-dd}.log" />
 		</rollingPolicy>
 		<layout class="org.apache.log4j.PatternLayout">
@@ -153,7 +153,7 @@
 		<appender-ref ref="PENTAHOFILE" />
 	</root>
 
-	<!--  optional logging info for the Mondrian OLAP Engine       -->
+	<!-- Optional logging info for the Mondrian OLAP Engine        -->
 
 	<!-- ========================================================= -->
 	<!-- Special Log File specifically for Mondrian                -->
