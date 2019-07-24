@@ -24,7 +24,7 @@ extractArchive() {
 copyDirectory() {
 	source="${1:?}"
 	target="${2:?}"
-	cp -fa "${source}"/. "${target}"
+	rsync -aAX "${source}"/ "${target}"/
 
 	# Execute ERB files
 	recursiveExecuteErbs() {

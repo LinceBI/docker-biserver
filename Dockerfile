@@ -27,6 +27,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		netcat-openbsd \
 		openjdk-8-jdk \
 		openssl \
+		rsync \
 		ruby \
 		tar \
 		tzdata \
