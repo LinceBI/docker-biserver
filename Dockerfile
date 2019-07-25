@@ -1,6 +1,6 @@
-FROM ubuntu:18.04
+FROM docker.io/ubuntu:18.04
 
-# Install dependencies
+# Install system packages
 RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
@@ -11,10 +11,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		ca-certificates \
 		curl \
 		diffutils \
+		dnsutils \
 		file \
 		findutils \
 		gnupg \
 		gzip \
+		iputils-ping \
 		jq \
 		libarchive-tools \
 		libwebkitgtk-1.0-0 \
@@ -29,6 +31,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		openssl \
 		rsync \
 		ruby \
+		runit \
 		tar \
 		tzdata \
 		unzip \
@@ -55,6 +58,27 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install Tini
+COPY --from=docker.io/hectormolinero/tini:latest --chown=root:root /usr/bin/tini /usr/bin/tini
+
+# Install Supercronic
+COPY --from=docker.io/hectormolinero/supercronic:latest --chown=root:root /usr/bin/supercronic /usr/bin/supercronic
+
+# Create users and groups
+ENV BISERVER_UID=5000
+ENV BISERVER_GID=5000
+RUN printf '%s\n' 'Creating users and groups...' \
+	&& groupadd \
+		--gid "${BISERVER_GID}" \
+		biserver \
+	&& useradd \
+		--uid "${BISERVER_UID}" \
+		--gid "${BISERVER_GID}" \
+		--shell "$(command -v bash)" \
+		--home-dir /var/cache/biserver/ \
+		--create-home \
+		biserver
+
 # Setup locale
 RUN sed -i 's|^# \(en_US\.UTF-8 UTF-8\)$|\1|' /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
@@ -62,6 +86,9 @@ ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 # Setup timezone
 ENV TZ=Etc/UTC
 RUN ln -sf /usr/share/zoneinfo/"${TZ}" /etc/localtime
+
+# Copy build scripts
+COPY --chown=root:root scripts/build/ /usr/share/biserver/build/
 
 # Java environment
 RUN ln -rs "$(dirname $(dirname $(readlink -f $(which javac))))" /usr/lib/jvm/java
@@ -74,22 +101,7 @@ ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
 
-# Copy build scripts
-COPY --chown=root:root build-scripts/ /opt/build-scripts/
-
-ENV TOMCAT_GID=5000
-ENV TOMCAT_UID=5000
-RUN printf '%s\n' 'Creating users and groups...' \
-	# Create users and groups
-	&& groupadd --gid "${TOMCAT_GID}" tomcat \
-	&& useradd \
-		--uid "${TOMCAT_UID}" \
-		--gid "${TOMCAT_GID}" \
-		--shell "$(command -v bash)" \
-		--home-dir /var/cache/tomcat/ \
-		--create-home \
-		tomcat
-
+# Install Tomcat
 ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_MINOR_VERSION=5
 ARG TOMCAT_PATCH_VERSION=latest
@@ -101,7 +113,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& apt-get install -y --no-install-recommends \
 		${RUN_PKGS} ${BUILD_PKGS} \
 	# Download Tomcat
-	&& /opt/build-scripts/download-tomcat.sh \
+	&& /usr/share/biserver/build/download-tomcat.sh \
 		"${TOMCAT_MAJOR_VERSION}" \
 		"${TOMCAT_MINOR_VERSION}" \
 		"${TOMCAT_PATCH_VERSION}" \
@@ -119,7 +131,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 		&& mkdir "${CATALINA_BASE}"/work/ \
 	) \
 	# Build and install Tomcat Native Library
-	&& mkdir /tmp/tomcat-native \
+	&& mkdir /tmp/tomcat-native/ \
 	&& (cd /tmp/tomcat-native/ \
 		&& tar --strip-components=1 -xvf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
 		&& cd ./native/ && ./configure --prefix="${CATALINA_HOME}" \
@@ -133,20 +145,20 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	# Set permissions
 	&& find \
 		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-		-exec chown tomcat:tomcat '{}' ';' \
-		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; fi' ';' \
-		-exec sh -c 'if [ -f "{}" ]; then chmod 644 "{}"; fi' ';' \
-	&& chmod 755 "${CATALINA_HOME}"/bin/*.sh \
+		-exec chown biserver:biserver '{}' ';' \
+		-exec sh -c 'if [ -d "$1" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
+		-exec sh -c 'if [ -f "$1" ]; then chmod 644 "$1"; fi' _ '{}' ';' \
+		-exec sh -c 'if [ -f "$1" ] && [ "${1##*.}" = "sh" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS} \
 	&& apt-get autoremove -y \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& find /tmp/ -mindepth 1 -delete
 
-# Copy Tomcat libraries and placeholders
-COPY --chown=tomcat:tomcat config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
+# Copy Tomcat libraries and jars.json file
+COPY --chown=biserver:biserver config/biserver/tomcat/lib/ "${CATALINA_BASE}"/lib/
 
-# Download Tomcat libraries
+# Download Tomcat libraries from jars.json file
 RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 	&& jsonFile="${CATALINA_BASE}"/lib/jars.json \
 	&& jarsCount="$(jq -r '.|length-1' "${jsonFile}")" \
@@ -159,7 +171,7 @@ RUN printf '%s\n' 'Downloading Tomcat libraries...' \
 		&& curl -Lo "${output}" "${download}" \
 		&& printf '%s\n' "Verifying checksum..." \
 		&& printf '%s\n' "${checksum}  ${output}" | sha256sum -c \
-		&& chown tomcat:tomcat "${output}"; \
+		&& chown biserver:biserver "${output}"; \
 	done && rm -f "${jsonFile}"
 
 # Pentaho BI Server environment
@@ -186,12 +198,13 @@ ARG WEBAPP_PENTAHO_STYLE_DIRNAME="pentaho-style"
 ENV WEBAPP_PENTAHO_STYLE_DIRNAME="${WEBAPP_PENTAHO_STYLE_DIRNAME}"
 ENV WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME="${WEBAPP_PENTAHO_STYLE_DIRNAME}"
 
+# Install Pentaho BI Server
 ARG BISERVER_VERSION='8.3.0.0-371'
 ARG BISERVER_MAVEN_REPO='https://repo.stratebi.com/repository/pentaho-mvn/'
 #ARG BISERVER_MAVEN_REPO='https://nexus.pentaho.org/content/groups/omni/'
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
-	&& /opt/build-scripts/download-biserver.sh "${BISERVER_VERSION}" "${BISERVER_MAVEN_REPO}" /tmp/biserver/ \
+	&& /usr/share/biserver/build/download-biserver.sh "${BISERVER_VERSION}" "${BISERVER_MAVEN_REPO}" /tmp/biserver/ \
 	# Install Pentaho BI Server
 	&& mkdir -p \
 		"${BISERVER_HOME}"/"${KETTLE_DIRNAME}" \
@@ -207,43 +220,48 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
 	) \
 	# Download Pentaho BI Server resources
-	&& /opt/build-scripts/download-biserver-resources.sh "${BISERVER_VERSION}" "${BISERVER_HOME}" \
+	&& /usr/share/biserver/build/download-biserver-resources.sh "${BISERVER_VERSION}" "${BISERVER_HOME}" \
 	# Set permissions
-	&& chown tomcat:tomcat "${BISERVER_HOME}" \
 	&& find \
-		"${BISERVER_HOME}"/"${KETTLE_DIRNAME}" \
-		"${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}" \
-		"${BISERVER_HOME}"/"${DATA_DIRNAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" \
-		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" \
-		-exec chown tomcat:tomcat '{}' ';' \
-		-exec sh -c 'if [ -d "{}" ]; then chmod 755 "{}"; fi' ';' \
-		-exec sh -c 'if [ -f "{}" ]; then chmod 644 "{}"; fi' ';' \
-	&& chmod 755 "${BISERVER_HOME}"/*.sh \
+		"${BISERVER_HOME}" \
+		-exec chown biserver:biserver '{}' ';' \
+		-exec sh -c 'if [ -d "$1" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
+		-exec sh -c 'if [ -f "$1" ]; then chmod 644 "$1"; fi' _ '{}' ';' \
+		-exec sh -c 'if [ -f "$1" ] && [ "${1##*.}" = "sh" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
 # Copy Tomcat config
-COPY --chown=tomcat:tomcat config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
-COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
-COPY --chown=tomcat:tomcat config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
+COPY --chown=biserver:biserver config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=biserver:biserver config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
+COPY --chown=biserver:biserver config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
+COPY --chown=biserver:biserver config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
 
 # Copy Pentaho BI Server config
-COPY --chown=tomcat:tomcat config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
-COPY --chown=tomcat:tomcat config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
+COPY --chown=biserver:biserver config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
+COPY --chown=biserver:biserver config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
 COPY --chown=root:root config/biserver.init.d/ "${BISERVER_INITD}"/
 
+# Copy crontab
+COPY --chown=root:root config/crontab /etc/crontab
+
 # Copy runtime scripts
-COPY --chown=root:root scripts/ /opt/scripts/
+COPY --chown=root:root scripts/bin/ /usr/share/biserver/bin/
+
+# Copy services
+COPY --chown=biserver:biserver scripts/service/ /usr/share/biserver/service/
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
 #VOLUME "${BISERVER_HOME}"/"${DATA_DIRNAME}/hsqldb/"
 #VOLUME "${CATALINA_BASE}"/logs/
 
-# Drop root privileges
-USER tomcat:tomcat
-
+# Switch to Pentaho BI Server directory
 WORKDIR "${BISERVER_HOME}"
-CMD ["/opt/scripts/start.sh"]
+
+# Drop root privileges
+USER biserver:biserver
+
+# Start all services
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/usr/bin/runsvdir", "-P", "/usr/share/biserver/service/"]

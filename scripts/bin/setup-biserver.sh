@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-. /opt/scripts/set-utils.sh
+. /usr/share/biserver/bin/set-utils.sh
 
 ########
 
@@ -106,20 +106,20 @@ IFS=$_IFS
 ########
 
 # Directory rename setup
-/opt/scripts/setup-biserver-rename.sh
+/usr/share/biserver/bin/setup-biserver-rename.sh
 
 # General setup
-/opt/scripts/setup-biserver-general.sh
+/usr/share/biserver/bin/setup-biserver-general.sh
 
 # PostgreSQL setup
 if [ "${STORAGE_TYPE}" = 'postgres' ]; then
-	/opt/scripts/setup-biserver-storage-postgres.sh
+	/usr/share/biserver/bin/setup-biserver-storage-postgres.sh
 fi
 
 # MySQL setup
 if [ "${STORAGE_TYPE}" = 'mysql' ]; then
-	/opt/scripts/setup-biserver-storage-mysql.sh
+	/usr/share/biserver/bin/setup-biserver-storage-mysql.sh
 fi
 
 # biserver.init.d/ setup
-/opt/scripts/setup-biserver-initd.sh
+/usr/share/biserver/bin/setup-biserver-initd.sh

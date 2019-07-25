@@ -21,4 +21,4 @@ docker run --rm \
 	--env MYSQL_QUARTZ_USER='pentaho_user' \
 	--env MYSQL_QUARTZ_PASSWORD='pentaho_password' \
 	--env MYSQL_QUARTZ_DATABASE='quartz' \
-	"${DOCKER_BISERVER_IMAGE}" /opt/scripts/export.sh
+	"${DOCKER_BISERVER_IMAGE}" /usr/share/biserver/bin/export.sh

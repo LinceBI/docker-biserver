@@ -5,7 +5,7 @@ export LC_ALL=C
 
 # Execute setup scripts
 export EXPORT_ENABLED='true'
-/opt/scripts/setup.sh 1>&2
+/usr/share/biserver/bin/setup.sh 1>&2
 
 # Print tarball to stdout
 GZIP=-4n tar \
