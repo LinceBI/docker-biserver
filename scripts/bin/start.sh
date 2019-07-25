@@ -3,13 +3,13 @@
 set -eu
 export LC_ALL=C
 
-. /opt/scripts/set-utils.sh
+. /usr/share/biserver/bin/set-utils.sh
 
 ########
 
 if [ ! -f "${HOME}"/.biserver.firstrun.lock ]; then
 	touch "${HOME}"/.biserver.firstrun.lock
-	/opt/scripts/setup.sh
+	/usr/share/biserver/bin/setup.sh
 fi
 
 ########

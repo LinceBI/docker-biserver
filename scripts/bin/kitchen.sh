@@ -4,7 +4,7 @@ set -eu
 export LC_ALL=C
 
 WEBINFDIR="${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}/WEB-INF"
-CLASSPATH=$(find "${WEBINFDIR}/lib" -type d -printf '%p/*:')
+CLASSPATH=$(find "${WEBINFDIR}/lib" "${CATALINA_BASE}/lib" -type d -printf '%p/*:')
 
 cd "${BISERVER_HOME}"/"${KETTLE_DIRNAME}"
 exec java \

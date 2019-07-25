@@ -67,7 +67,7 @@ $(STANDALONE_TARBALL): build-image build-envfile
 	mkdir -p '$(DISTDIR)'
 	'$(DOCKER)' run --rm --env-file '$(ENVFILE)' \
 		'$(IMAGE_NAME):$(IMAGE_VERSION)' \
-		/opt/scripts/export.sh > '$(STANDALONE_TARBALL)'
+		/usr/share/biserver/bin/export.sh > '$(STANDALONE_TARBALL)'
 
 ##################################################
 ## "load-*" targets

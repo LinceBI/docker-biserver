@@ -3,8 +3,8 @@
 set -eu
 export LC_ALL=C
 
-. /opt/scripts/set-utils.sh
-. /opt/scripts/set-utils-postgres.sh
+. /usr/share/biserver/bin/set-utils.sh
+. /usr/share/biserver/bin/set-utils-postgres.sh
 
 ########
 
