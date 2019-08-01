@@ -14,7 +14,7 @@ build:image:
   artifacts:
     expire_in: 15 mins
     paths:
-      - dist/
+      - dist/*.tgz
 
 deploy:image:
   stage: deploy

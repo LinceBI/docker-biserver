@@ -145,7 +145,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	# Set permissions
 	&& find \
 		"${CATALINA_HOME}" "${CATALINA_BASE}" \
-		-exec chown biserver:biserver '{}' ';' \
+		-exec chown -h biserver:biserver '{}' ';' \
 		-exec sh -c 'if [ -d "$1" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
 		-exec sh -c 'if [ -f "$1" ]; then chmod 644 "$1"; fi' _ '{}' ';' \
 		-exec sh -c 'if [ -f "$1" ] && [ "${1##*.}" = "sh" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
@@ -224,7 +224,7 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Set permissions
 	&& find \
 		"${BISERVER_HOME}" \
-		-exec chown biserver:biserver '{}' ';' \
+		-exec chown -h biserver:biserver '{}' ';' \
 		-exec sh -c 'if [ -d "$1" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
 		-exec sh -c 'if [ -f "$1" ]; then chmod 644 "$1"; fi' _ '{}' ';' \
 		-exec sh -c 'if [ -f "$1" ] && [ "${1##*.}" = "sh" ]; then chmod 755 "$1"; fi' _ '{}' ';' \
