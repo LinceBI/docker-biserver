@@ -139,7 +139,6 @@ initdFromDir() {
 			# Execute shell scripts
 			if matches "${entry}" "${execPattern}"; then
 				logInfo "Executing script \"${entry}\""
-				[ -x "${entry}" ] || chmod +x "${entry}"
 				cd "${BISERVER_HOME}" && "${entry}"
 			# Extract archives
 			elif matches "${entry}" "\(${tarPattern}\|${zipPattern}\)"; then
@@ -179,9 +178,11 @@ initdFromDir() {
 						fi
 						;;
 					esac
+			# Copy jar files
 			elif matches "${entry}" "${jarPattern}"; then
 				logInfo "Copying jar \"${entry}\"..."
 				cp -f "${entry}" "${CATALINA_BASE}"/lib/
+			# Ignore the rest of files
 			else
 				logWarn "Ignoring file \"${entry}\""
 			fi
