@@ -177,7 +177,7 @@ initdFromDir() {
 							extractArchive "${entry}" "${BISERVER_HOME}"
 						fi
 						;;
-					esac
+				esac
 			# Copy jar files
 			elif matches "${entry}" "${jarPattern}"; then
 				logInfo "Copying jar \"${entry}\"..."
