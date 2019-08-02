@@ -10,6 +10,7 @@ export LC_ALL=C
 execPattern="\.\(sh\|run\)$"
 tarPattern="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
 zipPattern="\.\(zip\|kar\)$"
+jarPattern="\.\(jar\)$"
 
 extractArchive() {
 	source="${1:?}"
@@ -138,7 +139,6 @@ initdFromDir() {
 			# Execute shell scripts
 			if matches "${entry}" "${execPattern}"; then
 				logInfo "Executing script \"${entry}\""
-				[ -x "${entry}" ] || chmod +x "${entry}"
 				cd "${BISERVER_HOME}" && "${entry}"
 			# Extract archives
 			elif matches "${entry}" "\(${tarPattern}\|${zipPattern}\)"; then
@@ -177,11 +177,16 @@ initdFromDir() {
 							extractArchive "${entry}" "${BISERVER_HOME}"
 						fi
 						;;
-					esac
+				esac
+			# Copy jar files
+			elif matches "${entry}" "${jarPattern}"; then
+				logInfo "Copying jar \"${entry}\"..."
+				cp -f "${entry}" "${CATALINA_BASE}"/lib/
+			# Ignore the rest of files
 			else
 				logWarn "Ignoring file \"${entry}\""
 			fi
-		else
+		elif [ -e "${entry}" ]; then
 			logWarn "Ignoring entry \"${entry}\""
 		fi
 	done

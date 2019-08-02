@@ -74,8 +74,8 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
  * **`MYSQL_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
- * **`JAVA_XMS` (`1024m` por defecto)**: tamaño inicial del heap de Java.
- * **`JAVA_XMX` (`4096m` por defecto)**: tamaño máximo del heap de Java.
+ * **`CATALINA_OPTS_JAVA_XMS` (`1024m` por defecto)**: tamaño inicial del heap de Java.
+ * **`CATALINA_OPTS_JAVA_XMX` (`4096m` por defecto)**: tamaño máximo del heap de Java.
 
 ## Instalación de plugins y ejecución de scripts personalizados
 
@@ -84,6 +84,7 @@ directorio `./config/biserver.init.d/` son tratados de diferentes maneras.
 
  * **Archivos `*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
    anteriormente documentadas.
+ * **Archivos `*.jar`:** son copiados a `${CATALINA_BASE}/lib/`.
  * **Archivos `*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`:**
    * **`*.__root__.*`**: son extraídos en `${BISERVER_HOME}`.
    * **`*.__webapp_pentaho__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.

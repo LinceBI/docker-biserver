@@ -1,8 +1,8 @@
 [
 	{ "filename": "h2-1.2.131.jar",                  "checksum": "c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22", "download": "https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar" },
 	{ "filename": "hsqldb-2.3.2.jar",                "checksum": "e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf687fe1786a7c2ec6", "download": "https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.3.2/hsqldb-2.3.2.jar" },
-	{ "filename": "mssql-jdbc-7.2.2.jre8.jar",       "checksum": "ef0e8d28b7d78744c3f4198b0f1c574fcbe8dfaa091acc28c2708e1dbcecfa26", "download": "https://github.com/microsoft/mssql-jdbc/releases/download/v7.2.2/mssql-jdbc-7.2.2.jre8.jar" },
-	{ "filename": "mysql-connector-java-5.1.47.jar", "checksum": "e4f84048f392b2b37baf46a8d508e4b8ddae286d209ef995b9e11885201c1923", "download": "https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.47/mysql-connector-java-5.1.47.jar" },
+	{ "filename": "mssql-jdbc-7.4.0.jre8.jar",       "checksum": "8a06c94b6e69f9ef2755ae0e2956516666daa0ac7ceacd995dd441f5f8b0c44d", "download": "https://github.com/microsoft/mssql-jdbc/releases/download/v7.4.0/mssql-jdbc-7.4.0.jre8.jar" },
+	{ "filename": "mysql-connector-java-5.1.48.jar", "checksum": "56e26caaa3821f5ae4af44f9c74f66cf8b84ea01516ad3803cbb0e9049b6eca8", "download": "https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.48/mysql-connector-java-5.1.48.jar" },
 	{ "filename": "postgresql-42.2.6.jar",           "checksum": "07daadb33e87638703bf41f3307fc0dbdb386e54af5d5d6481511a36f50ca004", "download": "https://jdbc.postgresql.org/download/postgresql-42.2.6.jar" },
 	{ "filename": "vertica-jdbc-9.2.1-0.jar",        "checksum": "2791104a77cd22fbd6605157e18e27bd71eef24cbffb3a04e2dacdaad7e0d89d", "download": "https://www.vertica.com/client_drivers/9.2.x/9.2.1-0/vertica-jdbc-9.2.1-0.jar" }
 ]
