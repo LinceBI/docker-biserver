@@ -185,7 +185,7 @@ initdFromDir() {
 			else
 				logWarn "Ignoring file \"${entry}\""
 			fi
-		else
+		elif [ -e "${entry}" ]; then
 			logWarn "Ignoring entry \"${entry}\""
 		fi
 	done
