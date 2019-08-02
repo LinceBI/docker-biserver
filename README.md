@@ -84,6 +84,7 @@ directorio `./config/biserver.init.d/` son tratados de diferentes maneras.
 
  * **Archivos `*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno
    anteriormente documentadas.
+ * **Archivos `*.jar`:** son copiados a `${CATALINA_BASE}/lib/`.
  * **Archivos `*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`:**
    * **`*.__root__.*`**: son extraídos en `${BISERVER_HOME}`.
    * **`*.__webapp_pentaho__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.

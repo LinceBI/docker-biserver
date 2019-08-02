@@ -10,6 +10,7 @@ export LC_ALL=C
 execPattern="\.\(sh\|run\)$"
 tarPattern="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
 zipPattern="\.\(zip\|kar\)$"
+jarPattern="\.\(jar\)$"
 
 extractArchive() {
 	source="${1:?}"
@@ -178,6 +179,9 @@ initdFromDir() {
 						fi
 						;;
 					esac
+			elif matches "${entry}" "${jarPattern}"; then
+				logInfo "Copying jar \"${entry}\"..."
+				cp -f "${entry}" "${CATALINA_BASE}"/lib/
 			else
 				logWarn "Ignoring file \"${entry}\""
 			fi
