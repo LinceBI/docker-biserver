@@ -21,9 +21,9 @@ export CATALINA_OPTS="$(cat <<-EOF
 	-Dsun.rmi.dgc.client.gcInterval=3600000
 	-Dsun.rmi.dgc.server.gcInterval=3600000
 	-Dfile.encoding=utf8
-	-Xms${JAVA_XMS-1024m}
-	-Xmx${JAVA_XMX-4096m}
-	${CATALINA_OPTS_EXTRA-}
+	-Xms${CATALINA_OPTS_JAVA_XMS}
+	-Xmx${CATALINA_OPTS_JAVA_XMX}
+	${CATALINA_OPTS_EXTRA}
 EOF
 )"
 
