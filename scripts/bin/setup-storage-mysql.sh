@@ -4,7 +4,7 @@ set -eu
 export LC_ALL=C
 
 . /usr/share/biserver/bin/set-utils.sh
-. /usr/share/biserver/bin/set-utils-mysql.sh
+. /usr/share/biserver/bin/set-utils-storage-mysql.sh
 
 ########
 
