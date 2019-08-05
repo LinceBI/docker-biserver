@@ -19,7 +19,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		iputils-ping \
 		jq \
 		libarchive-tools \
-		libwebkitgtk-1.0-0 \
 		locales \
 		lsb-release \
 		lzip \
@@ -91,10 +90,8 @@ RUN ln -sf /usr/share/zoneinfo/"${TZ}" /etc/localtime
 COPY --chown=root:root scripts/build/ /usr/share/biserver/build/
 
 # Java environment
-RUN ln -rs "$(dirname $(dirname $(readlink -f $(which javac))))" /usr/lib/jvm/java
-ENV JAVA_HOME="/usr/lib/jvm/java"
-ENV JDK_HOME="${JAVA_HOME}"
-ENV JRE_HOME="${JAVA_HOME}/jre"
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
