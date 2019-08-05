@@ -17,6 +17,7 @@ recursiveExecuteErbs() {
 			dirname=${path%/*}; basename=$(basename "${path}" .erb)
 			output=${dirname}/${basename}
 			erb -T - -- "${output}.erb" > "${output}"
+			chmod --reference="${output}.erb" -- "${output}"
 		fi
 	done
 }
