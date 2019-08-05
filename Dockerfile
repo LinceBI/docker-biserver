@@ -133,7 +133,7 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	# Build and install Tomcat Native Library
 	&& mkdir /tmp/tomcat-native/ \
 	&& (cd /tmp/tomcat-native/ \
-		&& tar --strip-components=1 -xvf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
+		&& tar --strip-components=1 -xf "${CATALINA_HOME}"/bin/tomcat-native.tar.gz \
 		&& cd ./native/ && ./configure --prefix="${CATALINA_HOME}" \
 		&& make && make install \
 	) \
@@ -213,11 +213,11 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" \
 		"${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" \
 	&& (cd /tmp/biserver/ \
-		&& bsdtar -C "${BISERVER_HOME}"/"${KETTLE_DIRNAME}" --strip-components=3 -xvf ./pentaho-solutions.zip 'pentaho-solutions/system/kettle/*' \
-		&& bsdtar -C "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}" --strip-components=1 --exclude 'pentaho-solutions/system/kettle/*' -xvf ./pentaho-solutions.zip \
-		&& bsdtar -C "${BISERVER_HOME}"/"${DATA_DIRNAME}" --strip-components=1 -xvf ./pentaho-data.zip\
-		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" -xvf ./pentaho.war \
-		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xvf ./pentaho-style.war \
+		&& bsdtar -C "${BISERVER_HOME}"/"${KETTLE_DIRNAME}" --strip-components=3 -xf ./pentaho-solutions.zip 'pentaho-solutions/system/kettle/*' \
+		&& bsdtar -C "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}" --strip-components=1 --exclude 'pentaho-solutions/system/kettle/*' -xf ./pentaho-solutions.zip \
+		&& bsdtar -C "${BISERVER_HOME}"/"${DATA_DIRNAME}" --strip-components=1 -xf ./pentaho-data.zip \
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" -xf ./pentaho.war \
+		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xf ./pentaho-style.war \
 	) \
 	# Download Pentaho BI Server resources
 	&& /usr/share/biserver/build/download-biserver-resources.sh "${BISERVER_VERSION}" "${BISERVER_HOME}" \
