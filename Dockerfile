@@ -219,8 +219,6 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}" -xf ./pentaho.war \
 		&& bsdtar -C "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}" -xf ./pentaho-style.war \
 	) \
-	# Download Pentaho BI Server resources
-	&& /usr/share/biserver/build/download-biserver-resources.sh "${BISERVER_VERSION}" "${BISERVER_HOME}" \
 	# Set permissions
 	&& find \
 		"${BISERVER_HOME}" \
@@ -240,6 +238,7 @@ COPY --chown=biserver:biserver config/biserver/tomcat/webapps/pentaho-style/ "${
 # Copy Pentaho BI Server config
 COPY --chown=biserver:biserver config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
 COPY --chown=biserver:biserver config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
+COPY --chown=biserver:biserver config/biserver/*.* "${BISERVER_HOME}"/
 COPY --chown=root:root config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
