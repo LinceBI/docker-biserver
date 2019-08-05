@@ -17,6 +17,7 @@ recursiveExecuteErbs() {
 			dirname=${path%/*}; basename=$(basename "${path}" .erb)
 			output=${dirname}/${basename}
 			erb -T - -- "${output}.erb" > "${output}"
+			chmod --reference="${output}.erb" -- "${output}"
 		fi
 	done
 }
@@ -47,7 +48,3 @@ recursiveZipDirs() {
 	done
 }
 recursiveZipDirs "${BISERVER_HOME}"
-
-# Update Kettle directory location
-sed -ri "s|^(DI_HOME)=.*$|\1=\"\$DIR/${KETTLE_DIRNAME_SUBST}\"|" "${BISERVER_HOME}"/start-pentaho.sh
-sed -ri "s|^(SET DI_HOME)=.*$|\1=\"%~dp0${KETTLE_DIRNAME_SUBST}\"|" "${BISERVER_HOME}"/start-pentaho.bat
