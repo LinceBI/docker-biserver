@@ -140,7 +140,7 @@ initdFromDir() {
 			# Execute shell scripts
 			if matches "${entry}" "${execPattern}"; then
 				logInfo "Executing script \"${entry}\""
-				cd "${BISERVER_HOME}" && "${entry}"
+				(cd "${BISERVER_HOME}" && "${entry}")
 			# Extract archives
 			elif matches "${entry}" "\(${tarPattern}\|${zipPattern}\)"; then
 				case "${entry}" in

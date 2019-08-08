@@ -15,3 +15,18 @@ matches() { printf -- '%s' "${1:?}" | grep -q "${2:?}"; }
 logInfo() { printf -- '[INFO] %s\n' "$@"; }
 logWarn() { >&2 printf -- '[WARN] %s\n' "$@"; }
 logFail() { >&2 printf -- '[FAIL] %s\n' "$@"; }
+
+# Runs a command redirecting its output to stdout and a file while keeping its exit code
+runAndLog() {
+	runCmd=${1:?}
+	logFile=${2:?}
+
+	logPipe=$(mktemp -u)
+	mkfifo -m 600 "${logPipe}"
+
+	tee "${logFile}" < "${logPipe}" & teePid=$!
+	${runCmd} > "${logPipe}" 2>&1; exitCode=$?
+	rm -f "${logPipe}"; wait "${teePid}"
+
+	return "${exitCode}"
+}

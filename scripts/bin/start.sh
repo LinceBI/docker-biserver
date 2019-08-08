@@ -7,9 +7,9 @@ export LC_ALL=C
 
 ########
 
-if [ ! -f "${HOME}"/.biserver.firstrun.lock ]; then
-	touch "${HOME}"/.biserver.firstrun.lock
-	/usr/share/biserver/bin/setup.sh
+if [ ! -f "${HOME}"/biserver.setup.lock ]; then
+	runAndLog /usr/share/biserver/bin/setup.sh "${HOME}"/biserver.setup.log
+	touch "${HOME}"/biserver.setup.lock
 fi
 
 ########
