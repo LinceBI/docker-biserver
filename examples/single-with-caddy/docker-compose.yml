@@ -3,13 +3,13 @@ version: "3.7"
 services:
 
   caddy:
-    image: hectormolinero/caddy:latest
-    restart: on-failure:3
+    image: "hectormolinero/caddy:latest"
+    restart: "on-failure:3"
     networks:
       - "biserver"
     ports:
-      - "0.0.0.0:80:80/tcp"
-      - "0.0.0.0:443:443/tcp"
+      - "80:80/tcp"
+      - "443:443/tcp"
     environment:
       TLS: "${TLS}"
       TLS_CA_SERVER: "${TLS_CA_SERVER}"
@@ -22,13 +22,13 @@ services:
       - "./Caddyfile:/etc/caddy/Caddyfile:ro"
       - "caddy-data:/var/lib/caddy"
     logging:
-      driver: journald
+      driver: "journald"
       options:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   postgres:
-    image: postgres:11
-    restart: on-failure:3
+    image: "postgres:11"
+    restart: "on-failure:3"
     networks:
       - "biserver"
     ports:
@@ -38,13 +38,13 @@ services:
     environment:
       POSTGRES_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
     logging:
-      driver: journald
+      driver: "journald"
       options:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver:
-    image: repo.stratebi.com/stratebi/biserver:8.2.0.0-342
-    restart: on-failure:3
+    image: "repo.stratebi.com/stratebi/biserver:8.2.0.0-342"
+    restart: "on-failure:3"
     networks:
       - "biserver"
     volumes:
@@ -72,14 +72,14 @@ services:
       - "caddy"
       - "postgres"
     logging:
-      driver: journald
+      driver: "journald"
       options:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 networks:
 
   biserver:
-    driver: bridge
+    driver: "bridge"
     internal: false
 
 volumes:
