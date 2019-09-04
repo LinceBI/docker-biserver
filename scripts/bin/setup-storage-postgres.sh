@@ -3,7 +3,9 @@
 set -eu
 export LC_ALL=C
 
+# shellcheck disable=SC1091
 . /usr/share/biserver/bin/set-utils.sh
+# shellcheck disable=SC1091
 . /usr/share/biserver/bin/set-utils-storage-postgres.sh
 
 ########
