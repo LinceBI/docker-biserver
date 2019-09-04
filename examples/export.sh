@@ -3,7 +3,16 @@
 set -eu
 export LC_ALL=C
 
-DOCKER_BISERVER_IMAGE=repo.stratebi.com/stratebi/biserver:8.2.0.0-342
+DOCKER=$(command -v docker 2>/dev/null)
 
-docker run --rm \
-	"${DOCKER_BISERVER_IMAGE}" /usr/share/biserver/bin/export.sh
+IMAGE_REGISTRY=repo.stratebi.com
+IMAGE_NAMESPACE=stratebi
+IMAGE_PROJECT=biserver
+IMAGE_TAG=8.2.0.0-342
+IMAGE_NAME=${IMAGE_REGISTRY:?}/${IMAGE_NAMESPACE:?}/${IMAGE_PROJECT:?}:${IMAGE_TAG:?}
+CONTAINER_NAME=${IMAGE_PROJECT:?}-export
+
+"${DOCKER:?}" run --rm \
+	--name "${CONTAINER_NAME:?}" \
+	--hostname "${CONTAINER_NAME:?}" \
+	"${IMAGE_NAME:?}" /usr/share/biserver/bin/export.sh

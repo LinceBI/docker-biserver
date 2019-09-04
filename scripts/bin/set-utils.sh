@@ -22,11 +22,11 @@ runAndLog() {
 	logFile=${2:?}
 
 	logPipe=$(mktemp -u)
-	mkfifo -m 600 "${logPipe}"
+	mkfifo -m 600 "${logPipe:?}"
 
-	tee "${logFile}" < "${logPipe}" & teePid=$!
-	${runCmd} > "${logPipe}" 2>&1; exitCode=$?
-	rm -f "${logPipe}"; wait "${teePid}"
+	tee "${logFile:?}" < "${logPipe:?}" & teePid=$!
+	${runCmd:?} > "${logPipe:?}" 2>&1; exitCode=$?
+	rm -f "${logPipe:?}"; wait "${teePid:?}"
 
-	return "${exitCode}"
+	return "${exitCode:?}"
 }

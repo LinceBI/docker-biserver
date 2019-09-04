@@ -3,6 +3,7 @@
 set -eu
 export LC_ALL=C
 
+# shellcheck disable=SC1091
 . /usr/share/biserver/bin/set-utils.sh
 
 ########
@@ -34,11 +35,11 @@ fi
 
 [ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
 [ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'
-[ -z "${FQSU_PORT-}" ]     && export FQSU_PORT="${TOMCAT_HTTP_PORT}"
+[ -z "${FQSU_PORT-}" ]     && export FQSU_PORT="${TOMCAT_HTTP_PORT:?}"
 
 [ -z "${STORAGE_TYPE-}" ] && export STORAGE_TYPE='local'
 
-if [ "${STORAGE_TYPE}" = 'local' ]; then
+if [ "${STORAGE_TYPE:?}" = 'local' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/hsql.hibernate.cfg.xml'
 fi
 
@@ -57,7 +58,7 @@ fi
 [ -z "${POSTGRES_QUARTZ_PASSWORD-}" ]      && export POSTGRES_QUARTZ_PASSWORD='pentaho_password'
 [ -z "${POSTGRES_QUARTZ_DATABASE-}" ]      && export POSTGRES_QUARTZ_DATABASE='quartz'
 
-if [ "${STORAGE_TYPE}" = 'postgres' ]; then
+if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
 fi
 
@@ -76,7 +77,7 @@ fi
 [ -z "${MYSQL_QUARTZ_PASSWORD-}" ]      && export MYSQL_QUARTZ_PASSWORD='pentaho_password'
 [ -z "${MYSQL_QUARTZ_DATABASE-}" ]      && export MYSQL_QUARTZ_DATABASE='quartz'
 
-if [ "${STORAGE_TYPE}" = 'mysql' ]; then
+if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/mysql5.hibernate.cfg.xml'
 fi
 
@@ -95,11 +96,11 @@ ENVIRON=$(awk -f- <<EOF
 EOF
 )
 _IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
-for env in ${ENVIRON}; do
-	env_key="$(printf -- '%s' "${env}" | cut -f1)"
-	env_value="$(printf -- '%s' "${env}" | cut -f2-)"
-	export "${env_key}_RE=$(quoteRe "${env_value}")"
-	export "${env_key}_SUBST=$(quoteSubst "${env_value}")"
+for env in ${ENVIRON:?}; do
+	env_key="$(printf -- '%s' "${env:?}" | cut -f1)"
+	env_value="$(printf -- '%s' "${env:?}" | cut -f2-)"
+	export "${env_key:?}_RE=$(quoteRe "${env_value?}")"
+	export "${env_key:?}_SUBST=$(quoteSubst "${env_value?}")"
 done
 IFS=$_IFS
 
@@ -112,12 +113,12 @@ IFS=$_IFS
 /usr/share/biserver/bin/setup-general.sh
 
 # PostgreSQL setup
-if [ "${STORAGE_TYPE}" = 'postgres' ]; then
+if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
 	/usr/share/biserver/bin/setup-storage-postgres.sh
 fi
 
 # MySQL setup
-if [ "${STORAGE_TYPE}" = 'mysql' ]; then
+if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 	/usr/share/biserver/bin/setup-storage-mysql.sh
 fi
 
