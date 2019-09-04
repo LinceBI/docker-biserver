@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   caddy:
-    image: "hectormolinero/caddy:latest"
+    image: "docker.io/hectormolinero/caddy:latest"
     restart: "on-failure:3"
     networks:
       - "biserver"
@@ -28,7 +28,7 @@ services:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   postgres:
-    image: "postgres:11"
+    image: "docker.io/postgres:11"
     restart: "on-failure:3"
     networks:
       - "biserver"
