@@ -64,15 +64,15 @@ COPY --from=docker.io/hectormolinero/tini:latest --chown=root:root /usr/bin/tini
 COPY --from=docker.io/hectormolinero/supercronic:latest --chown=root:root /usr/bin/supercronic /usr/bin/supercronic
 
 # Create users and groups
-ENV BISERVER_UID=5000
-ENV BISERVER_GID=5000
+ENV BISERVER_USER_UID=5000
+ENV BISERVER_USER_GID=5000
 RUN printf '%s\n' 'Creating users and groups...' \
 	&& groupadd \
-		--gid "${BISERVER_GID:?}" \
+		--gid "${BISERVER_USER_GID:?}" \
 		biserver \
 	&& useradd \
-		--uid "${BISERVER_UID:?}" \
-		--gid "${BISERVER_GID:?}" \
+		--uid "${BISERVER_USER_UID:?}" \
+		--gid "${BISERVER_USER_GID:?}" \
 		--shell "$(command -v bash)" \
 		--home-dir /var/cache/biserver/ \
 		--create-home \
