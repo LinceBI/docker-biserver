@@ -3,88 +3,96 @@
 set -eu
 export LC_ALL=C
 
-imageExists() { [ -n "$(docker images -q "$1")" ]; }
-containerExists() { docker ps -aqf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
-containerIsRunning() { docker ps -qf name="$1" --format '{{.Names}}' | grep -Fxq "$1"; }
-networkExists() { docker network ls -qf name="$1" --format '{{.Name}}' | grep -Fxq "$1"; }
+DOCKER=$(command -v docker 2>/dev/null)
 
-DOCKER_BISERVER_IMAGE=repo.stratebi.com/stratebi/biserver:8.3.0.0-371
-DOCKER_BISERVER_CONTAINER=biserver
+BISERVER_IMAGE_REGISTRY=repo.stratebi.com
+BISERVER_IMAGE_NAMESPACE=stratebi
+BISERVER_IMAGE_PROJECT=biserver
+BISERVER_IMAGE_TAG=8.3.0.0-371
+BISERVER_IMAGE_NAME=${BISERVER_IMAGE_REGISTRY:?}/${BISERVER_IMAGE_NAMESPACE:?}/${BISERVER_IMAGE_PROJECT:?}:${BISERVER_IMAGE_TAG:?}
+BISERVER_CONTAINER_NAME=${BISERVER_IMAGE_PROJECT:?}
 
-DOCKER_POSTGRES_IMAGE=postgres:11
-DOCKER_POSTGRES_CONTAINER="${DOCKER_BISERVER_CONTAINER}-postgres"
-DOCKER_POSTGRES_MAINTENANCE_PASSWORD='postgres'
+POSTGRES_IMAGE_REGISTRY=docker.io
+#POSTGRES_IMAGE_NAMESPACE=
+POSTGRES_IMAGE_PROJECT=postgres
+POSTGRES_IMAGE_TAG=11
+POSTGRES_IMAGE_NAME=${POSTGRES_IMAGE_REGISTRY:?}/${POSTGRES_IMAGE_PROJECT:?}:${POSTGRES_IMAGE_TAG:?}
+POSTGRES_CONTAINER_NAME=${BISERVER_IMAGE_PROJECT:?}-${POSTGRES_IMAGE_PROJECT:?}
+POSTGRES_CONTAINER_MAINTENANCE_PASSWORD='H4!b5at+kWls-8yh4Guq'
 
-DOCKER_NETWORK=${DOCKER_BISERVER_CONTAINER}
+CONTAINERS_NETWORK=${BISERVER_IMAGE_PROJECT:?}
+
+imageExists() { [ -n "$("${DOCKER:?}" images -q "${1:?}")" ]; }
+containerExists() { "${DOCKER:?}" ps -af name="${1:?}" --format '{{.Names}}' | grep -Fxq "${1:?}"; }
+containerIsRunning() { "${DOCKER:?}" ps -f name="${1:?}" --format '{{.Names}}' | grep -Fxq "${1:?}"; }
+networkExists() { "${DOCKER:?}" network ls -f name="$1" --format '{{.Name}}' | grep -Fxq "${1:?}"; }
 
 # Network
 #########
 
-if ! networkExists "${DOCKER_NETWORK}"; then
-	printf -- '%s\n' "Creating \"${DOCKER_NETWORK}\" network..."
-	docker network create "${DOCKER_NETWORK}"
+if ! networkExists "${CONTAINERS_NETWORK:?}"; then
+	printf -- '%s\n' "Creating \"${CONTAINERS_NETWORK:?}\" network..."
+	"${DOCKER:?}" network create "${CONTAINERS_NETWORK:?}"
 fi
 
 # PostgreSQL container
 ######################
 
-if ! imageExists "${DOCKER_POSTGRES_IMAGE}"; then
-	>&2 printf -- '%s\n' "${DOCKER_POSTGRES_IMAGE} image doesn't exist!"
-	exit 1
+if ! imageExists "${POSTGRES_IMAGE_NAME:?}" && ! imageExists "${POSTGRES_IMAGE_NAME#docker.io/}"; then
+	"${DOCKER:?}" pull "${POSTGRES_IMAGE_NAME:?}"
 fi
 
-if containerIsRunning "${DOCKER_POSTGRES_CONTAINER}"; then
-	printf -- '%s\n' "Stopping \"${DOCKER_POSTGRES_CONTAINER}\" container..."
-	docker stop "${DOCKER_POSTGRES_CONTAINER}" >/dev/null
+if containerIsRunning "${POSTGRES_CONTAINER_NAME:?}"; then
+	printf -- '%s\n' "Stopping \"${POSTGRES_CONTAINER_NAME:?}\" container..."
+	"${DOCKER:?}" stop "${POSTGRES_CONTAINER_NAME:?}" >/dev/null
 fi
 
-if containerExists "${DOCKER_POSTGRES_CONTAINER}"; then
-	printf -- '%s\n' "Removing \"${DOCKER_POSTGRES_CONTAINER}\" container..."
-	docker rm "${DOCKER_POSTGRES_CONTAINER}" >/dev/null
+if containerExists "${POSTGRES_CONTAINER_NAME:?}"; then
+	printf -- '%s\n' "Removing \"${POSTGRES_CONTAINER_NAME:?}\" container..."
+	"${DOCKER:?}" rm "${POSTGRES_CONTAINER_NAME:?}" >/dev/null
 fi
 
-printf -- '%s\n' "Creating \"${DOCKER_POSTGRES_CONTAINER}\" container..."
-
-docker run --detach \
-	--name "${DOCKER_POSTGRES_CONTAINER}" \
-	--hostname "${DOCKER_POSTGRES_CONTAINER}" \
-	--network "${DOCKER_NETWORK}" \
+printf -- '%s\n' "Creating \"${POSTGRES_CONTAINER_NAME:?}\" container..."
+"${DOCKER:?}" run --detach \
+	--name "${POSTGRES_CONTAINER_NAME:?}" \
+	--hostname "${POSTGRES_CONTAINER_NAME:?}" \
+	--network "${CONTAINERS_NETWORK:?}" \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '127.0.0.1:5432:5432/tcp' \
-	--env POSTGRES_PASSWORD="${DOCKER_POSTGRES_MAINTENANCE_PASSWORD}" \
-	"${DOCKER_POSTGRES_IMAGE}"
+	--env POSTGRES_PASSWORD="${POSTGRES_CONTAINER_MAINTENANCE_PASSWORD:?}" \
+	"${POSTGRES_IMAGE_NAME:?}"
 
 printf -- '%s\n' 'Waiting for database server...'
-until nc -zv 127.0.0.1 5432; do sleep 1; done && sleep 20
+until nc -zv 127.0.0.1 5432; do sleep 1; done && sleep 10
 
 # Pentaho BI Server container
 #############################
 
-if ! imageExists "${DOCKER_BISERVER_IMAGE}"; then
-	>&2 printf -- '%s\n' "${DOCKER_BISERVER_IMAGE} image doesn't exist!"
+if ! imageExists "${BISERVER_IMAGE_NAME:?}" && ! imageExists "${BISERVER_IMAGE_NAME#docker.io/}"; then
+	>&2 printf -- '%s\n' "\"${BISERVER_IMAGE_NAME:?}\" image doesn't exist!"
 	exit 1
 fi
 
-if containerIsRunning "${DOCKER_BISERVER_CONTAINER}"; then
-	printf -- '%s\n' "Stopping \"${DOCKER_BISERVER_CONTAINER}\" container..."
-	docker stop "${DOCKER_BISERVER_CONTAINER}" >/dev/null
+if containerIsRunning "${BISERVER_CONTAINER_NAME:?}"; then
+	printf -- '%s\n' "Stopping \"${BISERVER_CONTAINER_NAME:?}\" container..."
+	"${DOCKER:?}" stop "${BISERVER_CONTAINER_NAME:?}" >/dev/null
 fi
 
-if containerExists "${DOCKER_BISERVER_CONTAINER}"; then
-	printf -- '%s\n' "Removing \"${DOCKER_BISERVER_CONTAINER}\" container..."
-	docker rm "${DOCKER_BISERVER_CONTAINER}" >/dev/null
+if containerExists "${BISERVER_CONTAINER_NAME:?}"; then
+	printf -- '%s\n' "Removing \"${BISERVER_CONTAINER_NAME:?}\" container..."
+	"${DOCKER:?}" rm "${BISERVER_CONTAINER_NAME:?}" >/dev/null
 fi
 
-printf -- '%s\n' "Creating \"${DOCKER_BISERVER_CONTAINER}\" container..."
-docker run --detach \
-	--name "${DOCKER_BISERVER_CONTAINER}" \
-	--hostname "${DOCKER_BISERVER_CONTAINER}" \
-	--network "${DOCKER_NETWORK}" \
+printf -- '%s\n' "Creating \"${BISERVER_CONTAINER_NAME:?}\" container..."
+"${DOCKER:?}" run --detach \
+	--name "${BISERVER_CONTAINER_NAME:?}" \
+	--hostname "${BISERVER_CONTAINER_NAME:?}" \
+	--network "${CONTAINERS_NETWORK:?}" \
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
 	--env STORAGE_TYPE='postgres' \
-	--env POSTGRES_HOST="${DOCKER_POSTGRES_CONTAINER}" \
-	--env POSTGRES_MAINTENANCE_PASSWORD="${DOCKER_POSTGRES_MAINTENANCE_PASSWORD}" \
-	"${DOCKER_BISERVER_IMAGE}" "$@"
+	--env POSTGRES_HOST="${POSTGRES_CONTAINER_NAME:?}" \
+	--env POSTGRES_MAINTENANCE_PASSWORD="${POSTGRES_CONTAINER_MAINTENANCE_PASSWORD:?}" \
+	"${BISERVER_IMAGE_NAME:?}" "$@"
