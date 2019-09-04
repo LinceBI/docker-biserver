@@ -98,8 +98,8 @@ _IFS=$IFS; IFS="$(printf '\nx')"; IFS="${IFS%x}"
 for env in ${ENVIRON:?}; do
 	env_key="$(printf -- '%s' "${env:?}" | cut -f1)"
 	env_value="$(printf -- '%s' "${env:?}" | cut -f2-)"
-	export "${env_key:?}_RE=$(quoteRe "${env_value:?}")"
-	export "${env_key:?}_SUBST=$(quoteSubst "${env_value:?}")"
+	export "${env_key:?}_RE=$(quoteRe "${env_value?}")"
+	export "${env_key:?}_SUBST=$(quoteSubst "${env_value?}")"
 done
 IFS=$_IFS
 
