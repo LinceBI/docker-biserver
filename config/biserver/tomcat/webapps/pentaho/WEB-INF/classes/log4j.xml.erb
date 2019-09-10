@@ -159,7 +159,6 @@
 	<!-- Special Log File specifically for Mondrian                -->
 	<!-- ========================================================= -->
 
-	<!--
 	<appender name="MONDRIAN" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian.log" />
 		<param name="Append" value="false" />
@@ -174,13 +173,11 @@
 		<priority value="DEBUG" />
 		<appender-ref ref="MONDRIAN" />
 	</category>
-	-->
 
 	<!-- ========================================================= -->
 	<!-- Special Log File specifically for Mondrian MDX Statements -->
 	<!-- ========================================================= -->
 
-	<!--
 	<appender name="MDXLOG" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian_mdx.log" />
 		<param name="Append" value="false" />
@@ -195,13 +192,11 @@
 		<priority value="DEBUG" />
 		<appender-ref ref="MDXLOG" />
 	</category>
-	-->
 
 	<!-- ========================================================= -->
 	<!-- Special Log File specifically for Mondrian SQL Statements -->
 	<!-- ========================================================= -->
 
-	<!--
 	<appender name="SQLLOG" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian_sql.log" />
 		<param name="Append" value="false" />
@@ -216,6 +211,5 @@
 		<priority value="DEBUG" />
 		<appender-ref ref="SQLLOG" />
 	</category>
-	-->
 
 </log4j:configuration>
