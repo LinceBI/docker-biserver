@@ -24,6 +24,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		lzip \
 		lzma \
 		lzop \
+		mime-support \
 		nano \
 		netcat-openbsd \
 		openjdk-8-jdk \
