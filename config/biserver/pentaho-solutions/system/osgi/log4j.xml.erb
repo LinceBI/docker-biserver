@@ -20,21 +20,23 @@
 	<!-- Preserve messages in a local file -->
 	<!-- ================================= -->
 
-	<!-- A time/date based rolling appender -->
-	<appender name="PENTAHOFILE" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="PENTAHOFILE" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" />
-		<param name="Append" value="false" />
-		<!-- Rollover at midnight each day -->
-		<param name="DatePattern" value="'.'yyyy-MM-dd" />
-		<!-- Rollover at the top of each hour
-		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
-		-->
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<!-- The default pattern: Date Priority [Category] Message\n -->
 			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
-			<!-- The full pattern: Date MS Priority [Category] (Thread:NDC) Message\n
-			<param name="ConversionPattern" value="%d %-5r %-5p [%c] (%t:%x) %m%n" />
-			-->
+		</layout>
+	</appender>
+
+	<appender name="pdi-execution-appender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
 		</layout>
 	</appender>
 
@@ -44,9 +46,8 @@
 
 	<appender name="PENTAHOCONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
-		<param name="Threshold" value="ERROR" />
+		<param name="Threshold" value="INFO" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<!-- The default pattern: Date Priority [Category] Message\n -->
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n" />
 		</layout>
 	</appender>
@@ -54,6 +55,10 @@
 	<!-- ================ -->
 	<!-- Limit categories -->
 	<!-- ================ -->
+
+	<category name="org.apache.hadoop.io.retry">
+		<priority value="INFO" />
+	</category>
 
 	<category name="org.hibernate">
 		<priority value="ERROR" />
@@ -107,6 +112,10 @@
 		<priority value="ERROR" />
 	</category>
 
+	<category name="org.pentaho.platform.engine.core.system.status">
+		<priority value="INFO" />
+	</category>
+
 	<!-- =========================== -->
 	<!-- Repository Import Log Level -->
 	<!-- =========================== -->
@@ -114,6 +123,16 @@
 	<category name="RepositoryImportLog">
 		<priority value="INFO" />
 	</category>
+
+	<logger name="org.pentaho.di.trans.Trans" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="pdi-execution-appender" />
+	</logger>
+
+	<logger name="org.pentaho.di.job.Job" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="pdi-execution-appender" />
+	</logger>
 
 	<!-- ======================= -->
 	<!-- Setup the Root category -->
@@ -133,9 +152,9 @@
 
 	<appender name="MONDRIAN" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian.log" />
-		<param name="Append" value="false" />
-		<param name="MaxFileSize" value="500KB" />
-		<param name="MaxBackupIndex" value="1" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
 		</layout>
@@ -152,9 +171,9 @@
 
 	<appender name="MDXLOG" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian_mdx.log" />
-		<param name="Append" value="false" />
-		<param name="MaxFileSize" value="500KB" />
-		<param name="MaxBackupIndex" value="1" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
 		</layout>
@@ -171,9 +190,9 @@
 
 	<appender name="SQLLOG" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian_sql.log" />
-		<param name="Append" value="false" />
-		<param name="MaxFileSize" value="500KB" />
-		<param name="MaxBackupIndex" value="1" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
 		</layout>
@@ -182,6 +201,25 @@
 	<category name="mondrian.sql">
 		<priority value="DEBUG" />
 		<appender-ref ref="SQLLOG" />
+	</category>
+
+	<!-- ========================================================= -->
+	<!-- Special Log File specifically for Metadata SQL Statements -->
+	<!-- ========================================================= -->
+
+	<appender name="METADATASQLLOG" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_metadata_sql.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="9" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<category name="org.pentaho.metadata.query.impl.sql.SqlGenerator">
+		<priority value="TRACE" />
+		<appender-ref ref="METADATASQLLOG" />
 	</category>
 
 </log4j:configuration>
