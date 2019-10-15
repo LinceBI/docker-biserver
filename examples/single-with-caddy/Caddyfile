@@ -35,7 +35,7 @@
 
 	tls {$TLS}
 	tls {$TLS_EMAIL} {
-		ca https://{$TLS_CA_SERVER}/directory
+		ca https://{$TLS_CASERVER}/directory
 		dns {$TLS_DNSPROVIDER}
 	}
 
