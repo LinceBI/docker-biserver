@@ -1,40 +1,40 @@
-image: "docker.io/docker:stable"
-
 stages:
   - "build:images"
   - "push:images"
 
-build:image:
+default:
+  image: "docker.io/docker:stable"
+
+build:images:
   stage: "build:images"
   before_script:
-    - "docker info"
-    - "apk add --no-cache coreutils make"
+    - "apk add --no-cache coreutils git make xz"
   script:
-    - "make save-image save-standalone"
+    - "make build-image save-image save-standalone"
   artifacts:
     expire_in: "15 mins"
     paths:
-      - "dist/*.tgz"
+      - "./dist/*.tgz"
 
-push:image:
+push:images:
   stage: "push:images"
-  before_script:
-    - "apk add --no-cache coreutils make"
-    - "docker login -u \"${CI_REGISTRY_USER:?}\" -p \"${CI_REGISTRY_PASSWORD:?}\" \"${CI_REGISTRY:?}\" >/dev/null 2>&1"
-  script:
-    - "make load-image push-image"
+  dependencies:
+    - "build:images"
   only:
     - "/^biserver-[0-9]+\\.[0-9]+$/"
-  dependencies:
-    - "build:image"
+  before_script:
+    - "apk add --no-cache coreutils git make xz"
+    - "docker login -u \"${CI_REGISTRY_USER:?}\" -p \"${CI_REGISTRY_PASSWORD:?}\" \"${CI_REGISTRY:?}\""
+  script:
+    - "make load-image push-image"
 
 push:standalone:
   stage: "push:images"
-  before_script:
-    - "apk add --no-cache coreutils curl"
-  script:
-    - "curl -u \"${HTTP_UPLOAD_USER:?}:${HTTP_UPLOAD_PASS:?}\" -T ./dist/*_standalone.tgz \"${HTTP_UPLOAD_URL:?}\""
+  dependencies:
+    - "build:images"
   only:
     - "/^biserver-[0-9]+\\.[0-9]+$/"
-  dependencies:
-    - "build:image"
+  before_script:
+    - "apk add --no-cache coreutils git make xz"
+  script:
+    - "curl -u \"${HTTP_UPLOAD_USER:?}:${HTTP_UPLOAD_PASS:?}\" -T ./dist/*_standalone.tgz \"${HTTP_UPLOAD_URL:?}\""
