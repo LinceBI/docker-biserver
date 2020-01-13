@@ -17,7 +17,7 @@ services:
         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   postgres:
-    image: "docker.io/postgres:11"
+    image: "docker.io/postgres:12"
     restart: "on-failure:3"
     networks:
       - "biserver"

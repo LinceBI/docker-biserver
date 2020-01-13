@@ -46,7 +46,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
-		postgresql-client-11 \
+		postgresql-client-12 \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install MySQL client
