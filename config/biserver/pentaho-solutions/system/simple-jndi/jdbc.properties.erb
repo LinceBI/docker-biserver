@@ -16,6 +16,12 @@ Hibernate/driver=com.mysql.jdbc.Driver
 Hibernate/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_HIBERNATE_DATABASE'] %>
 Hibernate/user=<%= ENV['MYSQL_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['MYSQL_HIBERNATE_PASSWORD'] %>
+<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+Hibernate/type=javax.sql.DataSource
+Hibernate/driver=oracle.jdbc.OracleDriver
+Hibernate/url=jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_HIBERNATE_DATABASE'] %>
+Hibernate/user=<%= ENV['ORACLE_HIBERNATE_USER'] %>
+Hibernate/password=<%= ENV['ORACLE_HIBERNATE_PASSWORD'] %>
 <%- end -%>
 
 <%- if ENV['STORAGE_TYPE'] == 'local' -%>
@@ -36,6 +42,12 @@ Quartz/driver=com.mysql.jdbc.Driver
 Quartz/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_QUARTZ_DATABASE'] %>
 Quartz/user=<%= ENV['MYSQL_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>
+<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+Quartz/type=javax.sql.DataSource
+Quartz/driver=oracle.jdbc.OracleDriver
+Quartz/url=jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_QUARTZ_DATABASE'] %>
+Quartz/user=<%= ENV['ORACLE_QUARTZ_USER'] %>
+Quartz/password=<%= ENV['ORACLE_QUARTZ_PASSWORD'] %>
 <%- end -%>
 
 SampleData/type=javax.sql.DataSource

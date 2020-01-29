@@ -26,10 +26,22 @@
 		<param name="schema" value="mysql" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
+		<param name="driver" value="oracle.jdbc.OracleDriver" />
+		<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+		<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+		<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+		<param name="tablespace" value="" />
+		<param name="indexTablespace" value="" />
+		<param name="schema" value="oracle" />
+		<param name="schemaObjectPrefix" value="fs_repos_" />
+	</FileSystem>
 	<%- end -%>
 
 	<%- if ENV['STORAGE_TYPE'] == 'local' -%>
-	<DataStore class="org.apache.jackrabbit.core.data.FileDataStore" />
+	<DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
+	</DataStore>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
 		<param name="driver" value="org.postgresql.Driver" />
@@ -50,6 +62,19 @@
 		<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="mysql" />
+		<param name="minRecordLength" value="1024" />
+		<param name="maxConnections" value="3" />
+		<param name="copyWhenReading" value="true" />
+		<param name="tablePrefix" value="" />
+		<param name="schemaObjectPrefix" value="ds_repos_" />
+	</DataStore>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
+		<param name="driver" value="oracle.jdbc.OracleDriver" />
+		<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+		<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+		<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+		<param name="databaseType" value="oracle" />
 		<param name="minRecordLength" value="1024" />
 		<param name="maxConnections" value="3" />
 		<param name="copyWhenReading" value="true" />
@@ -88,7 +113,7 @@
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
-			<param name="schemaObjectPrefix" value="fs_ws_<%= ENV['INSTANCE_ID'] %>_" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
 		</FileSystem>
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
@@ -97,14 +122,25 @@
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="fs_ws_<%= ENV['INSTANCE_ID'] %>_" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
+		</FileSystem>
+		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
+			<param name="driver" value="oracle.jdbc.OracleDriver" />
+			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+			<param name="tablespace" value="" />
+			<param name="indexTablespace" value="" />
+			<param name="schema" value="oracle" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
 		</FileSystem>
 		<%- end -%>
 
 		<%- if ENV['STORAGE_TYPE'] == 'local' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.H2PersistenceManager">
 			<param name="url" value="jdbc:h2:${rep.home}/version/db" />
-			<param name="schemaObjectPrefix" value="${wsp.name}_" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
@@ -122,6 +158,17 @@
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
+		</PersistenceManager>
+		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
+			<param name="driver" value="oracle.jdbc.OracleDriver" />
+			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+			<param name="tablespace" value="" />
+			<param name="indexTablespace" value="" />
+			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
 		<%- end -%>
@@ -148,7 +195,7 @@
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
-			<param name="schemaObjectPrefix" value="fs_ver_<%= ENV['INSTANCE_ID'] %>_" />
+			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
@@ -157,14 +204,25 @@
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="fs_ver_<%= ENV['INSTANCE_ID'] %>_" />
+			<param name="schemaObjectPrefix" value="fs_ver_" />
+		</FileSystem>
+		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
+			<param name="driver" value="oracle.jdbc.OracleDriver" />
+			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+			<param name="tablespace" value="" />
+			<param name="indexTablespace" value="" />
+			<param name="schema" value="oracle" />
+			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
 		<%- end -%>
 
 		<%- if ENV['STORAGE_TYPE'] == 'local' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.H2PersistenceManager">
 			<param name="url" value="jdbc:h2:${rep.home}/version/db" />
-			<param name="schemaObjectPrefix" value="version_" />
+			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
@@ -184,12 +242,24 @@
 			<param name="schema" value="mysql" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
+		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
+			<param name="driver" value="oracle.jdbc.OracleDriver" />
+			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+			<param name="tablespace" value="" />
+			<param name="indexTablespace" value="" />
+			<param name="schema" value="oracle" />
+			<param name="schemaObjectPrefix" value="pm_ver_" />
+		</PersistenceManager>
 		<%- end -%>
 	</Versioning>
 
 	<Cluster id="<%= ENV['INSTANCE_ID'] %>">
 		<%- if ENV['STORAGE_TYPE'] == 'local' -%>
-		<Journal class="org.apache.jackrabbit.core.journal.MemoryJournal" />
+		<Journal class="org.apache.jackrabbit.core.journal.MemoryJournal">
+		</Journal>
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
@@ -198,7 +268,7 @@
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
-			<param name="schemaObjectPrefix" value="J_C_" />
+			<param name="schemaObjectPrefix" value="j_cl_" />
 			<param name="janitorEnabled" value="true" />
 			<param name="janitorSleep" value="86400" />
 			<param name="janitorFirstRunHourOfDay" value="3" />
@@ -211,7 +281,22 @@
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="J_C_" />
+			<param name="schemaObjectPrefix" value="j_cl_" />
+			<param name="janitorEnabled" value="true" />
+			<param name="janitorSleep" value="86400" />
+			<param name="janitorFirstRunHourOfDay" value="3" />
+		</Journal>
+		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+		<Journal class="org.apache.jackrabbit.core.journal.OracleDatabaseJournal">
+			<param name="revision" value="${rep.home}/revision.log" />
+			<param name="driver" value="oracle.jdbc.OracleDriver" />
+			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
+			<param name="tablespace" value="" />
+			<param name="indexTablespace" value="" />
+			<param name="schema" value="oracle" />
+			<param name="schemaObjectPrefix" value="j_cl_" />
 			<param name="janitorEnabled" value="true" />
 			<param name="janitorSleep" value="86400" />
 			<param name="janitorFirstRunHourOfDay" value="3" />

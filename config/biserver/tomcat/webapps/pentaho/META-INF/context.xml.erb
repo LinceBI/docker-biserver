@@ -49,6 +49,22 @@
 		maxWaitMillis="10000"
 		validationQuery="SELECT 1"
 	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="oracle.jdbc.OracleDriver"
+		username="<%= ENV['ORACLE_HIBERNATE_USER'] %>"
+		password="<%= ENV['ORACLE_HIBERNATE_PASSWORD'] %>"
+		url="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_HIBERNATE_DATABASE'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT 1"
+	/>
 	<%- end -%>
 
 	<%- if ENV['STORAGE_TYPE'] == 'local' -%>
@@ -93,6 +109,22 @@
 		username="<%= ENV['MYSQL_QUARTZ_USER'] %>"
 		password="<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>"
 		url="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_QUARTZ_DATABASE'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="oracle.jdbc.OracleDriver"
+		username="<%= ENV['ORACLE_QUARTZ_USER'] %>"
+		password="<%= ENV['ORACLE_QUARTZ_PASSWORD'] %>"
+		url="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_QUARTZ_DATABASE'] %>"
 		initialSize="0"
 		maxTotal="20"
 		maxIdle="5"

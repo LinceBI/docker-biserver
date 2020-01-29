@@ -25,6 +25,8 @@ org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.misfireThreshold = 60000
 <%- if ENV['STORAGE_TYPE'] == 'postgres' -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
 <%- else -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 <%- end -%>

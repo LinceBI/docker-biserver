@@ -4,5 +4,5 @@
 	{ "filename": "mssql-jdbc-7.4.1.jre8.jar",       "checksum": "00a6eaf49184dbffd89c4baf21d08a471797ead9bf48ca38faf7f9fe4244e391", "download": "https://github.com/microsoft/mssql-jdbc/releases/download/v7.4.1/mssql-jdbc-7.4.1.jre8.jar" },
 	{ "filename": "mysql-connector-java-5.1.48.jar", "checksum": "56e26caaa3821f5ae4af44f9c74f66cf8b84ea01516ad3803cbb0e9049b6eca8", "download": "https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.48/mysql-connector-java-5.1.48.jar" },
 	{ "filename": "postgresql-42.2.9.jar",           "checksum": "2bd6cdf3a6a277135f74f9d138ba24d0bda15c3a79014093aedfa698cb6627da", "download": "https://jdbc.postgresql.org/download/postgresql-42.2.9.jar" },
-	{ "filename": "vertica-jdbc-9.3.0-0.jar",        "checksum": "f7362e2dc691df7da30a0bdab00551a1daf52d44b0bbc3affa9083e50f51df29", "download": "https://www.vertica.com/client_drivers/9.3.x/9.3.0-0/vertica-jdbc-9.3.0-0.jar" }
+	{ "filename": "vertica-jdbc-9.3.1-0.jar",        "checksum": "8dcbeb09dba23d8241d7e95707c1069ee52a3c8fd7a8c4e71751ebc6bb8f6d1c", "download": "https://www.vertica.com/client_drivers/9.3.x/9.3.1-0/vertica-jdbc-9.3.1-0.jar" }
 ]

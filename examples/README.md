@@ -19,6 +19,10 @@ Hibernate.
 Crea una red y despliega asociados a ella dos contenedores Pentaho BI Server configurados en modo cluster, los cuales almacenan los datos en un
 contenedor Postgres.
 
+## `./export.sh`
+
+Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en local.
+
 ## `./export_with_postgres.sh`
 
 Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en PostgreSQL.
@@ -26,3 +30,7 @@ Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar
 ## `./export_with_mysql.sh`
 
 Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en MySQL.
+
+## `./export_with_oracle.sh`
+
+Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en Oracle.

@@ -81,6 +81,22 @@ if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/mysql5.hibernate.cfg.xml'
 fi
 
+[ -z "${ORACLE_HOST-}" ]                  && export ORACLE_HOST='localhost'
+[ -z "${ORACLE_PORT-}" ]                  && export ORACLE_PORT='1521'
+[ -z "${ORACLE_JACKRABBIT_USER-}" ]       && export ORACLE_JACKRABBIT_USER='jcr_user'
+[ -z "${ORACLE_JACKRABBIT_PASSWORD-}" ]   && export ORACLE_JACKRABBIT_PASSWORD='jcr_password'
+[ -z "${ORACLE_JACKRABBIT_DATABASE-}" ]   && export ORACLE_JACKRABBIT_DATABASE='jackrabbit'
+[ -z "${ORACLE_HIBERNATE_USER-}" ]        && export ORACLE_HIBERNATE_USER='hibuser'
+[ -z "${ORACLE_HIBERNATE_PASSWORD-}" ]    && export ORACLE_HIBERNATE_PASSWORD='hibpassword'
+[ -z "${ORACLE_HIBERNATE_DATABASE-}" ]    && export ORACLE_HIBERNATE_DATABASE='hibernate'
+[ -z "${ORACLE_QUARTZ_USER-}" ]           && export ORACLE_QUARTZ_USER='pentaho_user'
+[ -z "${ORACLE_QUARTZ_PASSWORD-}" ]       && export ORACLE_QUARTZ_PASSWORD='pentaho_password'
+[ -z "${ORACLE_QUARTZ_DATABASE-}" ]       && export ORACLE_QUARTZ_DATABASE='quartz'
+
+if [ "${STORAGE_TYPE:?}" = 'oracle' ]; then
+	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/oracle10g.hibernate.cfg.xml'
+fi
+
 [ -z "${DEFAULT_ADMIN_PASSWORD-}" ]     && export DEFAULT_ADMIN_PASSWORD='password'
 [ -z "${DEFAULT_NON_ADMIN_PASSWORD-}" ] && export DEFAULT_NON_ADMIN_PASSWORD='password'
 
@@ -120,6 +136,11 @@ fi
 # MySQL setup
 if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 	/usr/share/biserver/bin/setup-storage-mysql.sh
+fi
+
+# Oracle setup
+if [ "${STORAGE_TYPE:?}" = 'oracle' ]; then
+	logWarn 'Oracle setup is not supported'
 fi
 
 # biserver.init.d/ setup

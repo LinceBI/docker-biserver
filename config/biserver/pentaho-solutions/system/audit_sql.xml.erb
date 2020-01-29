@@ -16,6 +16,12 @@
 		<insertSQL>INSERT INTO PRO_AUDIT (JOB_ID, INST_ID, OBJ_ID, OBJ_TYPE, ACTOR, MESSAGE_TYPE, MESSAGE_NAME, MESSAGE_TEXT_VALUE, MESSAGE_NUM_VALUE, DURATION, AUDIT_TIME) values (?,?,?,?,?,?,?,?,?,?,?)</insertSQL>
 		<JNDI>Hibernate</JNDI>
 	</auditConnection>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<auditConnection>
+		<tableName>pro_audit</tableName>
+		<insertSQL>INSERT INTO PRO_AUDIT (AUDIT_ID, JOB_ID, INST_ID, OBJ_ID, OBJ_TYPE, ACTOR, MESSAGE_TYPE, MESSAGE_NAME, MESSAGE_TEXT_VALUE, MESSAGE_NUM_VALUE, DURATION, AUDIT_TIME) values (HIBERNATE_SEQUENCE.nextval,?,?,?,?,?,?,?,?,?,?,?)</insertSQL>
+		<JNDI>Hibernate</JNDI>
+	</auditConnection>
 	<%- end -%>
 
 </audit-sql>
