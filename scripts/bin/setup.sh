@@ -28,10 +28,6 @@ fi
 [ -z "${KARAF_ENDPORT-}" ]          && export KARAF_ENDPORT='8899'
 [ -z "${OSGI_SERVICE_STARTPORT-}" ] && export OSGI_SERVICE_STARTPORT='9050'
 [ -z "${OSGI_SERVICE_ENDPORT-}" ]   && export OSGI_SERVICE_ENDPORT='9149'
-[ -z "${RMI_SERVER_STARTPORT-}" ]   && export RMI_SERVER_STARTPORT='44444'
-[ -z "${RMI_SERVER_ENDPORT-}" ]     && export RMI_SERVER_ENDPORT='44499'
-[ -z "${RMI_REGISTRY_STARTPORT-}" ] && export RMI_REGISTRY_STARTPORT='11098'
-[ -z "${RMI_REGISTRY_ENDPORT-}" ]   && export RMI_REGISTRY_ENDPORT='11190'
 
 [ -z "${FQSU_PROTOCOL-}" ] && export FQSU_PROTOCOL='http'
 [ -z "${FQSU_DOMAIN-}" ]   && export FQSU_DOMAIN='localhost'

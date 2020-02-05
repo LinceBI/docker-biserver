@@ -15,6 +15,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
@@ -31,6 +32,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
@@ -47,6 +49,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
@@ -63,6 +66,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- end -%>
@@ -81,6 +85,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
@@ -97,6 +102,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
@@ -113,6 +119,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
@@ -129,6 +136,7 @@
 		maxTotal="20"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
 	<%- end -%>
