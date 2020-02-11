@@ -8,60 +8,49 @@ export LC_ALL=C
 
 ########
 
-#KETTLE_DIRNAME_WAS_RENAMED=false
-if [ "${KETTLE_DIRNAME:?}" != "${KETTLE_DEFAULT_DIRNAME:?}" ]; then
-	logInfo "Kettle directory was renamed to \"${KETTLE_DIRNAME:?}\""
-	#KETTLE_DIRNAME_WAS_RENAMED=true
-	if [ ! -e "${BISERVER_HOME:?}"/"${KETTLE_DIRNAME:?}" ]; then
-		logInfo 'Moving kettle directory...'
-		cp -a "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME:?}"/ "${BISERVER_HOME:?}"/"${KETTLE_DIRNAME:?}"
-		rm -r "${BISERVER_HOME:?}"/"${KETTLE_DEFAULT_DIRNAME:?}"/
-	fi
-fi
-
 #SOLUTIONS_DIRNAME_WAS_RENAMED=false
-if [ "${SOLUTIONS_DIRNAME:?}" != "${SOLUTIONS_DEFAULT_DIRNAME:?}" ]; then
+if [ "${SOLUTIONS_DIRNAME:?}" != pentaho-solutions ]; then
 	logInfo "Solutions directory was renamed to \"${SOLUTIONS_DIRNAME:?}\""
 	#SOLUTIONS_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
 		logInfo 'Moving solutions directory...'
-		cp -a "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME:?}"/ "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
-		rm -r "${BISERVER_HOME:?}"/"${SOLUTIONS_DEFAULT_DIRNAME:?}"/
+		cp -a "${BISERVER_HOME:?}"/pentaho-solutions/ "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+		rm -r "${BISERVER_HOME:?}"/pentaho-solutions/
 	fi
 fi
 
 #DATA_DIRNAME_WAS_RENAMED=false
-if [ "${DATA_DIRNAME:?}" != "${DATA_DEFAULT_DIRNAME:?}" ]; then
+if [ "${DATA_DIRNAME:?}" != data ]; then
 	logInfo "Data directory was renamed to \"${DATA_DIRNAME:?}\""
 	#DATA_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" ]; then
 		logInfo 'Moving data directory...'
-		cp -a "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME:?}"/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
-		rm -r "${BISERVER_HOME:?}"/"${DATA_DEFAULT_DIRNAME:?}"/
+		cp -a "${BISERVER_HOME:?}"/data/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+		rm -r "${BISERVER_HOME:?}"/data/
 	fi
 fi
 
 ########
 
 #WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=false
-if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != "${WEBAPP_PENTAHO_DEFAULT_DIRNAME:?}" ]; then
+if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != pentaho ]; then
 	logInfo "Pentaho webapp directory was renamed to \"${WEBAPP_PENTAHO_DIRNAME:?}\""
 	#WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
 		logInfo 'Moving Pentaho webapp directory...'
-		cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME:?}"/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
-		rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DEFAULT_DIRNAME:?}"/
+		cp -a "${CATALINA_BASE:?}"/webapps/pentaho/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+		rm -r "${CATALINA_BASE:?}"/webapps/pentaho/
 	fi
 fi
 
 WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=false
-if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != "${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME:?}" ]; then
+if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != pentaho-style ]; then
 	logInfo "Pentaho style webapp directory was renamed to \"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}\""
 	WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
 		logInfo 'Moving Pentaho style webapp directory...'
-		cp -a "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME:?}"/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
-		rm -r "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME:?}"/
+		cp -a "${CATALINA_BASE:?}"/webapps/pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+		rm -r "${CATALINA_BASE:?}"/webapps/pentaho-style/
 	fi
 fi
 
@@ -75,8 +64,8 @@ fi
 #		"${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}" \
 #		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 #		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
-#		-type f \( -iname '*.html' -o -iname '*.jsp' \) \
-#		-exec sed -i "s|/${WEBAPP_PENTAHO_DEFAULT_DIRNAME_RE:?}/|/${WEBAPP_PENTAHO_DIRNAME_SUBST:?}/|g" '{}' \;
+#		-type f '(' -iname '*.html' -o -iname '*.jsp' ')' \
+#		-exec sed -i "s|/pentaho/|/${WEBAPP_PENTAHO_DIRNAME_SUBST:?}/|g" '{}' ';'
 #fi
 #
 
@@ -86,6 +75,6 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = true ]; then
 		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" \
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
-		-type f \( -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' \) \
-		-exec sed -i "s|/${WEBAPP_PENTAHO_STYLE_DEFAULT_DIRNAME_RE:?}/|/${WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST:?}/|g" '{}' \;
+		-type f '(' -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' ')' \
+		-exec sed -i "s|/pentaho-style/|/${WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST:?}/|g" '{}' ';'
 fi
