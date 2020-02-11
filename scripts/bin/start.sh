@@ -18,7 +18,7 @@ fi
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME:?}/lib"
 # shellcheck disable=SC2155
 export CATALINA_OPTS="$(cat <<-EOF
-	-DDI_HOME="${BISERVER_HOME:?}"/"${KETTLE_DIRNAME:?}" \
+	-DDI_HOME="${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/ \
 	-Dsun.rmi.dgc.client.gcInterval=3600000 \
 	-Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Dfile.encoding=utf8 \
