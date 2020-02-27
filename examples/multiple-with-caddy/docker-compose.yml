@@ -21,7 +21,7 @@ services:
       CLOUDFLARE_API_KEY: "${CLOUDFLARE_API_KEY}"
     volumes:
       - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      - "caddy-data:/var/lib/caddy"
+      - "caddy-data:/var/lib/caddy/"
     logging:
       driver: "journald"
       options:
@@ -35,7 +35,7 @@ services:
     ports:
       - "127.0.0.1:5432:5432/tcp"
     volumes:
-      - "postgres-data:/var/lib/postgresql/data"
+      - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
     logging:
@@ -49,7 +49,7 @@ services:
     networks:
       - "biserver"
     volumes:
-      - "./biserver.init.d:/etc/biserver.init.d:ro"
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
@@ -85,7 +85,7 @@ services:
     networks:
       - "biserver"
     volumes:
-      - "./biserver.init.d:/etc/biserver.init.d:ro"
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
