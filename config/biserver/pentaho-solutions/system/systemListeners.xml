@@ -38,6 +38,10 @@ in the QuartzSystemListener and VersionCheckSystemListener.
 				</bean>
 				<bean id="defaultContentSystemListener" class="org.pentaho.platform.plugin.action.defaultcontent.DefaultContentSystemListener" />
 				<bean id="csrfProtectionSystemListener" class="org.pentaho.platform.web.http.security.CsrfProtectionSystemListener" />
+				<bean id="repositoryCleanerSystemListener" class="org.pentaho.platform.plugin.services.repository.RepositoryCleanerSystemListener">
+					<property name="gcEnabled" value="true" />
+					<property name="execute" value="weekly" />
+				</bean>
 			</list>
 		</constructor-arg>
 	</bean>
