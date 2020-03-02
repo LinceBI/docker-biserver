@@ -50,7 +50,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install MySQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' 'deb https://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0' > /etc/apt/sources.list.d/mysql.list \
+	&& printf '%s\n' 'deb https://repo.mysql.com/apt/ubuntu/ bionic mysql-5.7' > /etc/apt/sources.list.d/mysql.list \
 	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends mysql-client \
@@ -100,9 +100,9 @@ ENV CATALINA_OPTS_JAVA_XMX=4096m
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.50"
+ARG TOMCAT_VERSION="8.5.51"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="ea762293e889f85d40f5ec14ac4474e133a379522d623f4ba5993da6260bf06e"
+ARG TOMCAT_PKG_CHECKSUM="836ecd816605e281636cae78c5b494ccaeb168c24f8266a72e9e704b2204affe"
 RUN printf '%s\n' 'Installing Tomcat...' \
 	# Install dependencies
 	&& RUN_PKGS="libapr1 libssl1.1" \
@@ -208,8 +208,8 @@ ARG HSQLDB_JDBC_JAR_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf68
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" && printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.9.jar"
-ARG POSTGRES_JDBC_JAR_CHECKSUM="2bd6cdf3a6a277135f74f9d138ba24d0bda15c3a79014093aedfa698cb6627da"
+ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.10.jar"
+ARG POSTGRES_JDBC_JAR_CHECKSUM="7b9ce944866a87e9c173e5884cd0195e4555aff88e5ec74df7c11bedd2a73f74"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" && printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c
 
 # Install MySQL JDBC
@@ -218,8 +218,8 @@ ARG MYSQL_JDBC_JAR_CHECKSUM="56e26caaa3821f5ae4af44f9c74f66cf8b84ea01516ad3803cb
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MYSQL_JDBC_JAR_URL:?}" && printf '%s  %s' "${MYSQL_JDBC_JAR_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_JAR_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.0/mssql-jdbc-8.2.0.jre8.jar"
-ARG MSSQL_JDBC_JAR_CHECKSUM="aa8eaefa0dd132c7cdf8d63107ad38a39d64f6550ee4aaf0f59dc14ca756734a"
+ARG MSSQL_JDBC_JAR_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.1/mssql-jdbc-8.2.1.jre8.jar"
+ARG MSSQL_JDBC_JAR_CHECKSUM="3dbe11015570a28569da590ab376c82f0e0bc0df9fd78a0e2aea8fbf2a77fb74"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MSSQL_JDBC_JAR_URL:?}" && printf '%s  %s' "${MSSQL_JDBC_JAR_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c
 
 # Install Vertica JDCB
