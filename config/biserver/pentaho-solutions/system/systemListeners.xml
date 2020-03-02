@@ -33,7 +33,7 @@ in the QuartzSystemListener and VersionCheckSystemListener.
 					</property>
 					<property name="requestedReleases" value="Minor, GA" />
 					<property name="disableVersionCheck">
-						<value>false</value>
+						<value>true</value>
 					</property>
 				</bean>
 				<bean id="defaultContentSystemListener" class="org.pentaho.platform.plugin.action.defaultcontent.DefaultContentSystemListener" />
