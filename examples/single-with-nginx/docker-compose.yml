@@ -11,10 +11,6 @@ services:
       - "80:80/tcp"
     volumes:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   postgres:
     image: "docker.io/postgres:12"
@@ -27,10 +23,6 @@ services:
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver:
     image: "repo.stratebi.com/stratebi/biserver:9.0.0.0-423"
@@ -58,10 +50,6 @@ services:
     depends_on:
       - "nginx"
       - "postgres"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 networks:
 
