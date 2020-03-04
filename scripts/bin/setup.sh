@@ -58,6 +58,25 @@ if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
 	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/postgresql.hibernate.cfg.xml'
 fi
 
+[ -z "${COCKROACH_HOST-}" ]                 && export COCKROACH_HOST='localhost'
+[ -z "${COCKROACH_PORT-}" ]                 && export COCKROACH_PORT='26257'
+[ -z "${COCKROACH_MAINTENANCE_USER-}" ]     && export COCKROACH_MAINTENANCE_USER='root'
+[ -z "${COCKROACH_MAINTENANCE_PASSWORD-}" ] && export COCKROACH_MAINTENANCE_PASSWORD='root'
+[ -z "${COCKROACH_MAINTENANCE_DATABASE-}" ] && export COCKROACH_MAINTENANCE_DATABASE='postgres'
+[ -z "${COCKROACH_JACKRABBIT_USER-}" ]      && export COCKROACH_JACKRABBIT_USER='jcr_user'
+[ -z "${COCKROACH_JACKRABBIT_PASSWORD-}" ]  && export COCKROACH_JACKRABBIT_PASSWORD='jcr_password'
+[ -z "${COCKROACH_JACKRABBIT_DATABASE-}" ]  && export COCKROACH_JACKRABBIT_DATABASE='jackrabbit'
+[ -z "${COCKROACH_HIBERNATE_USER-}" ]       && export COCKROACH_HIBERNATE_USER='hibuser'
+[ -z "${COCKROACH_HIBERNATE_PASSWORD-}" ]   && export COCKROACH_HIBERNATE_PASSWORD='hibpassword'
+[ -z "${COCKROACH_HIBERNATE_DATABASE-}" ]   && export COCKROACH_HIBERNATE_DATABASE='hibernate'
+[ -z "${COCKROACH_QUARTZ_USER-}" ]          && export COCKROACH_QUARTZ_USER='pentaho_user'
+[ -z "${COCKROACH_QUARTZ_PASSWORD-}" ]      && export COCKROACH_QUARTZ_PASSWORD='pentaho_password'
+[ -z "${COCKROACH_QUARTZ_DATABASE-}" ]      && export COCKROACH_QUARTZ_DATABASE='quartz'
+
+if [ "${STORAGE_TYPE:?}" = 'cockroach' ]; then
+	[ -z "${HIBERNATE_CONFIG_FILE-}" ] && export HIBERNATE_CONFIG_FILE='system/hibernate/cockroach.hibernate.cfg.xml'
+fi
+
 [ -z "${MYSQL_HOST-}" ]                 && export MYSQL_HOST='localhost'
 [ -z "${MYSQL_PORT-}" ]                 && export MYSQL_PORT='3306'
 [ -z "${MYSQL_MAINTENANCE_USER-}" ]     && export MYSQL_MAINTENANCE_USER='root'
@@ -127,6 +146,11 @@ IFS=$_IFS
 # PostgreSQL setup
 if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
 	/usr/share/biserver/bin/setup-storage-postgres.sh
+fi
+
+# CockroachDB setup
+if [ "${STORAGE_TYPE:?}" = 'cockroach' ]; then
+	/usr/share/biserver/bin/setup-storage-cockroach.sh
 fi
 
 # MySQL setup

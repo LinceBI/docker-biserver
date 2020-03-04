@@ -38,7 +38,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
  * **`DEFAULT_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
  * **`DEFAULT_NON_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
- * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres`, `mysql` u `oracle`.
+ * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres`, `mysql`, `oracle` o `cockroach`.
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con PostgreSQL.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con PostgreSQL.
  * **`POSTGRES_MAINTENANCE_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
@@ -78,6 +78,20 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`ORACLE_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
  * **`ORACLE_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`ORACLE_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz.
+ * **`COCKROACH_HOST` (`localhost` por defecto)**: host para la conexión con CockroachDB.
+ * **`COCKROACH_PORT` (`26257` por defecto)**: puerto para la conexión con CockroachDB.
+ * **`COCKROACH_MAINTENANCE_USER` (`root` por defecto)**: usuario para la conexión con CockroachDB.
+ * **`COCKROACH_MAINTENANCE_PASSWORD` (`root` por defecto)**: contraseña para la conexión con CockroachDB.
+ * **`COCKROACH_MAINTENANCE_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con CockroachDB.
+ * **`COCKROACH_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
+ * **`COCKROACH_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
+ * **`COCKROACH_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
+ * **`COCKROACH_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate (se creará si no existe).
+ * **`COCKROACH_HIBERNATE_PASSWORD` (`hibpassword` por defecto)**: contraseña del usuario de Hibernate.
+ * **`COCKROACH_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
+ * **`COCKROACH_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
+ * **`COCKROACH_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
+ * **`COCKROACH_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
  * **`CATALINA_OPTS_JAVA_XMS` (`1024m` por defecto)**: tamaño inicial del heap de Java.
  * **`CATALINA_OPTS_JAVA_XMX` (`4096m` por defecto)**: tamaño máximo del heap de Java.
 
