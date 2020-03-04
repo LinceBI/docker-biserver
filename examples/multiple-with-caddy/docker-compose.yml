@@ -22,10 +22,6 @@ services:
     volumes:
       - "./Caddyfile:/etc/caddy/Caddyfile:ro"
       - "caddy-data:/var/lib/caddy/"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   postgres:
     image: "docker.io/postgres:12"
@@ -38,10 +34,6 @@ services:
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver-helium:
     image: "repo.stratebi.com/stratebi/biserver:8.2.0.0-342"
@@ -72,12 +64,7 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${DB_HELIUM_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_HELIUM_QUARTZ_DATABASE}"
     depends_on:
-      - "caddy"
       - "postgres"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
   biserver-argon:
     image: "repo.stratebi.com/stratebi/biserver:8.2.0.0-342"
@@ -108,12 +95,7 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${DB_ARGON_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_ARGON_QUARTZ_DATABASE}"
     depends_on:
-      - "caddy"
       - "postgres"
-    logging:
-      driver: "journald"
-      options:
-        tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 networks:
 

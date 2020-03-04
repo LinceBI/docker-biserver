@@ -17,6 +17,15 @@
 		<param name="schema" value="postgresql" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+		<param name="driver" value="org.postgresql.Driver" />
+		<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+		<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+		<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
+		<param name="schema" value="postgresql" />
+		<param name="schemaObjectPrefix" value="fs_repos_" />
+	</FileSystem>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 		<param name="driver" value="com.mysql.jdbc.Driver" />
@@ -48,6 +57,19 @@
 		<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
 		<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
+		<param name="databaseType" value="postgresql" />
+		<param name="minRecordLength" value="1024" />
+		<param name="maxConnections" value="3" />
+		<param name="copyWhenReading" value="true" />
+		<param name="tablePrefix" value="" />
+		<param name="schemaObjectPrefix" value="ds_repos_" />
+	</DataStore>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
+		<param name="driver" value="org.postgresql.Driver" />
+		<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+		<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+		<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="postgresql" />
 		<param name="minRecordLength" value="1024" />
 		<param name="maxConnections" value="3" />
@@ -115,6 +137,15 @@
 			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
 		</FileSystem>
+		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
+			<param name="schema" value="postgresql" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
+		</FileSystem>
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
@@ -148,6 +179,15 @@
 			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
+			<param name="schema" value="postgresql" />
+			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
+		</PersistenceManager>
+		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
@@ -197,6 +237,15 @@
 			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
+		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
+			<param name="schema" value="postgresql" />
+			<param name="schemaObjectPrefix" value="fs_ver_" />
+		</FileSystem>
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
@@ -230,6 +279,15 @@
 			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
+			<param name="schema" value="postgresql" />
+			<param name="schemaObjectPrefix" value="pm_ver_" />
+		</PersistenceManager>
+		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
+			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
@@ -267,6 +325,19 @@
 			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
+			<param name="schema" value="postgresql" />
+			<param name="schemaObjectPrefix" value="j_cl_" />
+			<param name="janitorEnabled" value="true" />
+			<param name="janitorSleep" value="86400" />
+			<param name="janitorFirstRunHourOfDay" value="3" />
+		</Journal>
+		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
+			<param name="revision" value="${rep.home}/revision.log" />
+			<param name="driver" value="org.postgresql.Driver" />
+			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>"/>
+			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
 			<param name="schemaObjectPrefix" value="j_cl_" />
 			<param name="janitorEnabled" value="true" />

@@ -10,6 +10,12 @@ Hibernate/driver=org.postgresql.Driver
 Hibernate/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_HIBERNATE_DATABASE'] %>
 Hibernate/user=<%= ENV['POSTGRES_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>
+<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+Hibernate/type=javax.sql.DataSource
+Hibernate/driver=org.postgresql.Driver
+Hibernate/url=jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_HIBERNATE_DATABASE'] %>
+Hibernate/user=<%= ENV['COCKROACH_HIBERNATE_USER'] %>
+Hibernate/password=<%= ENV['COCKROACH_HIBERNATE_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=com.mysql.jdbc.Driver
@@ -36,6 +42,12 @@ Quartz/driver=org.postgresql.Driver
 Quartz/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_QUARTZ_DATABASE'] %>
 Quartz/user=<%= ENV['POSTGRES_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>
+<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+Quartz/type=javax.sql.DataSource
+Quartz/driver=org.postgresql.Driver
+Quartz/url=jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_QUARTZ_DATABASE'] %>
+Quartz/user=<%= ENV['COCKROACH_QUARTZ_USER'] %>
+Quartz/password=<%= ENV['COCKROACH_QUARTZ_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=com.mysql.jdbc.Driver

@@ -1,0 +1,69 @@
+version: "3.7"
+
+services:
+
+  roach1:
+    image: "docker.io/cockroachdb/cockroach:latest"
+    restart: "on-failure:3"
+    hostname: "roach1"
+    networks:
+      - "biserver"
+    ports:
+      - "8081:8080/tcp"
+      - "26257:26257/tcp"
+    volumes:
+      - "roach1-data:/cockroach/cockroach-data/"
+    command:
+      - "start"
+      - "--insecure"
+
+  roach2:
+    image: "docker.io/cockroachdb/cockroach:latest"
+    restart: "on-failure:3"
+    hostname: "roach2"
+    networks:
+      - "biserver"
+    volumes:
+      - "roach2-data:/cockroach/cockroach-data/"
+    command:
+      - "start"
+      - "--insecure"
+      - "--join=roach1,roach2,roach3"
+
+  roach3:
+    image: "docker.io/cockroachdb/cockroach:latest"
+    restart: "on-failure:3"
+    hostname: "roach3"
+    networks:
+      - "biserver"
+    volumes:
+      - "roach3-data:/cockroach/cockroach-data/"
+    command:
+      - "start"
+      - "--insecure"
+      - "--join=roach1,roach2,roach3"
+
+  biserver:
+    image: "repo.stratebi.com/stratebi/biserver:8.2.0.0-342"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "8080:8080/tcp"
+    environment:
+      STORAGE_TYPE: "cockroach"
+      COCKROACH_HOST: "roach1"
+    depends_on:
+      - "roach1"
+
+networks:
+
+  biserver:
+    driver: "bridge"
+    internal: false
+
+volumes:
+
+  roach1-data:
+  roach2-data:
+  roach3-data:

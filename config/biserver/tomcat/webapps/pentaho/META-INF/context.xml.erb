@@ -35,6 +35,23 @@
 		testOnBorrow="true"
 		validationQuery="SELECT 1"
 	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['COCKROACH_HIBERNATE_USER'] %>"
+		password="<%= ENV['COCKROACH_HIBERNATE_PASSWORD'] %>"
+		url="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_HIBERNATE_DATABASE'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<Resource
 		name="jdbc/Hibernate"
@@ -98,6 +115,23 @@
 		username="<%= ENV['POSTGRES_QUARTZ_USER'] %>"
 		password="<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>"
 		url="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_QUARTZ_DATABASE'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['COCKROACH_QUARTZ_USER'] %>"
+		password="<%= ENV['COCKROACH_QUARTZ_PASSWORD'] %>"
+		url="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_QUARTZ_DATABASE'] %>"
 		initialSize="0"
 		maxTotal="20"
 		maxIdle="5"
