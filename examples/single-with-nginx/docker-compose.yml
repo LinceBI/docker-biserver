@@ -48,7 +48,6 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
     depends_on:
-      - "nginx"
       - "postgres"
 
 networks:

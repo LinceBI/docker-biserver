@@ -64,7 +64,6 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${DB_HELIUM_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_HELIUM_QUARTZ_DATABASE}"
     depends_on:
-      - "caddy"
       - "postgres"
 
   biserver-argon:
@@ -96,7 +95,6 @@ services:
       POSTGRES_QUARTZ_PASSWORD: "${DB_ARGON_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_ARGON_QUARTZ_DATABASE}"
     depends_on:
-      - "caddy"
       - "postgres"
 
 networks:
