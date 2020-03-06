@@ -8,7 +8,6 @@ DOCKER := $(shell command -v docker 2>/dev/null)
 
 DISTDIR := ./dist
 DOCKERFILE := ./Dockerfile
-ENVFILE := $(DISTDIR)/env
 
 IMAGE_REGISTRY := repo.stratebi.com
 IMAGE_NAMESPACE := stratebi
@@ -36,15 +35,6 @@ build-image:
 		--tag '$(IMAGE_NAME):$(IMAGE_VERSION)' \
 		--file '$(DOCKERFILE)' ./
 
-.PHONY: build-envfile
-build-envfile:
-	mkdir -p '$(DISTDIR)'
-	'$(AWK)' 'BEGIN {for (v in ENVIRON) {\
-		gsub(/[^0-9A-Za-z_]/, "_", v); \
-		gsub(/\n/, " ", ENVIRON[v]); \
-		print(v"="ENVIRON[v]); \
-	}}' > '$(ENVFILE)'
-
 ##################################################
 ## "save-*" targets
 ##################################################
@@ -63,9 +53,9 @@ $(IMAGE_TARBALL): build-image
 .PHONY: save-standalone
 save-standalone: $(STANDALONE_TARBALL)
 
-$(STANDALONE_TARBALL): build-image build-envfile
+$(STANDALONE_TARBALL): build-image
 	mkdir -p '$(DISTDIR)'
-	'$(DOCKER)' run --rm --env-file '$(ENVFILE)' \
+	'$(DOCKER)' run --rm \
 		'$(IMAGE_NAME):$(IMAGE_VERSION)' \
 		/usr/share/biserver/bin/export.sh > '$(STANDALONE_TARBALL)'
 
@@ -103,5 +93,5 @@ push-image:
 
 .PHONY: clean
 clean:
-	rm -f '$(IMAGE_TARBALL)' '$(STANDALONE_TARBALL)' '$(ENVFILE)'
+	rm -f '$(IMAGE_TARBALL)' '$(STANDALONE_TARBALL)'
 	if [ -d '$(DISTDIR)' ] && [ -z "$$(ls -A '$(DISTDIR)')" ]; then rmdir '$(DISTDIR)'; fi
