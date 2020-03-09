@@ -140,7 +140,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/stratebi/biserver:9.0.0.0-423
+  repo.stratebi.com/lincebi/biserver:9.0.0.0-423
 ```
 
 Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.
