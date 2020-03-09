@@ -44,7 +44,7 @@ services:
       - "--join=roach1,roach2,roach3"
 
   biserver:
-    image: "repo.stratebi.com/stratebi/biserver:8.2.0.0-342"
+    image: "repo.stratebi.com/lincebi/biserver:8.2.0.0-342"
     restart: "on-failure:3"
     networks:
       - "biserver"
