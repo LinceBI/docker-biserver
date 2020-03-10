@@ -15,6 +15,8 @@ IMAGE_PROJECT := biserver
 IMAGE_NAME := $(IMAGE_REGISTRY)/$(IMAGE_NAMESPACE)/$(IMAGE_PROJECT)
 IMAGE_VERSION := 9.0.0.0-423
 
+IMAGE_BUILD_OPTS :=
+
 IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tgz
 STANDALONE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.tgz
 
@@ -33,7 +35,7 @@ all: save-image save-standalone
 build-image:
 	'$(DOCKER)' build \
 		--tag '$(IMAGE_NAME):$(IMAGE_VERSION)' \
-		--file '$(DOCKERFILE)' ./
+		--file '$(DOCKERFILE)' $(IMAGE_BUILD_OPTS) ./
 
 ##################################################
 ## "save-*" targets
