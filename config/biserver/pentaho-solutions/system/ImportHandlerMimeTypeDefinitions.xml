@@ -65,6 +65,12 @@
 				<extension>xml</extension>
 				<extension>xreportspec</extension>
 			</MimeTypeDefinition>
+			<MimeTypeDefinition mimeType="application/vnd.google-earth.kml+xml">
+				<extension>kml</extension>
+			</MimeTypeDefinition>
+			<MimeTypeDefinition mimeType="application/vnd.google-earth.kmz">
+				<extension>kmz</extension>
+			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="text/csv">
 				<extension>csv</extension>
 			</MimeTypeDefinition>
