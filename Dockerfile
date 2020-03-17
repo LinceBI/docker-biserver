@@ -208,8 +208,8 @@ ARG HSQLDB_JDBC_JAR_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf68
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" && printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.10.jar"
-ARG POSTGRES_JDBC_JAR_CHECKSUM="7b9ce944866a87e9c173e5884cd0195e4555aff88e5ec74df7c11bedd2a73f74"
+ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.11.jar"
+ARG POSTGRES_JDBC_JAR_CHECKSUM="31e9f3dc586c07477235893279ee80036de377681badaa1f27db6b74ab2437f4"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" && printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c
 
 # Install MySQL JDBC
