@@ -40,6 +40,22 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install Tini
+ARG TINI_VERSION="0.18.0"
+ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
+ARG TINI_BIN_CHECKSUM="12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855"
+RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
+	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
+	&& chmod 755 /usr/bin/tini
+
+# Install Supercronic
+ARG SUPERCRONIC_VERSION="0.1.9"
+ARG SUPERCRONIC_BIN_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
+ARG SUPERCRONIC_BIN_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
+RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
+	&& printf '%s  %s' "${SUPERCRONIC_BIN_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
+	&& chmod 755 /usr/bin/supercronic
+
 # Install PostgreSQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
 	&& printf '%s\n' 'deb https://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
@@ -55,12 +71,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
-
-# Install Tini
-COPY --from=docker.io/hectormolinero/tini:latest --chown=root:root /usr/bin/tini /usr/bin/tini
-
-# Install Supercronic
-COPY --from=docker.io/hectormolinero/supercronic:latest --chown=root:root /usr/bin/supercronic /usr/bin/supercronic
 
 # Create users and groups
 ENV BISERVER_USER_UID=1000
@@ -100,9 +110,9 @@ ENV CATALINA_OPTS_JAVA_XMX=4096m
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.51"
+ARG TOMCAT_VERSION="8.5.53"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="836ecd816605e281636cae78c5b494ccaeb168c24f8266a72e9e704b2204affe"
+ARG TOMCAT_PKG_CHECKSUM="72e3defbff444548ce9dc60935a1eab822c7d5224f2a8e98c849954575318c08"
 RUN printf '%s\n' 'Installing Tomcat...' \
 	# Install dependencies
 	&& RUN_PKGS="libapr1 libssl1.1" \
@@ -208,8 +218,8 @@ ARG HSQLDB_JDBC_JAR_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf68
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" && printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.10.jar"
-ARG POSTGRES_JDBC_JAR_CHECKSUM="7b9ce944866a87e9c173e5884cd0195e4555aff88e5ec74df7c11bedd2a73f74"
+ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.11.jar"
+ARG POSTGRES_JDBC_JAR_CHECKSUM="31e9f3dc586c07477235893279ee80036de377681badaa1f27db6b74ab2437f4"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" && printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c
 
 # Install MySQL JDBC
@@ -227,6 +237,10 @@ ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/9.3.x/9.3.1-0/v
 ARG VERTICA_JDBC_JAR_CHECKSUM="8dcbeb09dba23d8241d7e95707c1069ee52a3c8fd7a8c4e71751ebc6bb8f6d1c"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" && printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c
 
+# Other environment variables
+ENV SERVICE_BISERVER_ENABLED=true
+ENV SERVICE_SUPERCRONIC_ENABLED=true
+
 # Copy Tomcat config
 COPY --chown=biserver:biserver ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
@@ -242,7 +256,7 @@ COPY --chown=root:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 # Copy crontab
 COPY --chown=root:root ./config/crontab /etc/crontab
 
-# Copy runtime scripts
+# Copy scripts
 COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
@@ -261,4 +275,4 @@ USER biserver:biserver
 
 # Start all services
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/usr/bin/runsvdir", "-P", "/usr/share/biserver/service/"]
+CMD ["/usr/share/biserver/bin/init.sh"]

@@ -21,16 +21,16 @@ contenedor Postgres.
 
 ## `./export.sh`
 
-Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en local.
+Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en local.
 
 ## `./export_with_postgres.sh`
 
-Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en PostgreSQL.
+Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en PostgreSQL.
 
 ## `./export_with_mysql.sh`
 
-Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en MySQL.
+Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en MySQL.
 
 ## `./export_with_oracle.sh`
 
-Envía a STDOUT un tarball de un Pentaho BI Server ya configurado para almacenar los datos en Oracle.
+Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en Oracle.

@@ -16,6 +16,18 @@ logInfo() { printf -- '[INFO] %s\n' "$@"; }
 logWarn() { >&2 printf -- '[WARN] %s\n' "$@"; }
 logFail() { >&2 printf -- '[FAIL] %s\n' "$@"; }
 
+# Enables a service
+runitEnSv() {
+	svdir=/usr/share/biserver/service
+	ln -rs "${svdir:?}"/available/"${1:?}" "${svdir:?}"/enabled/
+}
+
+# Disables a service
+runitDisSv() {
+	svdir=/usr/share/biserver/service
+	unlink "${svdir:?}"/enabled/"${1:?}"
+}
+
 # Runs a command redirecting its output to stdout and a file while keeping its exit code
 runAndLog() {
 	runCmd=${1:?}

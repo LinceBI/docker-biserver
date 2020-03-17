@@ -24,6 +24,8 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
 
 ## Variables de entorno
 
+ * **`SERVICE_BISERVER_ENABLED` (`true` por defecto)**: habilita el servicio de Pentaho BI Server.
+ * **`SERVICE_SUPERCRONIC_ENABLED` (`true` por defecto)**: habilita el servicio de Supercronic.
  * **`SOLUTIONS_DIRNAME` (`pentaho-solutions` por defecto)**: nombre que tendrá el directorio `./pentaho-solutions/`.
  * **`DATA_DIRNAME` (`data` por defecto)**: nombre que tendrá el directorio `./data/`.
  * **`WEBAPP_PENTAHO_DIRNAME` (`pentaho` por defecto)**: nombre que tendrá el directorio `./tomcat/webapps/pentaho/`.
