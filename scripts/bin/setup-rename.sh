@@ -9,7 +9,7 @@ export LC_ALL=C
 ########
 
 #SOLUTIONS_DIRNAME_WAS_RENAMED=false
-if [ "${SOLUTIONS_DIRNAME:?}" != pentaho-solutions ]; then
+if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
 	logInfo "Solutions directory was renamed to \"${SOLUTIONS_DIRNAME:?}\""
 	#SOLUTIONS_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
@@ -20,7 +20,7 @@ if [ "${SOLUTIONS_DIRNAME:?}" != pentaho-solutions ]; then
 fi
 
 #DATA_DIRNAME_WAS_RENAMED=false
-if [ "${DATA_DIRNAME:?}" != data ]; then
+if [ "${DATA_DIRNAME:?}" != 'data' ]; then
 	logInfo "Data directory was renamed to \"${DATA_DIRNAME:?}\""
 	#DATA_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" ]; then
@@ -33,7 +33,7 @@ fi
 ########
 
 #WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=false
-if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != pentaho ]; then
+if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
 	logInfo "Pentaho webapp directory was renamed to \"${WEBAPP_PENTAHO_DIRNAME:?}\""
 	#WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
@@ -44,7 +44,7 @@ if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != pentaho ]; then
 fi
 
 WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=false
-if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != pentaho-style ]; then
+if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
 	logInfo "Pentaho style webapp directory was renamed to \"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}\""
 	WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=true
 	if [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
@@ -58,7 +58,7 @@ fi
 # This recursive replacement has dangerous implications compared to the benefits it brings.
 # Uncomment only if there is a bug related to the rename operation.
 #
-#if [ "${WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED:?}" = true ]; then
+#if [ "${WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 #	logInfo 'Updating references of Pentaho webapp...'
 #	find \
 #		"${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}" \
@@ -69,7 +69,7 @@ fi
 #fi
 #
 
-if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = true ]; then
+if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 	logInfo 'Updating references of Pentaho style webapp...'
 	find \
 		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" \

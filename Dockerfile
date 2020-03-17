@@ -227,6 +227,10 @@ ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/9.3.x/9.3.1-0/v
 ARG VERTICA_JDBC_JAR_CHECKSUM="8dcbeb09dba23d8241d7e95707c1069ee52a3c8fd7a8c4e71751ebc6bb8f6d1c"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" && printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c
 
+# Other environment variables
+ENV SERVICE_BISERVER_ENABLED=true
+ENV SERVICE_SUPERCRONIC_ENABLED=true
+
 # Copy Tomcat config
 COPY --chown=biserver:biserver ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
@@ -242,7 +246,7 @@ COPY --chown=root:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 # Copy crontab
 COPY --chown=root:root ./config/crontab /etc/crontab
 
-# Copy runtime scripts
+# Copy scripts
 COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
@@ -261,4 +265,4 @@ USER biserver:biserver
 
 # Start all services
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/usr/bin/runsvdir", "-P", "/usr/share/biserver/service/"]
+CMD ["/usr/share/biserver/bin/init.sh"]
