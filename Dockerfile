@@ -40,6 +40,22 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install Tini
+ARG TINI_VERSION="0.18.0"
+ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
+ARG TINI_BIN_CHECKSUM="12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855"
+RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
+	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
+	&& chmod 755 /usr/bin/tini
+
+# Install Supercronic
+ARG SUPERCRONIC_VERSION="0.1.9"
+ARG SUPERCRONIC_BIN_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
+ARG SUPERCRONIC_BIN_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
+RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
+	&& printf '%s  %s' "${SUPERCRONIC_BIN_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
+	&& chmod 755 /usr/bin/supercronic
+
 # Install PostgreSQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
 	&& printf '%s\n' 'deb https://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
@@ -55,12 +71,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
-
-# Install Tini
-COPY --from=docker.io/hectormolinero/tini:latest --chown=root:root /usr/bin/tini /usr/bin/tini
-
-# Install Supercronic
-COPY --from=docker.io/hectormolinero/supercronic:latest --chown=root:root /usr/bin/supercronic /usr/bin/supercronic
 
 # Create users and groups
 ENV BISERVER_USER_UID=1000
