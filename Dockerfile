@@ -100,9 +100,9 @@ ENV CATALINA_OPTS_JAVA_XMX=4096m
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.51"
+ARG TOMCAT_VERSION="8.5.53"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="836ecd816605e281636cae78c5b494ccaeb168c24f8266a72e9e704b2204affe"
+ARG TOMCAT_PKG_CHECKSUM="72e3defbff444548ce9dc60935a1eab822c7d5224f2a8e98c849954575318c08"
 RUN printf '%s\n' 'Installing Tomcat...' \
 	# Install dependencies
 	&& RUN_PKGS="libapr1 libssl1.1" \
