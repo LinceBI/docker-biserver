@@ -31,7 +31,7 @@ cd tomcat\bin
 set CATALINA_HOME=%~dp0tomcat
 
 SET BITS=64
-SET DI_HOME="%~dp0<%= ENV['SOLUTIONS_DIRNAME'] %>\system\kettle\"
+SET DI_HOME="%~dp0<%= ENV['SOLUTIONS_DIRNAME'] %>\system\kettle"
 
 set CATALINA_OPTS=-Xms2048m -Xmx6144m  -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Dfile.encoding=utf8 -DDI_HOME=%DI_HOME%
 
