@@ -15,7 +15,7 @@ build:images:
   artifacts:
     expire_in: "15 mins"
     paths:
-      - "./dist/*.tgz"
+      - "./dist/"
 
 push:images:
   stage: "push:images"
@@ -38,4 +38,4 @@ push:standalone:
   before_script:
     - "apk add --no-cache coreutils git make xz curl"
   script:
-    - "curl -u \"${HTTP_UPLOAD_USER:?}:${HTTP_UPLOAD_PASS:?}\" -T ./dist/*_standalone.tgz \"${HTTP_UPLOAD_URL:?}\""
+    - "curl -u \"${HTTP_UPLOAD_USER:?}:${HTTP_UPLOAD_PASS:?}\" -T ./dist/*_standalone.zip \"${HTTP_UPLOAD_URL:?}\""

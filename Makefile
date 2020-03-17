@@ -18,7 +18,7 @@ IMAGE_VERSION := 9.0.0.0-423
 IMAGE_BUILD_OPTS :=
 
 IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tgz
-STANDALONE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.tgz
+STANDALONE_ARCHIVE := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.zip
 
 ##################################################
 ## "all" target
@@ -53,13 +53,13 @@ $(IMAGE_TARBALL): build-image
 	$(call save_image,$(IMAGE_NAME):$(IMAGE_VERSION),$@)
 
 .PHONY: save-standalone
-save-standalone: $(STANDALONE_TARBALL)
+save-standalone: $(STANDALONE_ARCHIVE)
 
-$(STANDALONE_TARBALL): build-image
+$(STANDALONE_ARCHIVE): build-image
 	mkdir -p '$(DISTDIR)'
 	'$(DOCKER)' run --rm \
 		'$(IMAGE_NAME):$(IMAGE_VERSION)' \
-		/usr/share/biserver/bin/export.sh > '$(STANDALONE_TARBALL)'
+		/usr/share/biserver/bin/export.sh > '$(STANDALONE_ARCHIVE)'
 
 ##################################################
 ## "load-*" targets
@@ -95,5 +95,5 @@ push-image:
 
 .PHONY: clean
 clean:
-	rm -f '$(IMAGE_TARBALL)' '$(STANDALONE_TARBALL)'
+	rm -f '$(IMAGE_TARBALL)' '$(STANDALONE_ARCHIVE)'
 	if [ -d '$(DISTDIR)' ] && [ -z "$$(ls -A '$(DISTDIR)')" ]; then rmdir '$(DISTDIR)'; fi
