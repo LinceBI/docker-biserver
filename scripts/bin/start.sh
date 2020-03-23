@@ -8,9 +8,11 @@ export LC_ALL=C
 
 ########
 
-if [ ! -f "${HOME:?}"/biserver.setup.lock ]; then
-	runAndLog /usr/share/biserver/bin/setup.sh "${HOME:?}"/biserver.setup.log
-	touch "${HOME:?}"/biserver.setup.lock
+BISERVER_SETUP_LCK_FILE="${BISERVER_HOME:?}"/setup.lock
+BISERVER_SETUP_LOG_FILE="${CATALINA_BASE:?}"/logs/setup.log
+if [ ! -f "${BISERVER_SETUP_LCK_FILE:?}" ]; then
+	runAndLog /usr/share/biserver/bin/setup.sh "${BISERVER_SETUP_LOG_FILE}"
+	touch "${BISERVER_SETUP_LCK_FILE:?}"
 fi
 
 ########
