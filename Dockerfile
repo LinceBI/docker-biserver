@@ -269,13 +269,14 @@ COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
 
 # Set sane permissions until solved upstream:
 # https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
-RUN find /usr/share/biserver/bin/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find /home/biserver/ -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+RUN find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
 	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -regex '.*\.sh\(\.erb\)?$' -exec chmod 0755 '{}' '+'
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -regex '.*\.sh\(\.erb\)?$' -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -regex '.*\.\(sh\|run\)$' -exec chmod 0755 '{}' '+' \
+	&& find /usr/share/biserver/bin/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+'
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
