@@ -10,7 +10,7 @@ build:images:
   before_script:
     - "apk add --no-cache coreutils git make xz"
   script:
-    - "make IMAGE_BUILD_OPTS='--pull --no-cache' build-image"
+    - "make IMAGE_BUILD_OPTS='--pull' build-image"
     - "make save-image save-standalone"
   artifacts:
     expire_in: "15 mins"

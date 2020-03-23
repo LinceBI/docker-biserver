@@ -14,10 +14,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		dnsutils \
 		file \
 		findutils \
+		git \
 		gnupg \
 		gzip \
 		iputils-ping \
 		jq \
+		lftp \
 		libarchive-tools \
 		locales \
 		lsb-release \
@@ -28,10 +30,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		nano \
 		netcat-openbsd \
 		openjdk-8-jdk \
+		openssh-client \
 		openssl \
+		patch \
 		rsync \
 		ruby \
 		runit \
+		subversion \
 		tar \
 		tzdata \
 		unzip \
@@ -83,7 +88,7 @@ RUN printf '%s\n' 'Creating users and groups...' \
 		--uid "${BISERVER_USER_UID:?}" \
 		--gid "${BISERVER_USER_GID:?}" \
 		--shell "$(command -v bash)" \
-		--home-dir /var/cache/biserver/ \
+		--home-dir /home/biserver/ \
 		--create-home \
 		biserver
 
@@ -105,8 +110,8 @@ RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
-ENV CATALINA_OPTS_JAVA_XMS=1024m
-ENV CATALINA_OPTS_JAVA_XMX=4096m
+ENV CATALINA_OPTS_JAVA_XMS="1024m"
+ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
@@ -243,24 +248,24 @@ ENV SERVICE_SUPERCRONIC_ENABLED=true
 
 # Copy Tomcat config
 COPY --chown=biserver:biserver ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
-COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
+COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
 
 # Copy Pentaho BI Server config
-COPY --chown=biserver:biserver ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
 COPY --chown=biserver:biserver ./config/biserver/*.* "${BISERVER_HOME}"/
+COPY --chown=biserver:biserver ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
+COPY --chown=biserver:biserver ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
 COPY --chown=root:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
-COPY --chown=root:root ./config/crontab /etc/crontab
+COPY --chown=biserver:biserver ./config/crontab /home/biserver/.crontab
 
 # Copy scripts
 COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
-COPY --chown=biserver:biserver scripts/service/ /usr/share/biserver/service/
+COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
