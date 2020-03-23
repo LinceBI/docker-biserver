@@ -83,7 +83,7 @@ RUN printf '%s\n' 'Creating users and groups...' \
 		--uid "${BISERVER_USER_UID:?}" \
 		--gid "${BISERVER_USER_GID:?}" \
 		--shell "$(command -v bash)" \
-		--home-dir /var/cache/biserver/ \
+		--home-dir /home/biserver/ \
 		--create-home \
 		biserver
 
@@ -105,8 +105,8 @@ RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
-ENV CATALINA_OPTS_JAVA_XMS=1024m
-ENV CATALINA_OPTS_JAVA_XMX=4096m
+ENV CATALINA_OPTS_JAVA_XMS="1024m"
+ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
@@ -254,7 +254,7 @@ COPY --chown=biserver:biserver ./config/biserver/*.* "${BISERVER_HOME}"/
 COPY --chown=root:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
-COPY --chown=root:root ./config/crontab /etc/crontab
+COPY --chown=root:root ./config/crontab /home/biserver/.crontab
 
 # Copy scripts
 COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
