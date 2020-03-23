@@ -14,10 +14,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		dnsutils \
 		file \
 		findutils \
+		git \
 		gnupg \
 		gzip \
 		iputils-ping \
 		jq \
+		lftp \
 		libarchive-tools \
 		locales \
 		lsb-release \
@@ -28,10 +30,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		nano \
 		netcat-openbsd \
 		openjdk-8-jdk \
+		openssh-client \
 		openssl \
+		patch \
 		rsync \
 		ruby \
 		runit \
+		subversion \
 		tar \
 		tzdata \
 		unzip \
