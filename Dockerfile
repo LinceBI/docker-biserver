@@ -51,7 +51,7 @@ ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERS
 ARG TINI_BIN_CHECKSUM="12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855"
 RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
 	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
-	&& chmod 755 /usr/bin/tini
+	&& chmod 0755 /usr/bin/tini
 
 # Install Supercronic
 ARG SUPERCRONIC_VERSION="0.1.9"
@@ -59,7 +59,7 @@ ARG SUPERCRONIC_BIN_URL="https://github.com/aptible/supercronic/releases/downloa
 ARG SUPERCRONIC_BIN_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_BIN_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
-	&& chmod 755 /usr/bin/supercronic
+	&& chmod 0755 /usr/bin/supercronic
 
 # Install PostgreSQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -147,10 +147,10 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& bsdtar -C "${CATALINA_HOME:?}"/lib/ -xf "${CATALINA_HOME:?}"/lib/catalina.jar org/apache/catalina/util/ServerInfo.properties \
 	&& sed -i 's|^\(server\.info\)=.*$|\1=Apache Tomcat|g' "${CATALINA_HOME:?}"/lib/org/apache/catalina/util/ServerInfo.properties \
 	# Set permissions
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -exec chown -h biserver:biserver '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type d -exec chmod 755 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -exec chmod 644 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -name '*.sh' -exec chmod 755 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -not -user biserver -exec chown -h biserver:biserver '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0755 -name '*.sh' -exec chmod 0755 '{}' '+' \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS:?} \
 	&& apt-get autoremove -y \
@@ -205,10 +205,10 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	&& mv /tmp/biserver/pentaho-war/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 	&& mv /tmp/biserver/pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 	# Set permissions
-	&& find "${BISERVER_HOME:?}" -exec chown -h biserver:biserver '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type d -exec chmod 755 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -exec chmod 644 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -name '*.sh' -exec chmod 755 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -not -user biserver -exec chown -h biserver:biserver '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not -perm 0755 -name '*.sh' -exec chmod 0755 '{}' '+' \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
@@ -266,6 +266,16 @@ COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
 COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
+
+# Set sane permissions until solved upstream:
+# https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
+RUN find /usr/share/biserver/bin/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find /home/biserver/ -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -regex '.*\.sh\(\.erb\)?$' -exec chmod 0755 '{}' '+'
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
