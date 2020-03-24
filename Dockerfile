@@ -246,37 +246,24 @@ RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" && prin
 ENV SERVICE_BISERVER_ENABLED=true
 ENV SERVICE_SUPERCRONIC_ENABLED=true
 
-# Copy Tomcat config
+# Copy Pentaho BI Server config
 COPY --chown=biserver:biserver ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
 COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-
-# Copy Pentaho BI Server config
-COPY --chown=biserver:biserver ./config/biserver/*.* "${BISERVER_HOME}"/
-COPY --chown=biserver:biserver ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
 COPY --chown=biserver:biserver ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
-COPY --chown=root:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
+COPY --chown=biserver:biserver ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
+COPY --chown=biserver:biserver ./config/biserver/*.* "${BISERVER_HOME}"/
+COPY --chown=biserver:biserver ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
 COPY --chown=biserver:biserver ./config/crontab /home/biserver/.crontab
 
 # Copy scripts
-COPY --chown=root:root ./scripts/bin/ /usr/share/biserver/bin/
+COPY --chown=biserver:biserver ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
 COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
-
-# Set sane permissions until solved upstream:
-# https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
-RUN find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" "${BISERVER_HOME:?}" -type f -regex '.*\.sh\(\.erb\)?$' -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -regex '.*\.\(sh\|run\)$' -exec chmod 0755 '{}' '+' \
-	&& find /usr/share/biserver/bin/ -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+'
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
@@ -288,6 +275,16 @@ WORKDIR "${BISERVER_HOME}"
 
 # Drop root privileges
 USER biserver:biserver
+
+# Set sane permissions until solved upstream:
+# https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
+RUN find "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not '(' -perm 0644 -o -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0644 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f '(' -not -perm 0755 -a -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not '(' -perm 0644 -o -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0644 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f '(' -not -perm 0755 -a -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0755 '{}' '+' \
+	&& find /usr/share/biserver/bin/ /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+'
 
 # Start all services
 ENTRYPOINT ["/usr/bin/tini", "--"]
