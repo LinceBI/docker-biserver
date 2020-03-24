@@ -51,7 +51,7 @@ ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERS
 ARG TINI_BIN_CHECKSUM="12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855"
 RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
 	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
-	&& chmod 0755 /usr/bin/tini
+	&& chown root:root /usr/bin/tini && chmod 0755 /usr/bin/tini
 
 # Install Supercronic
 ARG SUPERCRONIC_VERSION="0.1.9"
@@ -59,7 +59,7 @@ ARG SUPERCRONIC_BIN_URL="https://github.com/aptible/supercronic/releases/downloa
 ARG SUPERCRONIC_BIN_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_BIN_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
-	&& chmod 0755 /usr/bin/supercronic
+	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
 # Install PostgreSQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -147,10 +147,10 @@ RUN printf '%s\n' 'Installing Tomcat...' \
 	&& bsdtar -C "${CATALINA_HOME:?}"/lib/ -xf "${CATALINA_HOME:?}"/lib/catalina.jar org/apache/catalina/util/ServerInfo.properties \
 	&& sed -i 's|^\(server\.info\)=.*$|\1=Apache Tomcat|g' "${CATALINA_HOME:?}"/lib/org/apache/catalina/util/ServerInfo.properties \
 	# Set permissions
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -not -user biserver -exec chown -h biserver:biserver '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0755 -name '*.sh' -exec chmod 0755 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -not -user biserver -exec chown -h biserver:root '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0664 -exec chmod 0664 '{}' '+' \
+	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0775 -name '*.sh' -exec chmod 0775 '{}' '+' \
 	# Cleanup
 	&& apt-get purge -y ${BUILD_PKGS:?} \
 	&& apt-get autoremove -y \
@@ -205,65 +205,76 @@ RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	&& mv /tmp/biserver/pentaho-war/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 	&& mv /tmp/biserver/pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 	# Set permissions
-	&& find "${BISERVER_HOME:?}" -not -user biserver -exec chown -h biserver:biserver '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -not -perm 0644 -exec chmod 0644 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -not -perm 0755 -name '*.sh' -exec chmod 0755 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -not -user biserver -exec chown -h biserver:root '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not -perm 0664 -exec chmod 0664 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not -perm 0775 -name '*.sh' -exec chmod 0775 '{}' '+' \
 	# Cleanup
 	&& find /tmp/ -mindepth 1 -delete
 
 # Install H2 JDBC
 ARG H2_JDBC_JAR_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
 ARG H2_JDBC_JAR_CHECKSUM="c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${H2_JDBC_JAR_URL:?}" && printf '%s  %s' "${H2_JDBC_JAR_CHECKSUM:?}" ./h2-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${H2_JDBC_JAR_URL:?}" && printf '%s  %s' "${H2_JDBC_JAR_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
+	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
 
 # Install HSQLDB JDBC
 ARG HSQLDB_JDBC_JAR_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.3.2/hsqldb-2.3.2.jar"
 ARG HSQLDB_JDBC_JAR_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf687fe1786a7c2ec6"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" && printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c \
+	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
 ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.11.jar"
 ARG POSTGRES_JDBC_JAR_CHECKSUM="31e9f3dc586c07477235893279ee80036de377681badaa1f27db6b74ab2437f4"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" && printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
+	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
 
 # Install MySQL JDBC
 ARG MYSQL_JDBC_JAR_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.48/mysql-connector-java-5.1.48.jar"
 ARG MYSQL_JDBC_JAR_CHECKSUM="56e26caaa3821f5ae4af44f9c74f66cf8b84ea01516ad3803cbb0e9049b6eca8"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MYSQL_JDBC_JAR_URL:?}" && printf '%s  %s' "${MYSQL_JDBC_JAR_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MYSQL_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${MYSQL_JDBC_JAR_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
+	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
 ARG MSSQL_JDBC_JAR_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.1/mssql-jdbc-8.2.1.jre8.jar"
 ARG MSSQL_JDBC_JAR_CHECKSUM="3dbe11015570a28569da590ab376c82f0e0bc0df9fd78a0e2aea8fbf2a77fb74"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MSSQL_JDBC_JAR_URL:?}" && printf '%s  %s' "${MSSQL_JDBC_JAR_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MSSQL_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${MSSQL_JDBC_JAR_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
+	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDCB
 ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/9.3.x/9.3.1-0/vertica-jdbc-9.3.1-0.jar"
 ARG VERTICA_JDBC_JAR_CHECKSUM="8dcbeb09dba23d8241d7e95707c1069ee52a3c8fd7a8c4e71751ebc6bb8f6d1c"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" && printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
+	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
 
 # Other environment variables
 ENV SERVICE_BISERVER_ENABLED=true
 ENV SERVICE_SUPERCRONIC_ENABLED=true
 
 # Copy Pentaho BI Server config
-COPY --chown=biserver:biserver ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
-COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
-COPY --chown=biserver:biserver ./config/biserver/*.* "${BISERVER_HOME}"/
-COPY --chown=biserver:biserver ./config/biserver.init.d/ "${BISERVER_INITD}"/
+COPY --chown=biserver:root ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
+COPY --chown=biserver:root ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
+COPY --chown=biserver:root ./config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
+COPY --chown=biserver:root ./config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
+COPY --chown=biserver:root ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
+COPY --chown=biserver:root ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
+COPY --chown=biserver:root ./config/biserver/*.* "${BISERVER_HOME}"/
+COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
-COPY --chown=biserver:biserver ./config/crontab /home/biserver/.crontab
+COPY --chown=biserver:root ./config/crontab /home/biserver/.crontab
 
 # Copy scripts
-COPY --chown=biserver:biserver ./scripts/bin/ /usr/share/biserver/bin/
+COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
-COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
+COPY --chown=biserver:root ./scripts/service/ /usr/share/biserver/service/
 
 # Don't declare volumes, let the user decide
 #VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
@@ -274,17 +285,17 @@ COPY --chown=biserver:biserver ./scripts/service/ /usr/share/biserver/service/
 WORKDIR "${BISERVER_HOME}"
 
 # Drop root privileges
-USER biserver:biserver
+USER biserver:root
 
 # Set sane permissions until solved upstream:
 # https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
-RUN find "${BISERVER_HOME:?}" -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -not '(' -perm 0644 -o -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0644 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f '(' -not -perm 0755 -a -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0755 -exec chmod 0755 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not '(' -perm 0644 -o -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0644 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f '(' -not -perm 0755 -a -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0755 '{}' '+' \
-	&& find /usr/share/biserver/bin/ /usr/share/biserver/service/ -not -perm 0755 -exec chmod 0755 '{}' '+'
+RUN find "${BISERVER_HOME:?}" -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f -not '(' -perm 0664 -o -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0664 '{}' '+' \
+	&& find "${BISERVER_HOME:?}" -type f '(' -not -perm 0775 -a -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0775 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not '(' -perm 0664 -o -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0664 '{}' '+' \
+	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f '(' -not -perm 0775 -a -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0775 '{}' '+' \
+	&& find /usr/share/biserver/bin/ /usr/share/biserver/service/ -not -perm 0775 -exec chmod 0775 '{}' '+'
 
 # Start all services
 ENTRYPOINT ["/usr/bin/tini", "--"]

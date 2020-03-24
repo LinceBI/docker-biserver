@@ -39,6 +39,7 @@ copyDirectory() {
 				# Substitute source dirname with target dirname
 				dirname=${target:?}${dirname##${source:?}}
 				output=${dirname:?}/${basename:?}
+				rm -f "${output:?}"
 				erb -T - -- "${output:?}.erb" > "${output:?}"
 				chmod --reference="${output:?}.erb" -- "${output:?}"
 			fi
