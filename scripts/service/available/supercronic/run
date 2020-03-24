@@ -4,4 +4,4 @@ set -eu
 
 cd ~/
 exec 2>&1
-exec /usr/bin/supercronic "${HOME:?}"/.crontab
+exec /usr/bin/supercronic /home/biserver/.crontab
