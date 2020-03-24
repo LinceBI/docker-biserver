@@ -287,16 +287,8 @@ WORKDIR "${BISERVER_HOME}"
 # Drop root privileges
 USER biserver:root
 
-# Set sane permissions until solved upstream:
-# https://gitlab.com/gitlab-org/gitlab-runner/issues/1736
-RUN find "${BISERVER_HOME:?}" -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f -not '(' -perm 0664 -o -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0664 '{}' '+' \
-	&& find "${BISERVER_HOME:?}" -type f '(' -not -perm 0775 -a -regex '.*\.sh\(\.erb\)?$' ')' -exec chmod 0775 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f -not '(' -perm 0664 -o -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0664 '{}' '+' \
-	&& find "${BISERVER_INITD:?}" /home/biserver/ -type f '(' -not -perm 0775 -a -regex '.*\.\(sh\|run\)$' ')' -exec chmod 0775 '{}' '+' \
-	&& find /usr/share/biserver/bin/ /usr/share/biserver/service/ -not -perm 0775 -exec chmod 0775 '{}' '+'
+# Set correct permissions to support arbitrary user ids
+RUN /usr/share/biserver/bin/update-permissions.sh
 
-# Start all services
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/usr/share/biserver/bin/init.sh"]
