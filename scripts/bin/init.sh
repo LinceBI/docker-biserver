@@ -12,7 +12,7 @@ if [ "${SERVICE_BISERVER_ENABLED:?}" = 'true' ]; then
 	runitEnSv biserver
 fi
 
-if [ "${SERVICE_SUPERCRONIC_ENABLED:?}" = 'true' ] && [ -e "${HOME:?}"/.crontab ]; then
+if [ "${SERVICE_SUPERCRONIC_ENABLED:?}" = 'true' ] && [ -e /home/biserver/crontab ]; then
 	runitEnSv supercronic
 fi
 
