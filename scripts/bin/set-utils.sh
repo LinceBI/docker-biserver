@@ -19,13 +19,17 @@ logFail() { >&2 printf -- '[FAIL] %s\n' "$@"; }
 # Enables a service
 runitEnSv() {
 	svdir=/usr/share/biserver/service
-	ln -rs "${svdir:?}"/available/"${1:?}" "${svdir:?}"/enabled/
+	if [ ! -e "${svdir:?}"/enabled/"${1:?}" ]; then
+		ln -rs "${svdir:?}"/available/"${1:?}" "${svdir:?}"/enabled/"${1:?}"
+	fi
 }
 
 # Disables a service
 runitDisSv() {
 	svdir=/usr/share/biserver/service
-	unlink "${svdir:?}"/enabled/"${1:?}"
+	if [ -e "${svdir:?}"/enabled/"${1:?}" ]; then
+		unlink "${svdir:?}"/enabled/"${1:?}"
+	fi
 }
 
 # Runs a command redirecting its output to stdout and a file while keeping its exit code
