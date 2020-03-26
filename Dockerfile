@@ -164,6 +164,7 @@ ENV SOLUTIONS_DIRNAME="pentaho-solutions"
 ENV DATA_DIRNAME="data"
 ENV WEBAPP_PENTAHO_DIRNAME="pentaho"
 ENV WEBAPP_PENTAHO_STYLE_DIRNAME="pentaho-style"
+ENV KETTLE_HOME="/home/biserver/.kettle"
 
 # Install Pentaho BI Server
 ARG BISERVER_VERSION="9.0.0.0-423"
