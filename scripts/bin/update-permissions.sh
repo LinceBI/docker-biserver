@@ -23,5 +23,5 @@ find "${BISERVER_INITD:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.\(sh\|run
 find /usr/share/biserver/bin/ -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
 find /usr/share/biserver/bin/ -type f -not -perm 0775 -exec chmod -c 0775 '{}' '+'
 
-find /usr/share/biserver/service/ -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
+find /usr/share/biserver/service/ -maxdepth 2 -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
 find /usr/share/biserver/service/ -type f '(' -not -perm 0775 -a -regex '^.*\/\(run\|finish\)$' ')' -exec chmod -c 0775 '{}' '+'
