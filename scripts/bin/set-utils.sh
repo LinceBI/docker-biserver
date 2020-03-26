@@ -3,6 +3,10 @@
 set -eu
 export LC_ALL=C
 
+# Set default umask
+export UMASK=0002
+umask "${UMASK:?}"
+
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "${1-}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
