@@ -276,7 +276,7 @@ COPY --chown=biserver:root ./scripts/service/ /usr/share/biserver/service/
 WORKDIR "${BISERVER_HOME}"
 
 # Drop root privileges
-USER biserver:root
+USER 1000:0
 
 # Set correct permissions to support arbitrary user ids
 RUN /usr/share/biserver/bin/update-permissions.sh
