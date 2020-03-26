@@ -77,20 +77,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Create users and groups
-ENV BISERVER_USER_UID=1000
-ENV BISERVER_USER_GID=1000
-RUN printf '%s\n' 'Creating users and groups...' \
-	&& groupadd \
-		--gid "${BISERVER_USER_GID:?}" \
-		biserver \
-	&& useradd \
-		--uid "${BISERVER_USER_UID:?}" \
-		--gid "${BISERVER_USER_GID:?}" \
-		--shell "$(command -v bash)" \
-		--home-dir /home/biserver/ \
-		--create-home \
-		biserver
+# Create unprivileged user
+ENV BIUSER_UID="1000"
+ENV BIUSER_HOME="/home/biserver"
+RUN useradd -u "${BIUSER_UID:?}" -g 0 -s "$(command -v bash)" -md "${BIUSER_HOME:?}" biserver
 
 # Setup locale
 RUN printf '%s\n' 'en_US.UTF-8 UTF-8' > /etc/locale.gen
@@ -164,7 +154,7 @@ ENV SOLUTIONS_DIRNAME="pentaho-solutions"
 ENV DATA_DIRNAME="data"
 ENV WEBAPP_PENTAHO_DIRNAME="pentaho"
 ENV WEBAPP_PENTAHO_STYLE_DIRNAME="pentaho-style"
-ENV KETTLE_HOME="/home/biserver/.kettle"
+ENV KETTLE_HOME="${BIUSER_HOME}"
 
 # Install Pentaho BI Server
 ARG BISERVER_VERSION="9.0.0.0-423"
@@ -269,7 +259,7 @@ COPY --chown=biserver:root ./config/biserver/*.* "${BISERVER_HOME}"/
 COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
-COPY --chown=biserver:root ./config/crontab /home/biserver/
+COPY --chown=biserver:root ./config/crontab "${BIUSER_HOME}"/
 
 # Copy scripts
 COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
