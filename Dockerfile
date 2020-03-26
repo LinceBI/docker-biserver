@@ -245,8 +245,10 @@ RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" \
 	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
 
 # Other environment variables
-ENV SERVICE_BISERVER_ENABLED=true
-ENV SERVICE_SUPERCRONIC_ENABLED=true
+ENV SERVICE_BISERVER_ENABLED="true"
+ENV SERVICE_SUPERCRONIC_ENABLED="true"
+ENV SVDIR="/usr/share/biserver/service/enabled"
+ENV SVWAIT="30"
 
 # Copy Pentaho BI Server config
 COPY --chown=biserver:root ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
@@ -281,5 +283,6 @@ USER 1000:0
 # Set correct permissions to support arbitrary user ids
 RUN /usr/share/biserver/bin/update-permissions.sh
 
+STOPSIGNAL SIGHUP
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/usr/share/biserver/bin/init.sh"]
