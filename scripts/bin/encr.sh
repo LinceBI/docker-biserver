@@ -4,13 +4,10 @@ set -eu
 export LC_ALL=C
 
 WEBINFDIR="${CATALINA_BASE:?}/webapps/${WEBAPP_PENTAHO_DIRNAME:?}/WEB-INF"
-CLASSPATH=$(printf -- '%s:' \
-	"${WEBINFDIR:?}/lib"/kettle-core-*.jar \
-	"${WEBINFDIR:?}/lib"/commons-*.jar \
-	"${WEBINFDIR:?}/lib"/slf4j-api-*.jar \
-)
+CLASSPATH=$(find "${WEBINFDIR:?}/lib" "${CATALINA_BASE:?}/lib" -type d -printf '%p/*:')
 
+cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/
 exec java \
 		-classpath "${CLASSPATH:?}" \
-		org.pentaho.di.core.encryption.Encr \
-		"$@" 2>/dev/null | tr -d '\n'
+		-Dlog4j.configuration=file:"${WEBINFDIR:?}/classes/log4j.xml" \
+		org.pentaho.di.core.encryption.Encr "$@" | tr -d '\n'
