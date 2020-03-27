@@ -8,15 +8,6 @@ export LC_ALL=C
 
 ########
 
-BISERVER_SETUP_LCK_FILE="${BISERVER_HOME:?}"/setup.lock
-BISERVER_SETUP_LOG_FILE="${CATALINA_BASE:?}"/logs/setup.log
-if [ ! -f "${BISERVER_SETUP_LCK_FILE:?}" ]; then
-	runAndLog /usr/share/biserver/bin/setup.sh "${BISERVER_SETUP_LOG_FILE}"
-	touch "${BISERVER_SETUP_LCK_FILE:?}"
-fi
-
-########
-
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}:${CATALINA_HOME:?}/lib"
 # shellcheck disable=SC2155
 export CATALINA_OPTS="$(cat <<-EOF
@@ -29,8 +20,6 @@ export CATALINA_OPTS="$(cat <<-EOF
 	${CATALINA_OPTS_EXTRA?}
 EOF
 )"
-
-########
 
 logInfo "Starting Pentaho BI Server..."
 cd "${CATALINA_HOME:?}"/bin

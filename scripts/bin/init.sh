@@ -8,6 +8,15 @@ export LC_ALL=C
 
 ########
 
+BISERVER_SETUP_LCK_FILE="${BISERVER_HOME:?}"/setup.lock
+BISERVER_SETUP_LOG_FILE="${CATALINA_BASE:?}"/logs/setup.log
+if [ ! -f "${BISERVER_SETUP_LCK_FILE:?}" ]; then
+	runAndLog /usr/share/biserver/bin/setup.sh "${BISERVER_SETUP_LOG_FILE}"
+	touch "${BISERVER_SETUP_LCK_FILE:?}"
+fi
+
+########
+
 if [ "${SERVICE_BISERVER_ENABLED:?}" = 'true' ]; then
 	runitEnSv biserver
 fi

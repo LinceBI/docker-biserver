@@ -99,7 +99,6 @@ RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
-ENV CATALINA_PID="${CATALINA_BASE}/bin/catalina.pid"
 ENV CATALINA_OPTS_JAVA_XMS="1024m"
 ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=

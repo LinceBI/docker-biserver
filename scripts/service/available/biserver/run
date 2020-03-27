@@ -2,6 +2,5 @@
 
 set -eu
 
-cd ~/
 exec 2>&1
 exec /usr/share/biserver/bin/start.sh
