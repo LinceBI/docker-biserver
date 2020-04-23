@@ -46,9 +46,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Tini
-ARG TINI_VERSION="0.18.0"
+ARG TINI_VERSION="0.19.0"
 ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
-ARG TINI_BIN_CHECKSUM="12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855"
+ARG TINI_BIN_CHECKSUM="93dcc18adc78c65a028a84799ecf8ad40c936fdfc5f2a57b1acda5a8117fa82c"
 RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
 	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
 	&& chown root:root /usr/bin/tini && chmod 0755 /usr/bin/tini
