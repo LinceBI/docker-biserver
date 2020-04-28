@@ -30,7 +30,3 @@ Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almac
 ## `./export_with_mysql.sh`
 
 Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en MySQL.
-
-## `./export_with_oracle.sh`
-
-Envía a STDOUT un archivo zip de un Pentaho BI Server ya configurado para almacenar los datos en Oracle.

@@ -82,17 +82,17 @@ ENV BIUSER_UID="1000"
 ENV BIUSER_HOME="/home/biserver"
 RUN useradd -u "${BIUSER_UID:?}" -g 0 -s "$(command -v bash)" -md "${BIUSER_HOME:?}" biserver
 
-# Setup locale
-RUN printf '%s\n' 'en_US.UTF-8 UTF-8' > /etc/locale.gen
-RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8 ||:
+# Set locale
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+RUN printf '%s\n' "${LANG:?} UTF-8" > /etc/locale.gen \
+	&& localedef -c -i "${LANG%%.*}" -f UTF-8 "${LANG:?}" ||:
 
-# Setup timezone
+# Set timezone
 ENV TZ=UTC
-RUN ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
-RUN printf '%s\n' "${TZ:?}" > /etc/timezone
+RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
+	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
-# Java environment
+# Set default Java
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 
@@ -104,10 +104,10 @@ ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.53"
+ARG TOMCAT_VERSION="8.5.54"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="72e3defbff444548ce9dc60935a1eab822c7d5224f2a8e98c849954575318c08"
-RUN printf '%s\n' 'Installing Tomcat...' \
+ARG TOMCAT_PKG_CHECKSUM="44bd3f8d13983349bab102a3d03b67ac4bf5d073afc2d16e3339c3d88f4b92d9"
+RUN export DEBIAN_FRONTEND=noninteractive \
 	# Install dependencies
 	&& RUN_PKGS="libapr1 libssl1.1" \
 	&& BUILD_PKGS="make gcc libapr1-dev libssl-dev" \
@@ -170,20 +170,20 @@ ARG BISERVER_STYLE_PKG_CHECKSUM="e9304be4e8bac5be5dd5b33ecd19569f79cad175bb0874e
 RUN printf '%s\n' 'Installing Pentaho BI Server...' \
 	# Download Pentaho BI Server
 	&& mkdir /tmp/biserver/ \
-	### ./pentaho-solutions/
+	# Download pentaho-solutions
 	&& curl -Lo /tmp/pentaho-solutions.zip "${BISERVER_SOLUTIONS_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_SOLUTIONS_PKG_CHECKSUM:?}" /tmp/pentaho-solutions.zip | sha256sum -c \
 	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-solutions.zip \
-	### ./data/
+	# Download pentaho-data
 	&& curl -Lo /tmp/pentaho-data.zip "${BISERVER_DATA_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_DATA_PKG_CHECKSUM:?}" /tmp/pentaho-data.zip | sha256sum -c \
 	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-data.zip \
-	### ./tomcat/webapps/pentaho/
+	# Download pentaho-war
 	&& curl -Lo /tmp/pentaho-war.war "${BISERVER_WAR_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_WAR_PKG_CHECKSUM:?}" /tmp/pentaho-war.war | sha256sum -c \
 	&& mkdir /tmp/biserver/pentaho-war/ \
 	&& bsdtar -C /tmp/biserver/pentaho-war/ -xf /tmp/pentaho-war.war \
-	### ./tomcat/webapps/pentaho-style/
+	# Download pentaho-style
 	&& curl -Lo /tmp/pentaho-style.war "${BISERVER_STYLE_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_STYLE_PKG_CHECKSUM:?}" /tmp/pentaho-style.war | sha256sum -c \
 	&& mkdir /tmp/biserver/pentaho-style/ \

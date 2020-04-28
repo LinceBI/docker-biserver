@@ -21,7 +21,7 @@ psqlWaitUntilAvailable() {
 	logInfo 'Checking CockroachDB connection...'
 	connectionRetries=0; maxConnectionRetries=60
 	until
-		psqlConnect "${COCKROACH_MAINTENANCE_DATABASE:?}" "${COCKROACH_MAINTENANCE_USER:?}" "${COCKROACH_MAINTENANCE_PASSWORD:?}" ||
+		psqlConnect "${COCKROACH_DATABASE:?}" "${COCKROACH_USER:?}" "${COCKROACH_PASSWORD:?}" ||
 		psqlConnect "${COCKROACH_JACKRABBIT_DATABASE:?}" "${COCKROACH_JACKRABBIT_USER:?}" "${COCKROACH_JACKRABBIT_PASSWORD:?}" ||
 		psqlConnect "${COCKROACH_HIBERNATE_DATABASE:?}" "${COCKROACH_HIBERNATE_USER:?}" "${COCKROACH_HIBERNATE_PASSWORD:?}" ||
 		psqlConnect "${COCKROACH_QUARTZ_DATABASE:?}" "${COCKROACH_QUARTZ_USER:?}" "${COCKROACH_QUARTZ_PASSWORD:?}"
@@ -40,6 +40,6 @@ psqlCreateDatabaseIfNotExists() {
 	logInfo "Checking \"${database:?}\" database..."
 	if ! psqlConnect "${database:?}" "${username:?}" "${password:?}"; then
 		logInfo "Creating \"${database:?}\" database..."
-		psqlRun "${COCKROACH_MAINTENANCE_DATABASE:?}" "${COCKROACH_MAINTENANCE_USER:?}" "${COCKROACH_MAINTENANCE_PASSWORD:?}" < "${script:?}"
+		psqlRun "${COCKROACH_DATABASE:?}" "${COCKROACH_USER:?}" "${COCKROACH_PASSWORD:?}" < "${script:?}"
 	fi
 }

@@ -22,7 +22,7 @@ services:
     volumes:
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
-      POSTGRES_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
 
   biserver:
     image: "repo.stratebi.com/lincebi/biserver:8.2.0.0-342"
@@ -37,7 +37,7 @@ services:
       PROXY_PORT: "80"
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
-      POSTGRES_MAINTENANCE_PASSWORD: "${DB_MAINTENANCE_PASSWORD}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
       POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
       POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
       POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"

@@ -9,7 +9,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 		<param name="schema" value="postgresql" />
@@ -18,7 +18,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 		<param name="schema" value="postgresql" />
@@ -27,21 +27,10 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 		<param name="driver" value="com.mysql.jdbc.Driver" />
-		<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 		<param name="schema" value="mysql" />
-		<param name="schemaObjectPrefix" value="fs_repos_" />
-	</FileSystem>
-	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-	<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
-		<param name="driver" value="oracle.jdbc.OracleDriver" />
-		<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-		<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-		<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-		<param name="tablespace" value="" />
-		<param name="indexTablespace" value="" />
-		<param name="schema" value="oracle" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
 	<%- end -%>
@@ -52,7 +41,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="postgresql" />
@@ -65,7 +54,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="postgresql" />
@@ -78,23 +67,10 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
 		<param name="driver" value="com.mysql.jdbc.Driver" />
-		<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+		<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="mysql" />
-		<param name="minRecordLength" value="1024" />
-		<param name="maxConnections" value="3" />
-		<param name="copyWhenReading" value="true" />
-		<param name="tablePrefix" value="" />
-		<param name="schemaObjectPrefix" value="ds_repos_" />
-	</DataStore>
-	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
-		<param name="driver" value="oracle.jdbc.OracleDriver" />
-		<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-		<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-		<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-		<param name="databaseType" value="oracle" />
 		<param name="minRecordLength" value="1024" />
 		<param name="maxConnections" value="3" />
 		<param name="copyWhenReading" value="true" />
@@ -129,7 +105,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -138,7 +114,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -147,21 +123,10 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
-			<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
-		</FileSystem>
-		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
-			<param name="driver" value="oracle.jdbc.OracleDriver" />
-			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-			<param name="tablespace" value="" />
-			<param name="indexTablespace" value="" />
-			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
 		</FileSystem>
 		<%- end -%>
@@ -174,7 +139,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -183,7 +148,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -192,21 +157,10 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.MySqlPersistenceManager">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
-			<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
-		</PersistenceManager>
-		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
-			<param name="driver" value="oracle.jdbc.OracleDriver" />
-			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-			<param name="tablespace" value="" />
-			<param name="indexTablespace" value="" />
-			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
 		<%- end -%>
@@ -229,7 +183,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -238,7 +192,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -247,21 +201,10 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
-			<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="fs_ver_" />
-		</FileSystem>
-		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
-			<param name="driver" value="oracle.jdbc.OracleDriver" />
-			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-			<param name="tablespace" value="" />
-			<param name="indexTablespace" value="" />
-			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
 		<%- end -%>
@@ -274,7 +217,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -283,7 +226,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -292,21 +235,10 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.MySqlPersistenceManager">
 			<param name="driver" value="com.mysql.jdbc.Driver" />
-			<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="pm_ver_" />
-		</PersistenceManager>
-		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
-			<param name="driver" value="oracle.jdbc.OracleDriver" />
-			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-			<param name="tablespace" value="" />
-			<param name="indexTablespace" value="" />
-			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
 		<%- end -%>
@@ -320,7 +252,7 @@
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -333,7 +265,7 @@
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['COCKROACH_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['COCKROACH_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -346,25 +278,10 @@
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
 			<param name="driver" value="com.mysql.jdbc.Driver" />
-			<param name="url" value="jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_JACKRABBIT_DATABASE'] %>" />
+			<param name="url" value="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['MYSQL_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['MYSQL_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="mysql" />
-			<param name="schemaObjectPrefix" value="j_cl_" />
-			<param name="janitorEnabled" value="true" />
-			<param name="janitorSleep" value="86400" />
-			<param name="janitorFirstRunHourOfDay" value="3" />
-		</Journal>
-		<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-		<Journal class="org.apache.jackrabbit.core.journal.OracleDatabaseJournal">
-			<param name="revision" value="${rep.home}/revision.log" />
-			<param name="driver" value="oracle.jdbc.OracleDriver" />
-			<param name="url" value="jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_JACKRABBIT_DATABASE'] %>" />
-			<param name="user" value="<%= ENV['ORACLE_JACKRABBIT_USER'] %>" />
-			<param name="password" value="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>" />
-			<param name="tablespace" value="" />
-			<param name="indexTablespace" value="" />
-			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="j_cl_" />
 			<param name="janitorEnabled" value="true" />
 			<param name="janitorSleep" value="86400" />

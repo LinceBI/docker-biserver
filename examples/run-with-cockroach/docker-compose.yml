@@ -1,6 +1,61 @@
 version: "3.7"
 
+# Secure CockroachDB cluster deployment for testing
+# purposes, absolutely not suitable for production.
+
 services:
+
+  roach0:
+    image: "docker.io/cockroachdb/cockroach:latest"
+    restart: "on-failure:3"
+    hostname: "roach0"
+    networks:
+      - "biserver"
+    volumes:
+      - "roach0-ca:/cockroach/cockroach-ca/"
+      - "roach1-certs:/cockroach/cockroach-certs1/"
+      - "roach2-certs:/cockroach/cockroach-certs2/"
+      - "roach3-certs:/cockroach/cockroach-certs3/"
+    entrypoint: "/bin/sh"
+    command: |
+      -euc "
+        cd /cockroach/
+        if [ ! -f ./cockroach-ca/ca.key ]; then
+          # Create CA
+          ./cockroach cert create-ca \
+            --ca-key=./cockroach-ca/ca.key \
+            --certs-dir=./cockroach-ca/ \
+            --overwrite
+          ./cockroach cert create-client root \
+            --ca-key=./cockroach-ca/ca.key \
+            --certs-dir=./cockroach-ca/ \
+            --overwrite
+          # Create roach certs
+          for i in 1 2 3; do
+            cp -f ./cockroach-ca/ca.crt ./cockroach-certs$$i/
+            ./cockroach cert create-node roach$$i localhost 127.0.0.1 \
+              --ca-key=./cockroach-ca/ca.key \
+              --certs-dir=./cockroach-certs$$i/ \
+              --overwrite
+            ./cockroach cert create-client root \
+              --ca-key=./cockroach-ca/ca.key \
+              --certs-dir=./cockroach-certs$$i/ \
+              --overwrite
+          done
+          sleep 10
+          # Initialize cluster
+          ./cockroach init \
+            --host=roach1 \
+            --certs-dir=./cockroach-ca/
+          # Create admin user
+          ./cockroach sql \
+            --host=roach1 \
+            --execute=\"CREATE USER dbadmin WITH PASSWORD 'password';\" \
+            --execute=\"GRANT admin TO dbadmin;\" \
+            --certs-dir=./cockroach-ca/
+        fi
+        while true; do sleep 30; done
+      "
 
   roach1:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -12,10 +67,18 @@ services:
       - "8081:8080/tcp"
       - "26257:26257/tcp"
     volumes:
+      - "roach1-certs:/cockroach/cockroach-certs/"
       - "roach1-data:/cockroach/cockroach-data/"
-    command:
-      - "start"
-      - "--insecure"
+    entrypoint: "/bin/sh"
+    command: |
+      -euc "
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=$$(hostname -f) \
+          --join=roach1,roach2,roach3 \
+          --certs-dir=./cockroach-certs/
+      "
 
   roach2:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -24,11 +87,18 @@ services:
     networks:
       - "biserver"
     volumes:
+      - "roach2-certs:/cockroach/cockroach-certs/"
       - "roach2-data:/cockroach/cockroach-data/"
-    command:
-      - "start"
-      - "--insecure"
-      - "--join=roach1,roach2,roach3"
+    entrypoint: "/bin/sh"
+    command: |
+      -euc "
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=$$(hostname -f) \
+          --join=roach1,roach2,roach3 \
+          --certs-dir=./cockroach-certs/
+      "
 
   roach3:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -37,11 +107,18 @@ services:
     networks:
       - "biserver"
     volumes:
+      - "roach3-certs:/cockroach/cockroach-certs/"
       - "roach3-data:/cockroach/cockroach-data/"
-    command:
-      - "start"
-      - "--insecure"
-      - "--join=roach1,roach2,roach3"
+    entrypoint: "/bin/sh"
+    command: |
+      -euc "
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=$$(hostname -f) \
+          --join=roach1,roach2,roach3 \
+          --certs-dir=./cockroach-certs/
+      "
 
   biserver:
     image: "repo.stratebi.com/lincebi/biserver:8.2.0.0-342"
@@ -53,8 +130,10 @@ services:
     environment:
       STORAGE_TYPE: "cockroach"
       COCKROACH_HOST: "roach1"
-    depends_on:
-      - "roach1"
+      COCKROACH_USER: "dbadmin"
+      COCKROACH_PASSWORD: "password"
+      COCKROACH_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257"
+      COCKROACH_JDBC_PROPS: "loadBalanceHosts=true"
 
 networks:
 
@@ -64,6 +143,10 @@ networks:
 
 volumes:
 
+  roach0-ca:
   roach1-data:
+  roach1-certs:
   roach2-data:
+  roach2-certs:
   roach3-data:
+  roach3-certs:

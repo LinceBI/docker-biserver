@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-# shellcheck disable=SC1091
+# shellcheck source=./set-utils.sh
 . /usr/share/biserver/bin/set-utils.sh
 
 ########

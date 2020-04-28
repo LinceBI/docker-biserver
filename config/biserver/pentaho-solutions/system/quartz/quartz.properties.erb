@@ -29,8 +29,6 @@ org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQ
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
 <%- else -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 <%- end -%>

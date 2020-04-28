@@ -21,7 +21,7 @@ psqlWaitUntilAvailable() {
 	logInfo 'Checking PostgreSQL connection...'
 	connectionRetries=0; maxConnectionRetries=60
 	until
-		psqlConnect "${POSTGRES_MAINTENANCE_DATABASE:?}" "${POSTGRES_MAINTENANCE_USER:?}" "${POSTGRES_MAINTENANCE_PASSWORD:?}" ||
+		psqlConnect "${POSTGRES_DATABASE:?}" "${POSTGRES_USER:?}" "${POSTGRES_PASSWORD:?}" ||
 		psqlConnect "${POSTGRES_JACKRABBIT_DATABASE:?}" "${POSTGRES_JACKRABBIT_USER:?}" "${POSTGRES_JACKRABBIT_PASSWORD:?}" ||
 		psqlConnect "${POSTGRES_HIBERNATE_DATABASE:?}" "${POSTGRES_HIBERNATE_USER:?}" "${POSTGRES_HIBERNATE_PASSWORD:?}" ||
 		psqlConnect "${POSTGRES_QUARTZ_DATABASE:?}" "${POSTGRES_QUARTZ_USER:?}" "${POSTGRES_QUARTZ_PASSWORD:?}"
@@ -40,6 +40,6 @@ psqlCreateDatabaseIfNotExists() {
 	logInfo "Checking \"${database:?}\" database..."
 	if ! psqlConnect "${database:?}" "${username:?}" "${password:?}"; then
 		logInfo "Creating \"${database:?}\" database..."
-		psqlRun "${POSTGRES_MAINTENANCE_DATABASE:?}" "${POSTGRES_MAINTENANCE_USER:?}" "${POSTGRES_MAINTENANCE_PASSWORD:?}" < "${script:?}"
+		psqlRun "${POSTGRES_DATABASE:?}" "${POSTGRES_USER:?}" "${POSTGRES_PASSWORD:?}" < "${script:?}"
 	fi
 }
