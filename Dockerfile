@@ -104,10 +104,10 @@ ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.53"
+ARG TOMCAT_VERSION="8.5.54"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="72e3defbff444548ce9dc60935a1eab822c7d5224f2a8e98c849954575318c08"
-RUN printf '%s\n' 'Installing Tomcat...' \
+ARG TOMCAT_PKG_CHECKSUM="44bd3f8d13983349bab102a3d03b67ac4bf5d073afc2d16e3339c3d88f4b92d9"
+RUN export DEBIAN_FRONTEND=noninteractive \
 	# Install dependencies
 	&& RUN_PKGS="libapr1 libssl1.1" \
 	&& BUILD_PKGS="make gcc libapr1-dev libssl-dev" \
@@ -167,23 +167,22 @@ ARG BISERVER_WAR_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VE
 ARG BISERVER_WAR_PKG_CHECKSUM="e47c28331d77511fa5f53dab07efeaef692ea74df2f834dd53e2af9aa224f920"
 ARG BISERVER_STYLE_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
 ARG BISERVER_STYLE_PKG_CHECKSUM="c194d6ba60934f8543106bb2ef0df904f4fa357fc7dc610e9b264c6e76d4c4bb"
-RUN printf '%s\n' 'Installing Pentaho BI Server...' \
-	# Download Pentaho BI Server
+RUN export DEBIAN_FRONTEND=noninteractive \
 	&& mkdir /tmp/biserver/ \
-	### ./pentaho-solutions/
+	# Download pentaho-solutions
 	&& curl -Lo /tmp/pentaho-solutions.zip "${BISERVER_SOLUTIONS_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_SOLUTIONS_PKG_CHECKSUM:?}" /tmp/pentaho-solutions.zip | sha256sum -c \
 	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-solutions.zip \
-	### ./data/
+	# Download pentaho-data
 	&& curl -Lo /tmp/pentaho-data.zip "${BISERVER_DATA_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_DATA_PKG_CHECKSUM:?}" /tmp/pentaho-data.zip | sha256sum -c \
 	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-data.zip \
-	### ./tomcat/webapps/pentaho/
+	# Download pentaho-war
 	&& curl -Lo /tmp/pentaho-war.war "${BISERVER_WAR_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_WAR_PKG_CHECKSUM:?}" /tmp/pentaho-war.war | sha256sum -c \
 	&& mkdir /tmp/biserver/pentaho-war/ \
 	&& bsdtar -C /tmp/biserver/pentaho-war/ -xf /tmp/pentaho-war.war \
-	### ./tomcat/webapps/pentaho-style/
+	# Download pentaho-style
 	&& curl -Lo /tmp/pentaho-style.war "${BISERVER_STYLE_PKG_URL:?}" \
 	&& printf '%s  %s' "${BISERVER_STYLE_PKG_CHECKSUM:?}" /tmp/pentaho-style.war | sha256sum -c \
 	&& mkdir /tmp/biserver/pentaho-style/ \
