@@ -7,7 +7,7 @@ Hibernate/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=org.postgresql.Driver
-Hibernate/url=<%= ENV['POSTGES_HIBERNATE_JDBC_URL'] %>
+Hibernate/url=<%= ENV['POSTGRES_HIBERNATE_JDBC_URL'] %>
 Hibernate/user=<%= ENV['POSTGRES_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
@@ -33,7 +33,7 @@ Quartz/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=org.postgresql.Driver
-Quartz/url=<%= ENV['POSTGES_QUARTZ_JDBC_URL'] %>
+Quartz/url=<%= ENV['POSTGRES_QUARTZ_JDBC_URL'] %>
 Quartz/user=<%= ENV['POSTGRES_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>

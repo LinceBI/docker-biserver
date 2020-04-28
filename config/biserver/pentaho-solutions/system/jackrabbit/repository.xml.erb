@@ -9,7 +9,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+		<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 		<param name="schema" value="postgresql" />
@@ -41,7 +41,7 @@
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
 		<param name="driver" value="org.postgresql.Driver" />
-		<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+		<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 		<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 		<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 		<param name="databaseType" value="postgresql" />
@@ -105,7 +105,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -139,7 +139,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -183,7 +183,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -217,7 +217,7 @@
 		<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.PostgreSQLPersistenceManager">
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>" />
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
@@ -252,7 +252,7 @@
 		<Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
 			<param name="revision" value="${rep.home}/revision.log" />
 			<param name="driver" value="org.postgresql.Driver" />
-			<param name="url" value="<%= ENV['POSTGES_JACKRABBIT_JDBC_URL'] %>" />
+			<param name="url" value="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>" />
 			<param name="user" value="<%= ENV['POSTGRES_JACKRABBIT_USER'] %>"/>
 			<param name="password" value="<%= ENV['POSTGRES_JACKRABBIT_PASSWORD'] %>" />
 			<param name="schema" value="postgresql" />
