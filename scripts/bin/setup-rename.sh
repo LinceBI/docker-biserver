@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-# shellcheck disable=SC1091
+# shellcheck source=./set-utils.sh
 . /usr/share/biserver/bin/set-utils.sh
 
 ########
@@ -54,8 +54,7 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
 	fi
 fi
 
-#
-# This recursive replacement has dangerous implications compared to the benefits it brings.
+# This replacement is too generic and has not been thoroughly tested.
 # Uncomment only if there is a bug related to the rename operation.
 #
 #if [ "${WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
@@ -65,9 +64,8 @@ fi
 #		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 #		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 #		-type f '(' -iname '*.html' -o -iname '*.jsp' ')' \
-#		-exec sed -i "s|/pentaho/|/${WEBAPP_PENTAHO_DIRNAME_SUBST:?}/|g" '{}' ';'
+#		-exec sed -i "s|/pentaho/|/$(quoteSubst "${WEBAPP_PENTAHO_DIRNAME:?}")/|g" '{}' ';'
 #fi
-#
 
 if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 	logInfo 'Updating references of Pentaho style webapp...'
@@ -76,5 +74,5 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 		-type f '(' -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' ')' \
-		-exec sed -i "s|/pentaho-style/|/${WEBAPP_PENTAHO_STYLE_DIRNAME_SUBST:?}/|g" '{}' ';'
+		-exec sed -i "s|/pentaho-style/|/$(quoteSubst "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}")/|g" '{}' ';'
 fi

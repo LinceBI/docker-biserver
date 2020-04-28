@@ -40,12 +40,12 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
  * **`DEFAULT_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
  * **`DEFAULT_NON_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
- * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres`, `mysql`, `oracle` o `cockroach`.
+ * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres`, `mysql` o `cockroach`.
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con PostgreSQL.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con PostgreSQL.
- * **`POSTGRES_MAINTENANCE_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
- * **`POSTGRES_MAINTENANCE_PASSWORD` (`postgres` por defecto)**: contraseña para la conexión con PostgreSQL.
- * **`POSTGRES_MAINTENANCE_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con PostgreSQL.
+ * **`POSTGRES_USER` (`postgres` por defecto)**: usuario para la conexión con PostgreSQL.
+ * **`POSTGRES_PASSWORD` (`postgres` por defecto)**: contraseña para la conexión con PostgreSQL.
+ * **`POSTGRES_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con PostgreSQL.
  * **`POSTGRES_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
  * **`POSTGRES_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`POSTGRES_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
@@ -57,9 +57,9 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`POSTGRES_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
  * **`MYSQL_HOST` (`localhost` por defecto)**: host para la conexión con MySQL.
  * **`MYSQL_PORT` (`3306` por defecto)**: puerto para la conexión con MySQL.
- * **`MYSQL_MAINTENANCE_USER` (`root` por defecto)**: usuario para la conexión con MySQL.
- * **`MYSQL_MAINTENANCE_PASSWORD` (`root` por defecto)**: contraseña para la conexión con MySQL.
- * **`MYSQL_MAINTENANCE_DATABASE` (`mysql` por defecto)**: nombre de la BBDD para la conexión con MySQL.
+ * **`MYSQL_USER` (`root` por defecto)**: usuario para la conexión con MySQL.
+ * **`MYSQL_PASSWORD` (`root` por defecto)**: contraseña para la conexión con MySQL.
+ * **`MYSQL_DATABASE` (`mysql` por defecto)**: nombre de la BBDD para la conexión con MySQL.
  * **`MYSQL_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
  * **`MYSQL_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`MYSQL_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
@@ -69,22 +69,11 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
  * **`MYSQL_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
- * **`ORACLE_HOST` (`localhost` por defecto)**: host para la conexión con Oracle.
- * **`ORACLE_PORT` (`1521` por defecto)**: puerto para la conexión con Oracle.
- * **`ORACLE_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit.
- * **`ORACLE_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
- * **`ORACLE_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit.
- * **`ORACLE_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate.
- * **`ORACLE_HIBERNATE_PASSWORD` (`hibpassword` por defecto)**: contraseña del usuario de Hibernate.
- * **`ORACLE_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate.
- * **`ORACLE_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz.
- * **`ORACLE_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
- * **`ORACLE_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz.
  * **`COCKROACH_HOST` (`localhost` por defecto)**: host para la conexión con CockroachDB.
  * **`COCKROACH_PORT` (`26257` por defecto)**: puerto para la conexión con CockroachDB.
- * **`COCKROACH_MAINTENANCE_USER` (`root` por defecto)**: usuario para la conexión con CockroachDB.
- * **`COCKROACH_MAINTENANCE_PASSWORD` (`root` por defecto)**: contraseña para la conexión con CockroachDB.
- * **`COCKROACH_MAINTENANCE_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con CockroachDB.
+ * **`COCKROACH_USER` (`root` por defecto)**: usuario para la conexión con CockroachDB.
+ * **`COCKROACH_PASSWORD` (`root` por defecto)**: contraseña para la conexión con CockroachDB.
+ * **`COCKROACH_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con CockroachDB.
  * **`COCKROACH_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
  * **`COCKROACH_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
  * **`COCKROACH_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).

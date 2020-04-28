@@ -82,17 +82,17 @@ ENV BIUSER_UID="1000"
 ENV BIUSER_HOME="/home/biserver"
 RUN useradd -u "${BIUSER_UID:?}" -g 0 -s "$(command -v bash)" -md "${BIUSER_HOME:?}" biserver
 
-# Setup locale
-RUN printf '%s\n' 'en_US.UTF-8 UTF-8' > /etc/locale.gen
-RUN localedef -c -i en_US -f UTF-8 en_US.UTF-8 ||:
+# Set locale
 ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+RUN printf '%s\n' "${LANG:?} UTF-8" > /etc/locale.gen \
+	&& localedef -c -i "${LANG%%.*}" -f UTF-8 "${LANG:?}" ||:
 
-# Setup timezone
+# Set timezone
 ENV TZ=UTC
-RUN ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
-RUN printf '%s\n' "${TZ:?}" > /etc/timezone
+RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
+	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
-# Java environment
+# Set default Java
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
 

@@ -7,27 +7,21 @@ Hibernate/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=org.postgresql.Driver
-Hibernate/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_HIBERNATE_DATABASE'] %>
+Hibernate/url=<%= ENV['POSTGES_HIBERNATE_JDBC_URL'] %>
 Hibernate/user=<%= ENV['POSTGRES_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=org.postgresql.Driver
-Hibernate/url=jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_HIBERNATE_DATABASE'] %>
+Hibernate/url=<%= ENV['COCKROACH_HIBERNATE_JDBC_URL'] %>
 Hibernate/user=<%= ENV['COCKROACH_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['COCKROACH_HIBERNATE_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Hibernate/type=javax.sql.DataSource
 Hibernate/driver=com.mysql.jdbc.Driver
-Hibernate/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_HIBERNATE_DATABASE'] %>
+Hibernate/url=<%= ENV['MYSQL_HIBERNATE_JDBC_URL'] %>
 Hibernate/user=<%= ENV['MYSQL_HIBERNATE_USER'] %>
 Hibernate/password=<%= ENV['MYSQL_HIBERNATE_PASSWORD'] %>
-<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-Hibernate/type=javax.sql.DataSource
-Hibernate/driver=oracle.jdbc.OracleDriver
-Hibernate/url=jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_HIBERNATE_DATABASE'] %>
-Hibernate/user=<%= ENV['ORACLE_HIBERNATE_USER'] %>
-Hibernate/password=<%= ENV['ORACLE_HIBERNATE_PASSWORD'] %>
 <%- end -%>
 
 <%- if ENV['STORAGE_TYPE'] == 'local' -%>
@@ -39,27 +33,21 @@ Quartz/password=password
 <%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=org.postgresql.Driver
-Quartz/url=jdbc:postgresql://<%= ENV['POSTGRES_HOST'] %>:<%= ENV['POSTGRES_PORT'] %>/<%= ENV['POSTGRES_QUARTZ_DATABASE'] %>
+Quartz/url=<%= ENV['POSTGES_QUARTZ_JDBC_URL'] %>
 Quartz/user=<%= ENV['POSTGRES_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=org.postgresql.Driver
-Quartz/url=jdbc:postgresql://<%= ENV['COCKROACH_HOST'] %>:<%= ENV['COCKROACH_PORT'] %>/<%= ENV['COCKROACH_QUARTZ_DATABASE'] %>
+Quartz/url=<%= ENV['COCKROACH_QUARTZ_JDBC_URL'] %>
 Quartz/user=<%= ENV['COCKROACH_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['COCKROACH_QUARTZ_PASSWORD'] %>
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 Quartz/type=javax.sql.DataSource
 Quartz/driver=com.mysql.jdbc.Driver
-Quartz/url=jdbc:mysql://<%= ENV['MYSQL_HOST'] %>:<%= ENV['MYSQL_PORT'] %>/<%= ENV['MYSQL_QUARTZ_DATABASE'] %>
+Quartz/url=<%= ENV['MYSQL_QUARTZ_JDBC_URL'] %>
 Quartz/user=<%= ENV['MYSQL_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>
-<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
-Quartz/type=javax.sql.DataSource
-Quartz/driver=oracle.jdbc.OracleDriver
-Quartz/url=jdbc:oracle:thin:@<%= ENV['ORACLE_HOST'] %>:<%= ENV['ORACLE_PORT'] %>:<%= ENV['ORACLE_QUARTZ_DATABASE'] %>
-Quartz/user=<%= ENV['ORACLE_QUARTZ_USER'] %>
-Quartz/password=<%= ENV['ORACLE_QUARTZ_PASSWORD'] %>
 <%- end -%>
 
 SampleData/type=javax.sql.DataSource
