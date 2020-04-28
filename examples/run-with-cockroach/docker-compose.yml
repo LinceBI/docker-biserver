@@ -132,9 +132,8 @@ services:
       COCKROACH_HOST: "roach1"
       COCKROACH_USER: "dbadmin"
       COCKROACH_PASSWORD: "password"
-      COCKROACH_JACKRABBIT_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257/jackrabbit?loadBalanceHosts=true"
-      COCKROACH_HIBERNATE_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257/hibernate?loadBalanceHosts=true"
-      COCKROACH_QUARTZ_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257/quartz?loadBalanceHosts=true"
+      COCKROACH_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257"
+      COCKROACH_JDBC_PROPS: "loadBalanceHosts=true"
 
 networks:
 
