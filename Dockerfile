@@ -21,6 +21,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		jq \
 		lftp \
 		libarchive-tools \
+		libtcnative-1 \
 		locales \
 		lsb-release \
 		lzip \
@@ -107,30 +108,21 @@ ENV CATALINA_OPTS_EXTRA=
 ARG TOMCAT_VERSION="8.5.54"
 ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
 ARG TOMCAT_PKG_CHECKSUM="44bd3f8d13983349bab102a3d03b67ac4bf5d073afc2d16e3339c3d88f4b92d9"
-RUN export DEBIAN_FRONTEND=noninteractive \
-	# Install dependencies
-	&& RUN_PKGS="libapr1 libssl1.1" \
-	&& BUILD_PKGS="make gcc libapr1-dev libssl-dev" \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends ${RUN_PKGS:?} ${BUILD_PKGS:?} \
+RUN mkdir /tmp/tomcat/ \
+	&& cd /tmp/tomcat/ \
 	# Download Tomcat
-	&& curl -Lo /tmp/tomcat.tar.gz "${TOMCAT_PKG_URL:?}" \
-	&& printf '%s  %s' "${TOMCAT_PKG_CHECKSUM:?}" /tmp/tomcat.tar.gz | sha256sum -c \
-	&& mkdir /tmp/tomcat/ \
-	&& tar -C /tmp/tomcat/ --strip-components=1 -xf /tmp/tomcat.tar.gz \
+	&& curl -Lo ./tomcat.tar.gz "${TOMCAT_PKG_URL:?}" \
+	&& printf '%s  %s' "${TOMCAT_PKG_CHECKSUM:?}" ./tomcat.tar.gz | sha256sum -c \
+	&& bsdtar -xf ./tomcat.tar.gz --strip-components=1 \
 	# Install Tomcat
 	&& mkdir -p "${CATALINA_HOME:?}" \
 	&& mkdir -p "${CATALINA_BASE:?}"/logs/ \
 	&& mkdir -p "${CATALINA_BASE:?}"/temp/ \
 	&& mkdir -p "${CATALINA_BASE:?}"/webapps/ \
 	&& mkdir -p "${CATALINA_BASE:?}"/work/ \
-	&& mv /tmp/tomcat/bin/ "${CATALINA_HOME:?}" \
-	&& mv /tmp/tomcat/lib/ "${CATALINA_HOME:?}" \
-	&& mv /tmp/tomcat/conf/ "${CATALINA_BASE:?}" \
-	# Build and install Tomcat Native Library
-	&& mkdir /tmp/tomcat-native/ \
-	&& tar -C /tmp/tomcat-native/ --strip-components=1 -xf "${CATALINA_HOME:?}"/bin/tomcat-native.tar.gz \
-	&& (cd /tmp/tomcat-native/native/ && ./configure --prefix="${CATALINA_HOME:?}" && make && make install) \
+	&& mv ./bin/ "${CATALINA_HOME:?}" \
+	&& mv ./lib/ "${CATALINA_HOME:?}" \
+	&& mv ./conf/ "${CATALINA_BASE:?}" \
 	# Hide version number
 	&& mkdir -p "${CATALINA_HOME:?}"/lib/ \
 	&& bsdtar -C "${CATALINA_HOME:?}"/lib/ -xf "${CATALINA_HOME:?}"/lib/catalina.jar org/apache/catalina/util/ServerInfo.properties \
@@ -141,10 +133,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0664 -exec chmod 0664 '{}' '+' \
 	&& find "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not -perm 0775 -name '*.sh' -exec chmod 0775 '{}' '+' \
 	# Cleanup
-	&& apt-get purge -y ${BUILD_PKGS:?} \
-	&& apt-get autoremove -y \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& find /tmp/ -mindepth 1 -delete
+	&& rm -rf /tmp/tomcat/
 
 # Pentaho BI Server environment
 ENV BISERVER_HOME="/var/lib/biserver"
@@ -167,39 +156,41 @@ ARG BISERVER_WAR_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VE
 ARG BISERVER_WAR_PKG_CHECKSUM="e47c28331d77511fa5f53dab07efeaef692ea74df2f834dd53e2af9aa224f920"
 ARG BISERVER_STYLE_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
 ARG BISERVER_STYLE_PKG_CHECKSUM="c194d6ba60934f8543106bb2ef0df904f4fa357fc7dc610e9b264c6e76d4c4bb"
-RUN export DEBIAN_FRONTEND=noninteractive \
-	&& mkdir /tmp/biserver/ \
+RUN mkdir /tmp/biserver/ \
+	&& cd /tmp/biserver/ \
 	# Download pentaho-solutions
-	&& curl -Lo /tmp/pentaho-solutions.zip "${BISERVER_SOLUTIONS_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_SOLUTIONS_PKG_CHECKSUM:?}" /tmp/pentaho-solutions.zip | sha256sum -c \
-	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-solutions.zip \
+	&& curl -Lo ./pentaho-solutions.zip "${BISERVER_SOLUTIONS_PKG_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_SOLUTIONS_PKG_CHECKSUM:?}" ./pentaho-solutions.zip | sha256sum -c \
+	&& mkdir ./pentaho-solutions/ \
+	&& bsdtar -C ./pentaho-solutions/ -xf ./pentaho-solutions.zip --strip-components=1 \
 	# Download pentaho-data
-	&& curl -Lo /tmp/pentaho-data.zip "${BISERVER_DATA_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_DATA_PKG_CHECKSUM:?}" /tmp/pentaho-data.zip | sha256sum -c \
-	&& bsdtar -C /tmp/biserver/ -xf /tmp/pentaho-data.zip \
+	&& curl -Lo ./pentaho-data.zip "${BISERVER_DATA_PKG_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_DATA_PKG_CHECKSUM:?}" ./pentaho-data.zip | sha256sum -c \
+	&& mkdir ./pentaho-data/ \
+	&& bsdtar -C ./pentaho-data/ -xf ./pentaho-data.zip --strip-components=1 \
 	# Download pentaho-war
-	&& curl -Lo /tmp/pentaho-war.war "${BISERVER_WAR_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_WAR_PKG_CHECKSUM:?}" /tmp/pentaho-war.war | sha256sum -c \
-	&& mkdir /tmp/biserver/pentaho-war/ \
-	&& bsdtar -C /tmp/biserver/pentaho-war/ -xf /tmp/pentaho-war.war \
+	&& curl -Lo ./pentaho-war.war "${BISERVER_WAR_PKG_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_WAR_PKG_CHECKSUM:?}" ./pentaho-war.war | sha256sum -c \
+	&& mkdir ./pentaho-war/ \
+	&& bsdtar -C ./pentaho-war/ -xf ./pentaho-war.war \
 	# Download pentaho-style
-	&& curl -Lo /tmp/pentaho-style.war "${BISERVER_STYLE_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_STYLE_PKG_CHECKSUM:?}" /tmp/pentaho-style.war | sha256sum -c \
-	&& mkdir /tmp/biserver/pentaho-style/ \
-	&& bsdtar -C /tmp/biserver/pentaho-style/ -xf /tmp/pentaho-style.war \
+	&& curl -Lo ./pentaho-style.war "${BISERVER_STYLE_PKG_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_STYLE_PKG_CHECKSUM:?}" ./pentaho-style.war | sha256sum -c \
+	&& mkdir ./pentaho-style/ \
+	&& bsdtar -C ./pentaho-style/ -xf ./pentaho-style.war \
 	# Install Pentaho BI Server
 	&& mkdir -p "${BISERVER_HOME:?}" \
-	&& mv /tmp/biserver/pentaho-solutions/ "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" \
-	&& mv /tmp/biserver/data/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" \
-	&& mv /tmp/biserver/pentaho-war/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
-	&& mv /tmp/biserver/pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
+	&& mv ./pentaho-solutions/ "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" \
+	&& mv ./pentaho-data/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" \
+	&& mv ./pentaho-war/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
+	&& mv ./pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 	# Set permissions
 	&& find "${BISERVER_HOME:?}" -not -user biserver -exec chown -h biserver:root '{}' '+' \
 	&& find "${BISERVER_HOME:?}" -type d -not -perm 0775 -exec chmod 0775 '{}' '+' \
 	&& find "${BISERVER_HOME:?}" -type f -not -perm 0664 -exec chmod 0664 '{}' '+' \
 	&& find "${BISERVER_HOME:?}" -type f -not -perm 0775 -name '*.sh' -exec chmod 0775 '{}' '+' \
 	# Cleanup
-	&& find /tmp/ -mindepth 1 -delete
+	&& rm -rf /tmp/biserver/
 
 # Install H2 JDBC
 ARG H2_JDBC_JAR_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
