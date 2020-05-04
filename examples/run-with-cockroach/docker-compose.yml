@@ -11,6 +11,8 @@ services:
     hostname: "roach0"
     networks:
       - "biserver"
+    environment:
+      COCKROACH_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - "roach0-ca:/cockroach/cockroach-ca/"
       - "roach1-certs:/cockroach/cockroach-certs1/"
@@ -50,7 +52,7 @@ services:
           # Create admin user
           ./cockroach sql \
             --host=roach1 \
-            --execute=\"CREATE USER dbadmin WITH PASSWORD 'password';\" \
+            --execute=\"CREATE USER dbadmin WITH PASSWORD '$${COCKROACH_PASSWORD}';\" \
             --execute=\"GRANT admin TO dbadmin;\" \
             --certs-dir=./cockroach-ca/
         fi
@@ -131,7 +133,7 @@ services:
       STORAGE_TYPE: "cockroach"
       COCKROACH_HOST: "roach1"
       COCKROACH_USER: "dbadmin"
-      COCKROACH_PASSWORD: "password"
+      COCKROACH_PASSWORD: "${DB_PASSWORD}"
       COCKROACH_JDBC_URL: "jdbc:postgresql://roach1:26257,roach2:26257,roach3:26257"
       COCKROACH_JDBC_PROPS: "loadBalanceHosts=true"
 
