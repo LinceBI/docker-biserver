@@ -226,9 +226,9 @@ RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MSSQL_JDBC_JAR_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_JAR_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
-# Install Vertica JDCB
-ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/9.3.x/9.3.1-0/vertica-jdbc-9.3.1-0.jar"
-ARG VERTICA_JDBC_JAR_CHECKSUM="8dcbeb09dba23d8241d7e95707c1069ee52a3c8fd7a8c4e71751ebc6bb8f6d1c"
+# Install Vertica JDBC
+ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/10.0.x/10.0.0-0/vertica-jdbc-10.0.0-0.jar"
+ARG VERTICA_JDBC_JAR_CHECKSUM="198cdbd203e038786cc0f61778a122286c8f3bae2cedbce56a453a5505fbca6d"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" \
 	&& printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
 	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
