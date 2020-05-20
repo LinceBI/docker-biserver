@@ -106,14 +106,19 @@ ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
 ARG TOMCAT_VERSION="8.5.55"
-ARG TOMCAT_PKG_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_CHECKSUM="99aa551ac8d9f64383228a830961f642e5799ce58ad1b779935d569bd00b14b6"
+ARG TOMCAT_PKG_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
+ARG TOMCAT_PKG_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
+ARG TOMCAT_PKG_LIN_CHECKSUM="99aa551ac8d9f64383228a830961f642e5799ce58ad1b779935d569bd00b14b6"
+ARG TOMCAT_PKG_WIN_CHECKSUM="e3b7d052eb0866b37528f822325a82adbe294f2c6f4c7595b636d3688383b32e"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
-	&& curl -Lo ./tomcat.tar.gz "${TOMCAT_PKG_URL:?}" \
-	&& printf '%s  %s' "${TOMCAT_PKG_CHECKSUM:?}" ./tomcat.tar.gz | sha256sum -c \
-	&& bsdtar -xf ./tomcat.tar.gz --strip-components=1 \
+	&& curl -Lo ./tomcat.tgz "${TOMCAT_PKG_LIN_URL:?}" \
+	&& curl -Lo ./tomcat.zip "${TOMCAT_PKG_WIN_URL:?}" \
+	&& printf '%s  %s' "${TOMCAT_PKG_LIN_CHECKSUM:?}" ./tomcat.tgz | sha256sum -c \
+	&& printf '%s  %s' "${TOMCAT_PKG_WIN_CHECKSUM:?}" ./tomcat.zip | sha256sum -c \
+	&& bsdtar -xkf ./tomcat.tgz --strip-components=1 \
+	&& bsdtar -xkf ./tomcat.zip --strip-components=1 \
 	# Install Tomcat
 	&& mkdir -p "${CATALINA_HOME:?}" \
 	&& mkdir -p "${CATALINA_BASE:?}"/logs/ \
