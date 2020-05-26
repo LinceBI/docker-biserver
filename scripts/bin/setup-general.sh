@@ -8,6 +8,11 @@ export LC_ALL=C
 
 ########
 
+# Extract HSQLDB data if the directory is empty
+if [ -z "$(ls -A "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/)" ]; then
+	(cd "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" && unzip -qo ./hsqldb.zip)
+fi
+
 # Create Kettle directory if it does not exist
 if [ ! -e "${KETTLE_HOME:?}"/.kettle/ ]; then
 	mkdir "${KETTLE_HOME:?}"/.kettle/

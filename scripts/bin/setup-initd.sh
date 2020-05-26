@@ -90,12 +90,16 @@ extractArchive() {
 		unzip -qod "${tmpdir:?}" "${source:?}"
 	fi
 
+	cd "${tmpdir:?}"
 	recursiveUnzipFiles "${tmpdir:?}"
 	recursiveExecuteErbs "${tmpdir:?}"
 	recursiveZipDirs "${tmpdir:?}"
 	recursiveRemoveSuffix "${tmpdir:?}"
+	cd "${OLDPWD:?}"
 
-	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/ \
+		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
+
 	rm -rf "${tmpdir:?}"
 }
 
@@ -107,12 +111,16 @@ copyDirectory() {
 
 	rsync -aAX "${source:?}"/ "${tmpdir:?}"/
 
+	cd "${tmpdir:?}"
 	recursiveUnzipFiles "${tmpdir:?}"
 	recursiveExecuteErbs "${tmpdir:?}"
 	recursiveZipDirs "${tmpdir:?}"
 	recursiveRemoveSuffix "${tmpdir:?}"
+	cd "${OLDPWD:?}"
 
-	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/ \
+		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
+
 	rm -rf "${tmpdir:?}"
 }
 
