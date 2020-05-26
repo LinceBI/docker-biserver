@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Schema name="SteelWheelsAdvanced">
+	<Cube cache="true" enabled="true" name="SteelWheelsAdvancedSales">
+		<Table name="ORDERFACT"></Table>
+		<Dimension foreignKey="TIME_ID" name="Time" type="TimeDimension">
+			<Hierarchy allMemberName="All Years" hasAll="true" primaryKey="TIME_ID">
+				<Table name="DIM_TIME"></Table>
+				<Level column="YEAR_ID" hideMemberIf="Never" levelType="TimeYears" name="Years" type="Integer" uniqueMembers="true">
+					<Annotations>
+						<Annotation name="AnalyzerDateFormat">[yyyy]</Annotation>
+						<Annotation name="Format">yyyy</Annotation>
+					</Annotations>
+				</Level>
+				<Level column="QTR_NAME" hideMemberIf="Never" levelType="TimeQuarters" name="Quarters" ordinalColumn="QTR_ID" type="String" uniqueMembers="false">
+					<Annotations>
+						<Annotation name="AnalyzerDateFormat">[yyyy].['QTR'q]</Annotation>
+						<Annotation name="Format">'QTR'Q</Annotation>
+					</Annotations>
+				</Level>
+				<Level column="MONTH_NAME" hideMemberIf="Never" levelType="TimeMonths" name="Months" ordinalColumn="MONTH_ID" type="String" uniqueMembers="false">
+					<Annotations>
+						<Annotation name="AnalyzerDateFormat">[yyyy].['QTR'q].[MMM]</Annotation>
+						<Annotation name="Format">MMM</Annotation>
+						<Annotation name="FormatLocale">en</Annotation>
+						<Annotation name="FormatCase">capitalize</Annotation>
+						<Annotation name="FormatTrim">true</Annotation>
+					</Annotations>
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension foreignKey="CUSTOMERNUMBER" name="Markets">
+			<Hierarchy allMemberName="All Markets" hasAll="true" primaryKey="CUSTOMERNUMBER" primaryKeyTable="">
+				<Table name="CUSTOMER_W_TER"></Table>
+				<Level column="TERRITORY" hideMemberIf="Never" levelType="Regular" name="Territory" type="String" uniqueMembers="true">
+					<!--Property name="CHART_SERIES_COLOR" column="TERRITORY_COLOR" type="String"></Property-->
+				</Level>
+				<Level column="COUNTRY" hideMemberIf="Never" levelType="Regular" name="Country">
+					<Annotations>
+						<Annotation name="Data.Role">Geography</Annotation>
+						<Annotation name="Geo.Role">country</Annotation>
+					</Annotations>
+				</Level>
+				<Level column="STATE" hideMemberIf="Never" levelType="Regular" name="State Province" type="String">
+					<Annotations>
+						<Annotation name="Data.Role">Geography</Annotation>
+						<Annotation name="Geo.Role">state</Annotation>
+						<Annotation name="Geo.RequiredParents">country</Annotation>
+					</Annotations>
+				</Level>
+				<Level column="CITY" hideMemberIf="Never" levelType="Regular" name="City" type="String">
+					<Annotations>
+						<Annotation name="Data.Role">Geography</Annotation>
+						<Annotation name="Geo.Role">city</Annotation>
+						<Annotation name="Geo.RequiredParents">country,state</Annotation>
+					</Annotations>
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension foreignKey="CUSTOMERNUMBER" name="Customers">
+			<Hierarchy allMemberName="All Customers" hasAll="true" primaryKey="CUSTOMERNUMBER">
+				<Table name="CUSTOMER_W_TER"></Table>
+				<Level column="CUSTOMERNAME" hideMemberIf="Never" levelType="Regular" name="Customer" type="String" uniqueMembers="true">
+					<Property column="CUSTOMERNUMBER" name="Customer Number" type="Numeric"></Property>
+					<Property column="CONTACTFIRSTNAME" name="Contact First Name" type="String"></Property>
+					<Property column="CONTACTLASTNAME" name="Contact Last Name" type="String"></Property>
+					<Property column="PHONE" name="Phone" type="String"></Property>
+					<Property column="ADDRESSLINE1" name="Address" type="String"></Property>
+					<Property column="CREDITLIMIT" name="Credit Limit" type="Numeric"></Property>
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension foreignKey="PRODUCTCODE" name="Product">
+			<Hierarchy allMemberName="All Products" caption="" hasAll="true" name="" primaryKey="PRODUCTCODE">
+				<Table name="PRODUCTS"></Table>
+				<Level column="PRODUCTLINE" hideMemberIf="Never" levelType="Regular" name="Line" table="PRODUCTS" type="String" uniqueMembers="false"></Level>
+				<Level column="PRODUCTVENDOR" hideMemberIf="Never" levelType="Regular" name="Vendor" table="PRODUCTS" type="String" uniqueMembers="false"></Level>
+				<Level column="PRODUCTNAME" hideMemberIf="Never" levelType="Regular" name="Product" table="PRODUCTS" type="String" uniqueMembers="true">
+					<Property column="PRODUCTCODE" name="Code" type="String"></Property>
+					<Property column="PRODUCTVENDOR" name="Vendor" type="String"></Property>
+					<Property column="PRODUCTDESCRIPTION" name="Description" type="String"></Property>
+				</Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension foreignKey="STATUS" name="Order Status">
+			<Hierarchy allMemberName="All Status Types" hasAll="true" primaryKey="STATUS">
+				<Level column="STATUS" hideMemberIf="Never" levelType="Regular" name="Type" type="String" uniqueMembers="true"></Level>
+			</Hierarchy>
+		</Dimension>
+		<Measure aggregator="sum" column="QUANTITYORDERED" formatString="#,###" name="Quantity">
+			<Annotations>
+				<Annotation name="AnalyzerBusinessGroup">Measures</Annotation>
+			</Annotations>
+			<!--CalculatedMemberProperty name="CHART_SERIES_COLOR" value="#0000cc" /-->
+		</Measure>
+		<Measure aggregator="sum" column="TOTALPRICE" formatString="#,###" name="Sales">
+			<Annotations>
+				<Annotation name="AnalyzerBusinessGroup">Measures</Annotation>
+			</Annotations>
+			<!--CalculatedMemberProperty name="CHART_SERIES_COLOR" value="#0d8ecf" /-->
+		</Measure>
+	</Cube>
+</Schema>
