@@ -8,74 +8,115 @@ export LC_ALL=C
 
 ########
 
-execPattern="\.\(sh\|run\)$"
-tarPattern="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
-zipPattern="\.\(zip\|kar\)$"
-jarPattern="\.\(jar\)$"
+# Execute ERB files
+recursiveExecuteErbs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			recursiveExecuteErbs "${path:?}"
+		elif [ "${path:?}" != "${path%.erb}" ]; then
+			logInfo "Executing ERB file: ${path:?}"
+			in=${path:?}; out=${path%.erb}
+			rm -f "${out:?}"
+			erb -T - -- "${in:?}" > "${out:?}"
+			chmod --reference="${in:?}" -- "${out:?}"
+		fi
+	done
+}
 
+# Extract files ending in .zip
+recursiveUnzipFiles() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			recursiveUnzipFiles "${path:?}"
+		elif [ "${path:?}" != "${path%.zip}" ]; then
+			logInfo "Extracting ZIP file: ${path:?}"
+			in=${path:?}; out=${path%/*}
+			unzip -qod "${out:?}" "${in:?}"
+			rm -f "${in:?}"
+		fi
+	done
+}
+
+# Compress directories ending in .zip, .pfm or .pgus
+recursiveZipDirs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			# This method must be called in a subshell to avoid
+			# overwriting variables in the current scope
+			(recursiveZipDirs "${path:?}")
+			if
+				[ "${path:?}" != "${path%.zip}" ] ||
+				# Pentaho File Metadata plugin
+				[ "${path:?}" != "${path%.pfm}" ] ||
+				# Pentaho Global User Settings plugin
+				[ "${path:?}" != "${path%.pgus}" ]
+			then
+				logInfo "Compressing directory: ${path:?}"
+				in=${path:?}; out=${in:?}; tmpOut=$(mktemp -u)
+				cd -- "${in:?}"     || exit; zip -qmyr "${tmpOut:?}" ./
+				cd -- "${OLDPWD:?}" || exit; rmdir -- "${in:?}"
+				[ -f "${tmpOut:?}" ] && mv -- "${tmpOut:?}" "${out:?}"
+			fi
+		fi
+	done
+}
+
+# Remove ".__keep__" suffix from files and directories
+recursiveRemoveSuffix() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			# This method must be called in a subshell to avoid
+			# overwriting variables in the current scope
+			(recursiveRemoveSuffix "${path:?}")
+		fi
+		if [ "${path:?}" != "${path%.__keep__}" ]; then
+			logInfo "Removing suffix from: ${path:?}"
+			in=${path:?}; out=${path%.__keep__}
+			if [ -e "${out:?}" ]; then exit 1; fi
+			mv -- "${in:?}" "${out:?}"
+		fi
+	done
+}
+
+# Extract archive and execute initialisation steps
 extractArchive() {
-	source="${1:?}"
-	target="${2:?}"
-	if matches "${source:?}" "${tarPattern:?}"; then
-		tar -C "${target:?}" -xf "${source:?}"
-	elif matches "${source:?}" "${zipPattern:?}"; then
-		unzip -qod "${target:?}" "${source:?}"
+	source=${1:?}
+	target=${2:?}
+	tmpdir=$(mktemp -d)
+
+	if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
+		tar -C "${tmpdir:?}" -xf "${source:?}"
+	elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
+		unzip -qod "${tmpdir:?}" "${source:?}"
 	fi
+
+	recursiveUnzipFiles "${tmpdir:?}"
+	recursiveExecuteErbs "${tmpdir:?}"
+	recursiveZipDirs "${tmpdir:?}"
+	recursiveRemoveSuffix "${tmpdir:?}"
+
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rm -rf "${tmpdir:?}"
 }
 
+# Copy directory and execute initialisation steps
 copyDirectory() {
-	source="${1:?}"
-	target="${2:?}"
-	rsync -aAX "${source:?}"/ "${target:?}"/
+	source=${1:?}
+	target=${2:?}
+	tmpdir=$(mktemp -d)
 
-	# Execute ERB files
-	recursiveExecuteErbs() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				recursiveExecuteErbs "${path:?}"
-			elif [ "${path:?}" != "${path%.erb}" ]; then
-				logInfo "Executing ERB file: ${path:?}"
-				dirname=${path%/*}; basename=$(basename "${path:?}" .erb)
-				# Substitute source dirname with target dirname
-				dirname=${target:?}${dirname##${source:?}}
-				output=${dirname:?}/${basename:?}
-				rm -f "${output:?}"
-				erb -T - -- "${output:?}.erb" > "${output:?}"
-				chmod --reference="${output:?}.erb" -- "${output:?}"
-			fi
-		done
-	}
-	recursiveExecuteErbs "${source:?}"
+	rsync -aAX "${source:?}"/ "${tmpdir:?}"/
 
-	# Compress directories ending in .zip, .pfm or .pgus
-	recursiveZipDirs() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				# This method must be called in a subshell to avoid
-				# overwriting variables in the current scope
-				(recursiveZipDirs "${path:?}")
-				if
-					[ "${path:?}" != "${path%.zip}" ] ||
-					# Pentaho File Metadata plugin
-					[ "${path:?}" != "${path%.pfm}" ] ||
-					# Pentaho Global User Settings plugin
-					[ "${path:?}" != "${path%.pgus}" ]
-				then
-					logInfo "Compressing directory: ${path:?}"
-					dirname=${path%/*}; basename=${path##*/}
-					# Substitute source dirname with target dirname
-					dirname=${target:?}${dirname##${source:?}}
-					output=${dirname:?}/${basename:?}; tmpOutput=$(mktemp -u)
-					cd -- "${output:?}" || exit; zip -qmyr "${tmpOutput:?}" ./
-					cd -- "${OLDPWD:?}" || exit; rmdir -- "${output:?}"
-					[ -f "${tmpOutput:?}" ] && mv -- "${tmpOutput:?}" "${output:?}"
-				fi
-			fi
-		done
-	}
-	recursiveZipDirs "${source:?}"
+	recursiveUnzipFiles "${tmpdir:?}"
+	recursiveExecuteErbs "${tmpdir:?}"
+	recursiveZipDirs "${tmpdir:?}"
+	recursiveRemoveSuffix "${tmpdir:?}"
+
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rm -rf "${tmpdir:?}"
 }
 
+# Check if it is a Pentaho plugin by detecting if a "plugin.xml" file is present
 isPentahoPlugin() {
 	source="${1:?}"
 	if [ -d "${source:?}" ]; then
@@ -83,11 +124,11 @@ isPentahoPlugin() {
 			return 0
 		fi
 	elif [ -f "${entry:?}" ]; then
-		if matches "${source:?}" "${tarPattern:?}"; then
+		if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
 			if tar -tf "${source:?}" | grep -q '^.*/plugin\.xml$'; then
 				return 0
 			fi
-		elif matches "${source:?}" "${zipPattern:?}"; then
+		elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
 			if unzip -Z1 "${source:?}" | grep -q '^.*/plugin\.xml$'; then
 				return 0
 			fi
@@ -140,11 +181,11 @@ initdFromDir() {
 			esac
 		elif [ -f "${entry:?}" ]; then
 			# Execute shell scripts
-			if matches "${entry:?}" "${execPattern:?}"; then
+			if matches "${entry:?}" "${PATTERN_EXT_RUN:?}"; then
 				logInfo "Executing script \"${entry:?}\""
 				(cd "${BISERVER_HOME:?}" && "${entry:?}")
 			# Extract archives
-			elif matches "${entry:?}" "\(${tarPattern:?}\|${zipPattern:?}\)"; then
+			elif matches "${entry:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)"; then
 				case "${entry:?}" in
 					*.__root__.*)
 						logInfo "Extracting file \"${entry:?}\" to root directory..."
@@ -182,7 +223,7 @@ initdFromDir() {
 						;;
 				esac
 			# Copy jar files
-			elif matches "${entry:?}" "${jarPattern:?}"; then
+			elif matches "${entry:?}" "${PATTERN_EXT_JAR:?}"; then
 				logInfo "Copying jar \"${entry:?}\"..."
 				cp -f "${entry:?}" "${CATALINA_BASE:?}"/lib/
 			# Ignore the rest of files
@@ -196,6 +237,4 @@ initdFromDir() {
 	LC_COLLATE=$_LC_COLLATE
 }
 
-if [ -d "${BISERVER_INITD:?}" ]; then
-	initdFromDir "${BISERVER_INITD:?}"
-fi
+initdFromDir "${@}"

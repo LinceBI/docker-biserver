@@ -142,6 +142,7 @@ RUN mkdir /tmp/tomcat/ \
 
 # Pentaho BI Server environment
 ENV BISERVER_HOME="/var/lib/biserver"
+ENV BISERVER_PRIV_INITD="/etc/biserver.priv.init.d"
 ENV BISERVER_INITD="/etc/biserver.init.d"
 ENV SOLUTIONS_DIRNAME="pentaho-solutions"
 ENV DATA_DIRNAME="data"
@@ -245,13 +246,7 @@ ENV SVDIR="/usr/share/biserver/service/enabled"
 ENV SVWAIT="30"
 
 # Copy Pentaho BI Server config
-COPY --chown=biserver:root ./config/biserver/tomcat/conf/ "${CATALINA_BASE}"/conf/
-COPY --chown=biserver:root ./config/biserver/tomcat/webapps/ROOT/ "${CATALINA_BASE}"/webapps/ROOT/
-COPY --chown=biserver:root ./config/biserver/tomcat/webapps/pentaho/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_DIRNAME}"/
-COPY --chown=biserver:root ./config/biserver/tomcat/webapps/pentaho-style/ "${CATALINA_BASE}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME}"/
-COPY --chown=biserver:root ./config/biserver/data/ "${BISERVER_HOME}"/"${DATA_DIRNAME}"/
-COPY --chown=biserver:root ./config/biserver/pentaho-solutions/ "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/
-COPY --chown=biserver:root ./config/biserver/*.* "${BISERVER_HOME}"/
+COPY --chown=biserver:root ./config/biserver.priv.init.d/ "${BISERVER_PRIV_INITD}"/
 COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab

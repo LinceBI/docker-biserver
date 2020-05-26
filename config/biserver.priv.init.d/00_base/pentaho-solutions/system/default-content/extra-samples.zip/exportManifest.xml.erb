@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ExportManifest xmlns:ns2="http://www.pentaho.com/schema/">
+	<ExportManifestInformation exportDate="01-01-1970 00:00:00 GMT" exportBy="admin" rootFolder="/" manifestVersion="2" />
+	<ExportManifestDatasource>
+		<name>FoodMart</name>
+		<accessType>NATIVE</accessType>
+		<accessTypeValue>NATIVE</accessTypeValue>
+		<attributes />
+		<changed>false</changed>
+		<connectionPoolingProperties />
+		<hostname>localhost</hostname>
+		<databasePort><%= ENV['HSQLDB_PORT'] %></databasePort>
+		<username>sa</username>
+		<password></password>
+		<databaseName>foodmart</databaseName>
+		<databaseType>
+			<defaultDatabasePort>9001</defaultDatabasePort>
+			<name>Hypersonic</name>
+			<shortName>HYPERSONIC</shortName>
+		</databaseType>
+		<extraOptions />
+		<forcingIdentifiersToUpperCase>false</forcingIdentifiersToUpperCase>
+		<initialPoolSize>0</initialPoolSize>
+		<maximumPoolSize>20</maximumPoolSize>
+		<partitioned>false</partitioned>
+		<quoteAllFields>false</quoteAllFields>
+		<streamingResults>false</streamingResults>
+		<usingConnectionPool>true</usingConnectionPool>
+		<usingDoubleDecimalAsSchemaTableSeparator>false</usingDoubleDecimalAsSchemaTableSeparator>
+	</ExportManifestDatasource>
+	<ExportManifestMondrian file="_datasources/analysis/FoodMart/schema.xml">
+		<catalogName>FoodMart</catalogName>
+		<xmlaEnabled>false</xmlaEnabled>
+		<parameters>
+			<entries>
+				<entry key="Provider" value="mondrian" />
+				<entry key="DataSource" value="FoodMart" />
+				<entry key="EnableXmla" value="false" />
+			</entries>
+		</parameters>
+	</ExportManifestMondrian>
+	<ExportManifestMondrian file="_datasources/analysis/SteelWheelsAdvanced/schema.xml">
+		<catalogName>SteelWheelsAdvanced</catalogName>
+		<xmlaEnabled>false</xmlaEnabled>
+		<parameters>
+			<entries>
+				<entry key="Provider" value="mondrian" />
+				<entry key="DataSource" value="SampleData" />
+				<entry key="EnableXmla" value="false" />
+			</entries>
+		</parameters>
+	</ExportManifestMondrian>
+</ns2:ExportManifest>

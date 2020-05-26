@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>" docBase="webapps/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>">
+
+	<%- if ENV['STORAGE_TYPE'] == 'local' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.hsqldb.jdbcDriver"
+		username="hibuser"
+		password="password"
+		url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/hibernate"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['POSTGRES_HIBERNATE_USER'] %>"
+		password="<%= ENV['POSTGRES_HIBERNATE_PASSWORD'] %>"
+		url="<%= ENV['POSTGRES_HIBERNATE_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['COCKROACH_HIBERNATE_USER'] %>"
+		password="<%= ENV['COCKROACH_HIBERNATE_PASSWORD'] %>"
+		url="<%= ENV['COCKROACH_HIBERNATE_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="com.mysql.jdbc.Driver"
+		username="<%= ENV['MYSQL_HIBERNATE_USER'] %>"
+		password="<%= ENV['MYSQL_HIBERNATE_PASSWORD'] %>"
+		url="<%= ENV['MYSQL_HIBERNATE_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- end -%>
+
+	<%- if ENV['STORAGE_TYPE'] == 'local' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.hsqldb.jdbcDriver"
+		username="pentaho_user"
+		password="password"
+		url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/quartz"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['POSTGRES_QUARTZ_USER'] %>"
+		password="<%= ENV['POSTGRES_QUARTZ_PASSWORD'] %>"
+		url="<%= ENV['POSTGRES_QUARTZ_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="org.postgresql.Driver"
+		username="<%= ENV['COCKROACH_QUARTZ_USER'] %>"
+		password="<%= ENV['COCKROACH_QUARTZ_PASSWORD'] %>"
+		url="<%= ENV['COCKROACH_QUARTZ_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		driverClassName="com.mysql.jdbc.Driver"
+		username="<%= ENV['MYSQL_QUARTZ_USER'] %>"
+		password="<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>"
+		url="<%= ENV['MYSQL_QUARTZ_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		testOnBorrow="true"
+		validationQuery="SELECT 1"
+	/>
+	<%- end -%>
+
+</Context>

@@ -1,0 +1,2 @@
+defaultAdminUserPassword=<%= %x(/usr/share/biserver/bin/encr.sh -kettle "${DEFAULT_ADMIN_PASSWORD:?}") %>
+defaultNonAdminUserPassword=<%= %x(/usr/share/biserver/bin/encr.sh -kettle "${DEFAULT_NON_ADMIN_PASSWORD:?}") %>

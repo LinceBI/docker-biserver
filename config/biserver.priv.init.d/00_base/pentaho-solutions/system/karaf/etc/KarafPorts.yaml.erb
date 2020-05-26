@@ -1,0 +1,35 @@
+Service:
+  - serviceName: karaf
+    serviceDescription: Karaf service ports
+
+  - serviceName: rmi
+    serviceDescription: RMI service ports
+
+ServerPort:
+  - id: KARAF_PORT
+    property: karaf.port
+    friendlyName: Karaf Port
+    startPort: <%= ENV['KARAF_STARTPORT'] %>
+    endPort: <%= ENV['KARAF_ENDPORT'] %>
+    serviceName: karaf
+
+  - id: OSGI_SERVICE_PORT
+    property: org.pentaho.osgi.service.http.port
+    friendlyName: OSGI Service Port
+    startPort: <%= ENV['OSGI_SERVICE_STARTPORT'] %>
+    endPort: <%= ENV['OSGI_SERVICE_ENDPORT'] %>
+    serviceName: karaf
+
+  - id: RMI_SERVER_PORT
+    property: org.pentaho.jmx.rmi.server.port
+    friendlyName: RMI Server Port
+    startPort: <%= ENV['RMI_SERVER_STARTPORT'] %>
+    endPort: <%= ENV['RMI_SERVER_ENDPORT'] %>
+    serviceName: rmi
+
+  - id: RMI_REGISTRY_PORT
+    property: org.pentaho.jmx.rmi.registry.port
+    friendlyName: JMX RMI Registry Port
+    startPort: <%= ENV['RMI_REGISTRY_STARTPORT'] %>
+    endPort: <%= ENV['RMI_REGISTRY_ENDPORT'] %>
+    serviceName: rmi
