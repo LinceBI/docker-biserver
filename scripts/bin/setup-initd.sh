@@ -8,17 +8,12 @@ export LC_ALL=C
 
 ########
 
-execPattern="\.\(sh\|run\)$"
-tarPattern="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
-zipPattern="\.\(zip\|kar\)$"
-jarPattern="\.\(jar\)$"
-
 extractArchive() {
 	source="${1:?}"
 	target="${2:?}"
-	if matches "${source:?}" "${tarPattern:?}"; then
+	if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
 		tar -C "${target:?}" -xf "${source:?}"
-	elif matches "${source:?}" "${zipPattern:?}"; then
+	elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
 		unzip -qod "${target:?}" "${source:?}"
 	fi
 }
@@ -47,6 +42,24 @@ copyDirectory() {
 	}
 	recursiveExecuteErbs "${source:?}"
 
+	# Extract files ending in .zip
+	recursiveUnzipFiles() {
+		for path in "${1:?}"/*; do
+			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+				recursiveUnzipFiles "${path:?}"
+			elif [ "${path:?}" != "${path%.zip}" ]; then
+				logInfo "Extracting ZIP file: ${path:?}"
+				dirname=${path%/*}; basename=${path##*/}
+				# Substitute source dirname with target dirname
+				dirname=${target:?}${dirname##${source:?}}
+				input=${dirname:?}/${basename:?}
+				unzip -qd "${dirname:?}" "${input:?}"
+				rm -f "${input:?}"
+			fi
+		done
+	}
+	recursiveUnzipFiles "${source:?}"
+
 	# Compress directories ending in .zip, .pfm or .pgus
 	recursiveZipDirs() {
 		for path in "${1:?}"/*; do
@@ -74,6 +87,26 @@ copyDirectory() {
 		done
 	}
 	recursiveZipDirs "${source:?}"
+
+	# Remove ".__preserve__" suffix from files and directories
+	recursiveRemoveSuffix() {
+		for path in "${1:?}"/*; do
+			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+				# This method must be called in a subshell to avoid
+				# overwriting variables in the current scope
+				(recursiveRemoveSuffix "${path:?}")
+			fi
+			if [ "${path:?}" != "${path%.__preserve__}" ]; then
+				logInfo "Removing suffix from: ${path:?}"
+				dirname=${path%/*}; basename=${path##*/}
+				# Substitute source dirname with target dirname
+				dirname=${target:?}${dirname##${source:?}}
+				output=${dirname:?}/${basename%.__preserve__}
+				mv -- "${output:?}.__preserve__" "${output:?}"
+			fi
+		done
+	}
+	recursiveRemoveSuffix "${source:?}"
 }
 
 isPentahoPlugin() {
@@ -83,11 +116,11 @@ isPentahoPlugin() {
 			return 0
 		fi
 	elif [ -f "${entry:?}" ]; then
-		if matches "${source:?}" "${tarPattern:?}"; then
+		if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
 			if tar -tf "${source:?}" | grep -q '^.*/plugin\.xml$'; then
 				return 0
 			fi
-		elif matches "${source:?}" "${zipPattern:?}"; then
+		elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
 			if unzip -Z1 "${source:?}" | grep -q '^.*/plugin\.xml$'; then
 				return 0
 			fi
@@ -140,11 +173,11 @@ initdFromDir() {
 			esac
 		elif [ -f "${entry:?}" ]; then
 			# Execute shell scripts
-			if matches "${entry:?}" "${execPattern:?}"; then
+			if matches "${entry:?}" "${PATTERN_EXT_RUN:?}"; then
 				logInfo "Executing script \"${entry:?}\""
 				(cd "${BISERVER_HOME:?}" && "${entry:?}")
 			# Extract archives
-			elif matches "${entry:?}" "\(${tarPattern:?}\|${zipPattern:?}\)"; then
+			elif matches "${entry:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)"; then
 				case "${entry:?}" in
 					*.__root__.*)
 						logInfo "Extracting file \"${entry:?}\" to root directory..."
@@ -182,7 +215,7 @@ initdFromDir() {
 						;;
 				esac
 			# Copy jar files
-			elif matches "${entry:?}" "${jarPattern:?}"; then
+			elif matches "${entry:?}" "${PATTERN_EXT_JAR:?}"; then
 				logInfo "Copying jar \"${entry:?}\"..."
 				cp -f "${entry:?}" "${CATALINA_BASE:?}"/lib/
 			# Ignore the rest of files
@@ -196,6 +229,4 @@ initdFromDir() {
 	LC_COLLATE=$_LC_COLLATE
 }
 
-if [ -d "${BISERVER_INITD:?}" ]; then
-	initdFromDir "${BISERVER_INITD:?}"
-fi
+initdFromDir "${@}"

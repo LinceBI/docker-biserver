@@ -33,11 +33,12 @@
 
 	<context-param>
 		<param-name>hsqldb-databases</param-name>
-		<%- if ENV['STORAGE_TYPE'] == 'local' -%>
-		<param-value>sampledata@../../<%= ENV['DATA_DIRNAME'] %>/hsqldb/sampledata,hibernate@../../<%= ENV['DATA_DIRNAME'] %>/hsqldb/hibernate,quartz@../../<%= ENV['DATA_DIRNAME'] %>/hsqldb/quartz</param-value>
-		<%- else -%>
-		<param-value>sampledata@../../<%= ENV['DATA_DIRNAME'] %>/hsqldb/sampledata</param-value>
-		<%- end -%>
+		<%- @hsqldbDbs = (ENV['STORAGE_TYPE'] == 'local' ?
+				['sampledata', 'hibernate', 'quartz'] :
+				['sampledata']
+			).map { |db| "#{db}@../../#{ENV['DATA_DIRNAME']}/hsqldb/#{db}" }
+		-%>
+		<param-value><%= @hsqldbDbs.join(',') %></param-value>
 	</context-param>
 	<!-- [END HSQLDB DATABASES] -->
 

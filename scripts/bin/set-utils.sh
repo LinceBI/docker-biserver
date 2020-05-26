@@ -7,6 +7,13 @@ export LC_ALL=C
 export UMASK=0002
 umask "${UMASK:?}"
 
+# Some regex patterns
+export PATTERN_EXT_RUN="\.\(sh\|run\)$"
+export PATTERN_EXT_TAR="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
+export PATTERN_EXT_ZIP="\.\(zip\|kar\)$"
+export PATTERN_EXT_JAR="\.\(jar\)$"
+export PATTERN_EXT_ERB="\.\(erb\)$"
+
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "${1-}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }

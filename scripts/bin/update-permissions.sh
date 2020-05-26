@@ -16,9 +16,9 @@ find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type d -not -perm 0775 -exec chmod -
 find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.sh$' ')' -exec chmod -c 0664 '{}' '+'
 find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.sh$' ')' -exec chmod -c 0775 '{}' '+'
 
-find "${BISERVER_INITD:?}" -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
-find "${BISERVER_INITD:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.\(sh\|run\)$' ')' -exec chmod -c 0664 '{}' '+'
-find "${BISERVER_INITD:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.\(sh\|run\)$' ')' -exec chmod -c 0775 '{}' '+'
+find "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}" -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
+find "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.\(sh\|run\)$' ')' -exec chmod -c 0664 '{}' '+'
+find "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.\(sh\|run\)$' ')' -exec chmod -c 0775 '{}' '+'
 
 find /usr/share/biserver/bin/ -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
 find /usr/share/biserver/bin/ -type f -not -perm 0775 -exec chmod -c 0775 '{}' '+'

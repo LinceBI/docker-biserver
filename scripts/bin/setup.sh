@@ -122,6 +122,16 @@ fi
 # General setup
 /usr/share/biserver/bin/setup-general.sh
 
+# biserver.priv.init.d/ setup
+if [ -d "${BISERVER_PRIV_INITD:?}" ]; then
+	/usr/share/biserver/bin/setup-initd.sh "${BISERVER_PRIV_INITD:?}"
+fi
+
+# biserver.init.d/ setup
+if [ -d "${BISERVER_INITD:?}" ]; then
+	/usr/share/biserver/bin/setup-initd.sh "${BISERVER_INITD:?}"
+fi
+
 # PostgreSQL setup
 if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
 	/usr/share/biserver/bin/setup-storage-postgres.sh
@@ -136,6 +146,3 @@ fi
 if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 	/usr/share/biserver/bin/setup-storage-mysql.sh
 fi
-
-# biserver.init.d/ setup
-/usr/share/biserver/bin/setup-initd.sh
