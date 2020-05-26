@@ -8,107 +8,115 @@ export LC_ALL=C
 
 ########
 
+# Execute ERB files
+recursiveExecuteErbs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			recursiveExecuteErbs "${path:?}"
+		elif [ "${path:?}" != "${path%.erb}" ]; then
+			logInfo "Executing ERB file: ${path:?}"
+			in=${path:?}; out=${path%.erb}
+			rm -f "${out:?}"
+			erb -T - -- "${in:?}" > "${out:?}"
+			chmod --reference="${in:?}" -- "${out:?}"
+		fi
+	done
+}
+
+# Extract files ending in .zip
+recursiveUnzipFiles() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			recursiveUnzipFiles "${path:?}"
+		elif [ "${path:?}" != "${path%.zip}" ]; then
+			logInfo "Extracting ZIP file: ${path:?}"
+			in=${path:?}; out=${path%/*}
+			unzip -qod "${out:?}" "${in:?}"
+			rm -f "${in:?}"
+		fi
+	done
+}
+
+# Compress directories ending in .zip, .pfm or .pgus
+recursiveZipDirs() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			# This method must be called in a subshell to avoid
+			# overwriting variables in the current scope
+			(recursiveZipDirs "${path:?}")
+			if
+				[ "${path:?}" != "${path%.zip}" ] ||
+				# Pentaho File Metadata plugin
+				[ "${path:?}" != "${path%.pfm}" ] ||
+				# Pentaho Global User Settings plugin
+				[ "${path:?}" != "${path%.pgus}" ]
+			then
+				logInfo "Compressing directory: ${path:?}"
+				in=${path:?}; out=${in:?}; tmpOut=$(mktemp -u)
+				cd -- "${in:?}"     || exit; zip -qmyr "${tmpOut:?}" ./
+				cd -- "${OLDPWD:?}" || exit; rmdir -- "${in:?}"
+				[ -f "${tmpOut:?}" ] && mv -- "${tmpOut:?}" "${out:?}"
+			fi
+		fi
+	done
+}
+
+# Remove ".__keep__" suffix from files and directories
+recursiveRemoveSuffix() {
+	for path in "${1:?}"/*; do
+		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
+			# This method must be called in a subshell to avoid
+			# overwriting variables in the current scope
+			(recursiveRemoveSuffix "${path:?}")
+		fi
+		if [ "${path:?}" != "${path%.__keep__}" ]; then
+			logInfo "Removing suffix from: ${path:?}"
+			in=${path:?}; out=${path%.__keep__}
+			if [ -e "${out:?}" ]; then exit 1; fi
+			mv -- "${in:?}" "${out:?}"
+		fi
+	done
+}
+
+# Extract archive and execute initialisation steps
 extractArchive() {
-	source="${1:?}"
-	target="${2:?}"
+	source=${1:?}
+	target=${2:?}
+	tmpdir=$(mktemp -d)
+
 	if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
-		tar -C "${target:?}" -xf "${source:?}"
+		tar -C "${tmpdir:?}" -xf "${source:?}"
 	elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
-		unzip -qod "${target:?}" "${source:?}"
+		unzip -qod "${tmpdir:?}" "${source:?}"
 	fi
+
+	recursiveUnzipFiles "${tmpdir:?}"
+	recursiveExecuteErbs "${tmpdir:?}"
+	recursiveZipDirs "${tmpdir:?}"
+	recursiveRemoveSuffix "${tmpdir:?}"
+
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rm -rf "${tmpdir:?}"
 }
 
+# Copy directory and execute initialisation steps
 copyDirectory() {
-	source="${1:?}"
-	target="${2:?}"
-	rsync -aAX "${source:?}"/ "${target:?}"/
+	source=${1:?}
+	target=${2:?}
+	tmpdir=$(mktemp -d)
 
-	# Execute ERB files
-	recursiveExecuteErbs() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				recursiveExecuteErbs "${path:?}"
-			elif [ "${path:?}" != "${path%.erb}" ]; then
-				logInfo "Executing ERB file: ${path:?}"
-				dirname=${path%/*}; basename=$(basename "${path:?}" .erb)
-				# Substitute source dirname with target dirname
-				dirname=${target:?}${dirname##${source:?}}
-				output=${dirname:?}/${basename:?}
-				rm -f "${output:?}"
-				erb -T - -- "${output:?}.erb" > "${output:?}"
-				chmod --reference="${output:?}.erb" -- "${output:?}"
-			fi
-		done
-	}
-	recursiveExecuteErbs "${source:?}"
+	rsync -aAX "${source:?}"/ "${tmpdir:?}"/
 
-	# Extract files ending in .zip
-	recursiveUnzipFiles() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				recursiveUnzipFiles "${path:?}"
-			elif [ "${path:?}" != "${path%.zip}" ]; then
-				logInfo "Extracting ZIP file: ${path:?}"
-				dirname=${path%/*}; basename=${path##*/}
-				# Substitute source dirname with target dirname
-				dirname=${target:?}${dirname##${source:?}}
-				input=${dirname:?}/${basename:?}
-				unzip -qd "${dirname:?}" "${input:?}"
-				rm -f "${input:?}"
-			fi
-		done
-	}
-	recursiveUnzipFiles "${source:?}"
+	recursiveUnzipFiles "${tmpdir:?}"
+	recursiveExecuteErbs "${tmpdir:?}"
+	recursiveZipDirs "${tmpdir:?}"
+	recursiveRemoveSuffix "${tmpdir:?}"
 
-	# Compress directories ending in .zip, .pfm or .pgus
-	recursiveZipDirs() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				# This method must be called in a subshell to avoid
-				# overwriting variables in the current scope
-				(recursiveZipDirs "${path:?}")
-				if
-					[ "${path:?}" != "${path%.zip}" ] ||
-					# Pentaho File Metadata plugin
-					[ "${path:?}" != "${path%.pfm}" ] ||
-					# Pentaho Global User Settings plugin
-					[ "${path:?}" != "${path%.pgus}" ]
-				then
-					logInfo "Compressing directory: ${path:?}"
-					dirname=${path%/*}; basename=${path##*/}
-					# Substitute source dirname with target dirname
-					dirname=${target:?}${dirname##${source:?}}
-					output=${dirname:?}/${basename:?}; tmpOutput=$(mktemp -u)
-					cd -- "${output:?}" || exit; zip -qmyr "${tmpOutput:?}" ./
-					cd -- "${OLDPWD:?}" || exit; rmdir -- "${output:?}"
-					[ -f "${tmpOutput:?}" ] && mv -- "${tmpOutput:?}" "${output:?}"
-				fi
-			fi
-		done
-	}
-	recursiveZipDirs "${source:?}"
-
-	# Remove ".__preserve__" suffix from files and directories
-	recursiveRemoveSuffix() {
-		for path in "${1:?}"/*; do
-			if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
-				# This method must be called in a subshell to avoid
-				# overwriting variables in the current scope
-				(recursiveRemoveSuffix "${path:?}")
-			fi
-			if [ "${path:?}" != "${path%.__preserve__}" ]; then
-				logInfo "Removing suffix from: ${path:?}"
-				dirname=${path%/*}; basename=${path##*/}
-				# Substitute source dirname with target dirname
-				dirname=${target:?}${dirname##${source:?}}
-				output=${dirname:?}/${basename%.__preserve__}
-				mv -- "${output:?}.__preserve__" "${output:?}"
-			fi
-		done
-	}
-	recursiveRemoveSuffix "${source:?}"
+	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/
+	rm -rf "${tmpdir:?}"
 }
 
+# Check if it is a Pentaho plugin by detecting if a "plugin.xml" file is present
 isPentahoPlugin() {
 	source="${1:?}"
 	if [ -d "${source:?}" ]; then

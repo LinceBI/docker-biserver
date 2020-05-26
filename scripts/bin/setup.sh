@@ -8,7 +8,7 @@ export LC_ALL=C
 
 ########
 
-[ -z "${EXPORT_ENABLED-}" ] && export EXPORT_ENABLED='false'
+[ -z "${IS_EXPORTING-}" ] && export IS_EXPORTING='false'
 
 if [ -z "${INSTANCE_ID-}" ]; then
 	# Each instance has a random 12 characters alphanumeric string
@@ -132,17 +132,19 @@ if [ -d "${BISERVER_INITD:?}" ]; then
 	/usr/share/biserver/bin/setup-initd.sh "${BISERVER_INITD:?}"
 fi
 
-# PostgreSQL setup
-if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
-	/usr/share/biserver/bin/setup-storage-postgres.sh
-fi
+if [ "${IS_EXPORTING:?}" != 'true' ]; then
+	# PostgreSQL setup
+	if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
+		/usr/share/biserver/bin/setup-storage-postgres.sh
+	fi
 
-# CockroachDB setup
-if [ "${STORAGE_TYPE:?}" = 'cockroach' ]; then
-	/usr/share/biserver/bin/setup-storage-cockroach.sh
-fi
+	# CockroachDB setup
+	if [ "${STORAGE_TYPE:?}" = 'cockroach' ]; then
+		/usr/share/biserver/bin/setup-storage-cockroach.sh
+	fi
 
-# MySQL setup
-if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
-	/usr/share/biserver/bin/setup-storage-mysql.sh
+	# MySQL setup
+	if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
+		/usr/share/biserver/bin/setup-storage-mysql.sh
+	fi
 fi
