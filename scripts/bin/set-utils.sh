@@ -60,3 +60,17 @@ runAndLog() {
 
 	return "${exitCode:?}"
 }
+
+# Executes an ERB template
+execErb() {
+	in=${1:?}
+	out=${2:-${in%.erb}}
+
+	if [ "${out:?}" = '-' ]; then
+		erb -T - -- "${in:?}"
+	else
+		rm -f -- "${out:?}"
+		erb -T - -- "${in:?}" > "${out:?}"
+		chmod --reference="${in:?}" -- "${out:?}"
+	fi
+}

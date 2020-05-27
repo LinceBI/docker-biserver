@@ -29,7 +29,8 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`SOLUTIONS_DIRNAME` (`pentaho-solutions` por defecto)**: nombre que tendrá el directorio `./pentaho-solutions/`.
  * **`DATA_DIRNAME` (`data` por defecto)**: nombre que tendrá el directorio `./data/`.
  * **`WEBAPP_PENTAHO_DIRNAME` (`pentaho` por defecto)**: nombre que tendrá el directorio `./tomcat/webapps/pentaho/`.
- * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (`pentaho-style` por defecto)**: nombre que tendrá el directorio `./tomcat/webapps/pentaho-style/`
+ * **`WEBAPP_PENTAHO_STYLE_DIRNAME` (`pentaho-style` por defecto)**: nombre que tendrá el directorio `./tomcat/webapps/pentaho-style/`.
+ * **`LOAD_SAMPLES` (`true` por defecto)**: cargar datos de ejemplo.
  * **`IS_PROXIED` (`false` por defecto)**: establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.
  * **`PROXY_SCHEME` (`https` por defecto)**: protocolo del proxy inverso.
  * **`PROXY_PORT` (`443` por defecto)**: puerto del proxy inverso.

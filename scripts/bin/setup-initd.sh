@@ -16,9 +16,7 @@ recursiveExecuteErbs() {
 		elif [ "${path:?}" != "${path%.erb}" ]; then
 			logInfo "Executing ERB file: ${path:?}"
 			in=${path:?}; out=${path%.erb}
-			rm -f "${out:?}"
-			erb -T - -- "${in:?}" > "${out:?}"
-			chmod --reference="${in:?}" -- "${out:?}"
+			execErb "${in:?}" "${out:?}"
 		fi
 	done
 }

@@ -15,6 +15,7 @@ if [ -z "${INSTANCE_ID-}" ]; then
 fi
 
 [ -z "${IS_EXPORTING-}" ] && export IS_EXPORTING='false'
+[ -z "${LOAD_SAMPLES-}" ] && export LOAD_SAMPLES='true'
 
 [ -z "${IS_PROXIED-}"   ] && export IS_PROXIED='false'
 [ -z "${PROXY_SCHEME-}" ] && export PROXY_SCHEME='https'
