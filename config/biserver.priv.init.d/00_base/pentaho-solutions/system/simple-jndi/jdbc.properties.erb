@@ -50,14 +50,18 @@ Quartz/user=<%= ENV['MYSQL_QUARTZ_USER'] %>
 Quartz/password=<%= ENV['MYSQL_QUARTZ_PASSWORD'] %>
 <%- end -%>
 
+<%- if ENV['LOAD_SAMPLES'] == 'true' -%>
 SampleData/type=javax.sql.DataSource
 SampleData/driver=org.hsqldb.jdbcDriver
 SampleData/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/sampledata
 SampleData/user=pentaho_user
 SampleData/password=password
+<%- end -%>
 
+<%- if ENV['LOAD_SAMPLES'] == 'true' -%>
 SampleDataAdmin/type=javax.sql.DataSource
 SampleDataAdmin/driver=org.hsqldb.jdbcDriver
 SampleDataAdmin/url=jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/sampledata
 SampleDataAdmin/user=pentaho_admin
 SampleDataAdmin/password=password
+<%- end -%>

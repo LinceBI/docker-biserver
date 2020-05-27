@@ -8,13 +8,14 @@ export LC_ALL=C
 
 ########
 
-[ -z "${IS_EXPORTING-}" ] && export IS_EXPORTING='false'
-
 if [ -z "${INSTANCE_ID-}" ]; then
 	# Each instance has a random 12 characters alphanumeric string
 	INSTANCE_ID="$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)"
 	export INSTANCE_ID
 fi
+
+[ -z "${IS_EXPORTING-}" ] && export IS_EXPORTING='false'
+[ -z "${LOAD_SAMPLES-}" ] && export LOAD_SAMPLES='true'
 
 [ -z "${IS_PROXIED-}"   ] && export IS_PROXIED='false'
 [ -z "${PROXY_SCHEME-}" ] && export PROXY_SCHEME='https'
@@ -120,35 +121,14 @@ fi
 
 ########
 
-# Directory rename setup
-/usr/share/biserver/bin/setup-rename.sh
+# Pre-init.d setup
+/usr/share/biserver/bin/setup-pre-initd.sh
 
-# General setup
-/usr/share/biserver/bin/setup-general.sh
+# Private init.d setup
+/usr/share/biserver/bin/setup-initd.sh "${BISERVER_PRIV_INITD:?}"
 
-# biserver.priv.init.d/ setup
-if [ -d "${BISERVER_PRIV_INITD:?}" ]; then
-	/usr/share/biserver/bin/setup-initd.sh "${BISERVER_PRIV_INITD:?}"
-fi
+# Public init.d setup
+/usr/share/biserver/bin/setup-initd.sh "${BISERVER_INITD:?}"
 
-# biserver.init.d/ setup
-if [ -d "${BISERVER_INITD:?}" ]; then
-	/usr/share/biserver/bin/setup-initd.sh "${BISERVER_INITD:?}"
-fi
-
-if [ "${IS_EXPORTING:?}" != 'true' ]; then
-	# PostgreSQL setup
-	if [ "${STORAGE_TYPE:?}" = 'postgres' ]; then
-		/usr/share/biserver/bin/setup-storage-postgres.sh
-	fi
-
-	# CockroachDB setup
-	if [ "${STORAGE_TYPE:?}" = 'cockroach' ]; then
-		/usr/share/biserver/bin/setup-storage-cockroach.sh
-	fi
-
-	# MySQL setup
-	if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
-		/usr/share/biserver/bin/setup-storage-mysql.sh
-	fi
-fi
+# Post-init.d setup
+/usr/share/biserver/bin/setup-post-initd.sh
