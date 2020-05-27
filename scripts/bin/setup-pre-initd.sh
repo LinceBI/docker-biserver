@@ -8,6 +8,7 @@ export LC_ALL=C
 
 ########
 
+# Rename solutions directory
 #SOLUTIONS_DIRNAME_WAS_RENAMED=false
 if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
 	logInfo "Solutions directory was renamed to \"${SOLUTIONS_DIRNAME:?}\""
@@ -19,6 +20,7 @@ if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
 	fi
 fi
 
+# Rename data directory
 #DATA_DIRNAME_WAS_RENAMED=false
 if [ "${DATA_DIRNAME:?}" != 'data' ]; then
 	logInfo "Data directory was renamed to \"${DATA_DIRNAME:?}\""
@@ -30,8 +32,7 @@ if [ "${DATA_DIRNAME:?}" != 'data' ]; then
 	fi
 fi
 
-########
-
+# Rename Pentaho webapp directory
 #WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED=false
 if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
 	logInfo "Pentaho webapp directory was renamed to \"${WEBAPP_PENTAHO_DIRNAME:?}\""
@@ -43,6 +44,7 @@ if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
 	fi
 fi
 
+# Rename Pentaho style webapp directory
 WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED=false
 if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
 	logInfo "Pentaho style webapp directory was renamed to \"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}\""
@@ -54,9 +56,9 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
 	fi
 fi
 
-# This replacement is too generic and has not been thoroughly tested.
-# Uncomment only if there is a bug related to the rename operation.
-#
+# Update references of Pentaho webapp
+#   NOTICE: this replacement is too generic and has not been thoroughly tested.
+#   Uncomment only if there is a bug related to the rename operation.
 #if [ "${WEBAPP_PENTAHO_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 #	logInfo 'Updating references of Pentaho webapp...'
 #	find \
@@ -67,6 +69,7 @@ fi
 #		-exec sed -i "s|/pentaho/|/$(quoteSubst "${WEBAPP_PENTAHO_DIRNAME:?}")/|g" '{}' ';'
 #fi
 
+# Update references of Pentaho style webapp
 if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 	logInfo 'Updating references of Pentaho style webapp...'
 	find \
@@ -75,4 +78,23 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME_WAS_RENAMED:?}" = 'true' ]; then
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
 		-type f '(' -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' ')' \
 		-exec sed -i "s|/pentaho-style/|/$(quoteSubst "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}")/|g" '{}' ';'
+fi
+
+########
+
+# Extract HSQLDB data if the directory is empty
+if [ -z "$(ls -A "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/)" ]; then
+	(cd "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" && unzip -qo ./hsqldb.zip)
+fi
+
+# Create Kettle directory if it does not exist
+if [ ! -e "${KETTLE_HOME:?}"/.kettle/ ]; then
+	mkdir "${KETTLE_HOME:?}"/.kettle/
+	chmod 775 "${KETTLE_HOME:?}"/.kettle/
+fi
+
+# Create Kettle properties file if it does not exist
+if [ ! -e "${KETTLE_HOME:?}"/.kettle/kettle.properties ]; then
+	touch "${KETTLE_HOME:?}"/.kettle/kettle.properties
+	chmod 664 "${KETTLE_HOME:?}"/.kettle/kettle.properties
 fi
