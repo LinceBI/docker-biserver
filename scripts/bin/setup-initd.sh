@@ -10,7 +10,9 @@ export LC_ALL=C
 
 # Execute ERB files
 recursiveExecuteErbs() {
-	for path in "${1:?}"/*; do
+	source=${1:?}
+
+	for path in "${source:?}"/*; do
 		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
 			recursiveExecuteErbs "${path:?}"
 		elif [ "${path:?}" != "${path%.erb}" ]; then
@@ -23,7 +25,9 @@ recursiveExecuteErbs() {
 
 # Extract files ending in .zip
 recursiveUnzipFiles() {
-	for path in "${1:?}"/*; do
+	source=${1:?}
+
+	for path in "${source:?}"/*; do
 		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
 			recursiveUnzipFiles "${path:?}"
 		elif [ "${path:?}" != "${path%.zip}" ]; then
@@ -37,7 +41,9 @@ recursiveUnzipFiles() {
 
 # Compress directories ending in .zip, .pfm or .pgus
 recursiveZipDirs() {
-	for path in "${1:?}"/*; do
+	source=${1:?}
+
+	for path in "${source:?}"/*; do
 		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
 			# This method must be called in a subshell to avoid
 			# overwriting variables in the current scope
@@ -61,7 +67,9 @@ recursiveZipDirs() {
 
 # Remove ".__keep__" suffix from files and directories
 recursiveRemoveSuffix() {
-	for path in "${1:?}"/*; do
+	source=${1:?}
+
+	for path in "${source:?}"/*; do
 		if [ -d "${path:?}" ] && [ ! -L "${path:?}" ]; then
 			# This method must be called in a subshell to avoid
 			# overwriting variables in the current scope
@@ -95,19 +103,16 @@ extractArchive() {
 	recursiveRemoveSuffix "${tmpdir:?}"
 	cd "${OLDPWD:?}"
 
-	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/ \
-		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
-
-	rm -rf "${tmpdir:?}"
+	mergeDirs "${tmpdir:?}"/ "${target:?}"/
 }
 
 # Copy directory and execute initialisation steps
 copyDirectory() {
 	source=${1:?}
 	target=${2:?}
-	tmpdir=$(mktemp -d)
+	tmpdir=$(mktemp -du)
 
-	rsync -aAX "${source:?}"/ "${tmpdir:?}"/
+	cp -a "${source:?}"/ "${tmpdir:?}"/
 
 	cd "${tmpdir:?}"
 	recursiveUnzipFiles "${tmpdir:?}"
@@ -116,20 +121,18 @@ copyDirectory() {
 	recursiveRemoveSuffix "${tmpdir:?}"
 	cd "${OLDPWD:?}"
 
-	rsync -aAX --remove-source-files "${tmpdir:?}"/ "${target:?}"/ \
-		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
-
-	rm -rf "${tmpdir:?}"
+	mergeDirs "${tmpdir:?}"/ "${target:?}"/
 }
 
 # Check if it is a Pentaho plugin by detecting if a "plugin.xml" file is present
 isPentahoPlugin() {
-	source="${1:?}"
+	source=${1:?}
+
 	if [ -d "${source:?}" ]; then
 		if [ -f "${source:?}"/plugin.xml ]; then
 			return 0
 		fi
-	elif [ -f "${entry:?}" ]; then
+	elif [ -f "${source:?}" ]; then
 		if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
 			if tar -tf "${source:?}" | grep -q '^.*/plugin\.xml$'; then
 				return 0
@@ -140,104 +143,106 @@ isPentahoPlugin() {
 			fi
 		fi
 	fi
+
 	return 1
 }
 
 initdFromDir() {
-	directory="${1:?}"
+	source=${1:?}
+
 	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C
-	for entry in "${directory:?}"/*; do
-		if [ -d "${entry:?}" ]; then
+	for path in "${source:?}"/*; do
+		if [ -d "${path:?}" ]; then
 			# Copy directories
-			case "${entry:?}" in
+			case "${path:?}" in
 				*.__root__)
-					logInfo "Copying directory \"${entry:?}\" to root directory..."
-					copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"
+					logInfo "Copying directory \"${path:?}\" to root directory..."
+					copyDirectory "${path:?}" "${BISERVER_HOME:?}"
 					;;
 				*.__webapp_pentaho__)
-					logInfo "Copying directory \"${entry:?}\" to Pentaho webapp directory..."
-					copyDirectory "${entry:?}"/. "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+					logInfo "Copying directory \"${path:?}\" to Pentaho webapp directory..."
+					copyDirectory "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 					;;
 				*.__webapp_pentaho_style__)
-					logInfo "Copying directory \"${entry:?}\" to Pentaho Style webapp directory..."
-					copyDirectory "${entry:?}"/. "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+					logInfo "Copying directory \"${path:?}\" to Pentaho Style webapp directory..."
+					copyDirectory "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 					;;
 				*.__pentaho_solutions__)
-					logInfo "Copying directory \"${entry:?}\" to solutions directory..."
-					copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+					logInfo "Copying directory \"${path:?}\" to solutions directory..."
+					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
 					;;
 				*.__data__)
-					logInfo "Copying directory \"${entry:?}\" to data directory..."
-					copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+					logInfo "Copying directory \"${path:?}\" to data directory..."
+					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
 					;;
 				*.__plugin__)
-					logInfo "Installing plugin \"${entry:?}\"..."
-					copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+					logInfo "Installing plugin \"${path:?}\"..."
+					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 					;;
 				*)
 					# Determine if it is a Pentaho plugin
-					if isPentahoPlugin "${entry:?}"; then
-						logInfo "Installing plugin \"${entry:?}\"..."
-						copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+					if isPentahoPlugin "${path:?}"; then
+						logInfo "Installing plugin \"${path:?}\"..."
+						copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 					else
-						logInfo "Copying directory \"${entry:?}\" to root directory..."
-						copyDirectory "${entry:?}"/. "${BISERVER_HOME:?}"
+						logInfo "Copying directory \"${path:?}\" to root directory..."
+						copyDirectory "${path:?}" "${BISERVER_HOME:?}"
 					fi
 					;;
 			esac
-		elif [ -f "${entry:?}" ]; then
+		elif [ -f "${path:?}" ]; then
 			# Execute shell scripts
-			if matches "${entry:?}" "${PATTERN_EXT_RUN:?}"; then
-				logInfo "Executing script \"${entry:?}\""
-				(cd "${BISERVER_HOME:?}" && "${entry:?}")
+			if matches "${path:?}" "${PATTERN_EXT_RUN:?}"; then
+				logInfo "Executing script \"${path:?}\""
+				(cd "${BISERVER_HOME:?}" && "${path:?}")
 			# Extract archives
-			elif matches "${entry:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)"; then
-				case "${entry:?}" in
+			elif matches "${path:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)"; then
+				case "${path:?}" in
 					*.__root__.*)
-						logInfo "Extracting file \"${entry:?}\" to root directory..."
-						extractArchive "${entry:?}" "${BISERVER_HOME:?}"
+						logInfo "Extracting file \"${path:?}\" to root directory..."
+						extractArchive "${path:?}" "${BISERVER_HOME:?}"
 						;;
 					*.__webapp_pentaho__.*)
-						logInfo "Extracting file \"${entry:?}\" to Pentaho webapp directory..."
-						extractArchive "${entry:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+						logInfo "Extracting file \"${path:?}\" to Pentaho webapp directory..."
+						extractArchive "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 						;;
 					*.__webapp_pentaho_style__.*)
-						logInfo "Extracting file \"${entry:?}\" to Pentaho Style webapp directory..."
-						extractArchive "${entry:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+						logInfo "Extracting file \"${path:?}\" to Pentaho Style webapp directory..."
+						extractArchive "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 						;;
 					*.__pentaho_solutions__.*)
-						logInfo "Extracting file \"${entry:?}\" to solutions directory..."
-						extractArchive "${entry:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+						logInfo "Extracting file \"${path:?}\" to solutions directory..."
+						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
 						;;
 					*.__data__.*)
-						logInfo "Extracting file \"${entry:?}\" to data directory..."
-						extractArchive "${entry:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+						logInfo "Extracting file \"${path:?}\" to data directory..."
+						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
 						;;
 					*.__plugin__.*)
-						logInfo "Installing plugin \"${entry:?}\"..."
-						extractArchive "${entry:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+						logInfo "Installing plugin \"${path:?}\"..."
+						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 						;;
 					*)
 						# Determine if it is a Pentaho plugin
-						if isPentahoPlugin "${entry:?}"; then
-							logInfo "Installing plugin \"${entry:?}\"..."
-							extractArchive "${entry:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+						if isPentahoPlugin "${path:?}"; then
+							logInfo "Installing plugin \"${path:?}\"..."
+							extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 						else
-							logInfo "Extracting file \"${entry:?}\" to root directory..."
-							extractArchive "${entry:?}" "${BISERVER_HOME:?}"
+							logInfo "Extracting file \"${path:?}\" to root directory..."
+							extractArchive "${path:?}" "${BISERVER_HOME:?}"
 						fi
 						;;
 				esac
 			# Copy jar files
-			elif matches "${entry:?}" "${PATTERN_EXT_JAR:?}"; then
-				logInfo "Copying jar \"${entry:?}\"..."
-				cp -f "${entry:?}" "${CATALINA_BASE:?}"/lib/
+			elif matches "${path:?}" "${PATTERN_EXT_JAR:?}"; then
+				logInfo "Copying jar \"${path:?}\"..."
+				cp -f "${path:?}" "${CATALINA_BASE:?}"/lib/
 			# Ignore the rest of files
 			else
-				logWarn "Ignoring file \"${entry:?}\""
+				logWarn "Ignoring file \"${path:?}\""
 			fi
-		elif [ -e "${entry:?}" ]; then
-			logWarn "Ignoring entry \"${entry:?}\""
+		elif [ -e "${path:?}" ]; then
+			logWarn "Ignoring entry \"${path:?}\""
 		fi
 	done
 	LC_COLLATE=$_LC_COLLATE

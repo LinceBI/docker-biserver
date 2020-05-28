@@ -61,6 +61,17 @@ runAndLog() {
 	return "${exitCode:?}"
 }
 
+# Merges a source directory with a target directory
+mergeDirs() {
+	source=${1:?}
+	target=${2:?}
+
+	rsync -aAX --remove-source-files "${source:?}"/ "${target:?}"/ \
+		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
+
+	rm -rf "${source:?}"
+}
+
 # Executes an ERB template
 execErb() {
 	in=${1:?}
