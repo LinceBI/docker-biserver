@@ -23,13 +23,13 @@ org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread = tru
 
 org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.misfireThreshold = 60000
-<%- if ENV['STORAGE_TYPE'] == 'postgres' -%>
+<%- if ENV['STORAGE_TYPE'] == 'local' -%>
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 <%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 <%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
-org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-<%- else -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 <%- end -%>
 org.quartz.jobStore.useProperties = false
