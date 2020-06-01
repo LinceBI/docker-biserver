@@ -66,8 +66,7 @@ mergeDirs() {
 	source=${1:?}
 	target=${2:?}
 
-	rsync -aAX --remove-source-files "${source:?}"/ "${target:?}"/ \
-		|| case "$?" in 0|23) exit 0 ;; *) exit "$?"; esac
+	rsync -rl --remove-source-files "${source:?}"/ "${target:?}"/
 
 	rm -rf "${source:?}"
 }
