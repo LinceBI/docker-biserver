@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
 
-	<config-file><%= ENV['HIBERNATE_CONFIG_FILE'] %></config-file>
+	<%- if ENV['STORAGE_TYPE'] == 'local' -%>
+	<config-file>system/hibernate/hsql.hibernate.cfg.xml</config-file>
+	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
+	<config-file>system/hibernate/postgresql.hibernate.cfg.xml</config-file>
+	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
+	<config-file>system/hibernate/cockroach.hibernate.cfg.xml</config-file>
+	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
+	<config-file>system/hibernate/mysql5.hibernate.cfg.xml</config-file>
+	<%- end -%>
+
 	<managed>false</managed>
 
 </settings>
