@@ -97,7 +97,7 @@ extractArchive() {
 	fi
 
 	cd "${tmpdir:?}"
-	recursiveUnzipFiles "${tmpdir:?}"
+	#recursiveUnzipFiles "${tmpdir:?}"
 	recursiveExecuteErbs "${tmpdir:?}"
 	recursiveZipDirs "${tmpdir:?}"
 	recursiveRemoveSuffix "${tmpdir:?}"
