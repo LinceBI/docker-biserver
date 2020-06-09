@@ -206,7 +206,8 @@ RUN mkdir /tmp/biserver/ \
 # Install H2 JDBC
 ARG H2_JDBC_JAR_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
 ARG H2_JDBC_JAR_CHECKSUM="c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${H2_JDBC_JAR_URL:?}" && printf '%s  %s' "${H2_JDBC_JAR_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
+RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${H2_JDBC_JAR_URL:?}" \
+	&& printf '%s  %s' "${H2_JDBC_JAR_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
 	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
 
 # Install HSQLDB JDBC
