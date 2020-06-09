@@ -64,7 +64,7 @@ RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
 
 # Install PostgreSQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' 'deb https://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+	&& printf '%s\n' "deb https://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends postgresql-client-12 \
@@ -72,7 +72,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install MySQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' 'deb https://repo.mysql.com/apt/ubuntu/ bionic mysql-5.7' > /etc/apt/sources.list.d/mysql.list \
+	&& printf '%s\n' "deb https://repo.mysql.com/apt/ubuntu/ $(lsb_release -cs) mysql-5.7" > /etc/apt/sources.list.d/mysql.list \
 	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends mysql-client \
