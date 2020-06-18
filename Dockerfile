@@ -218,8 +218,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.13.jar"
-ARG POSTGRES_JDBC_JAR_CHECKSUM="66de7790e75c173501f6591114defa297455214eceb462a50b255867c48a8b68"
+ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.14.jar"
+ARG POSTGRES_JDBC_JAR_CHECKSUM="48bbba05845b40bcce66ece3d7652153d27b5379d5ae90977b78eefd7c7a0287"
 RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
 	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
