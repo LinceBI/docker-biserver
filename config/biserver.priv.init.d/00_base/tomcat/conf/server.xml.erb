@@ -46,9 +46,10 @@
 				<Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
 			</Realm>
 			<Host name="localhost" appBase="webapps" unpackWARs="false" autoDeploy="false" copyXML="false">
-				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-					prefix="localhost_access_log" suffix=".txt"
-					pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+				<Valve className="org.apache.catalina.valves.AccessLogValve"
+					directory="logs" prefix="localhost_access" suffix=".log"
+					encoding="UTF-8" rotatable="true" maxDays="30"
+					pattern="common" />
 			</Host>
 		</Engine>
 
