@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:18.04
+FROM docker.io/ubuntu:20.04
 
 # Install system packages
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -11,22 +11,18 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		ca-certificates \
 		curl \
 		diffutils \
-		dnsutils \
 		file \
 		findutils \
 		git \
 		gnupg \
 		gzip \
-		iputils-ping \
 		jq \
 		lftp \
 		libarchive-tools \
 		libtcnative-1 \
 		locales \
 		lsb-release \
-		lzip \
 		lzma \
-		lzop \
 		mime-support \
 		nano \
 		netcat-openbsd \
@@ -39,20 +35,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		runit \
 		subversion \
 		tar \
+		tini \
 		tzdata \
 		unzip \
 		xxd \
 		xz-utils \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
-
-# Install Tini
-ARG TINI_VERSION="0.19.0"
-ARG TINI_BIN_URL="https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64"
-ARG TINI_BIN_CHECKSUM="93dcc18adc78c65a028a84799ecf8ad40c936fdfc5f2a57b1acda5a8117fa82c"
-RUN curl -Lo /usr/bin/tini "${TINI_BIN_URL:?}" \
-	&& printf '%s  %s' "${TINI_BIN_CHECKSUM:?}" /usr/bin/tini | sha256sum -c \
-	&& chown root:root /usr/bin/tini && chmod 0755 /usr/bin/tini
 
 # Install Supercronic
 ARG SUPERCRONIC_VERSION="0.1.9"
@@ -72,7 +61,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install MySQL client
 RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' "deb https://repo.mysql.com/apt/ubuntu/ $(lsb_release -cs) mysql-5.7" > /etc/apt/sources.list.d/mysql.list \
+	&& printf '%s\n' "deb https://repo.mysql.com/apt/ubuntu/ $(lsb_release -cs) mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
 	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends mysql-client \
