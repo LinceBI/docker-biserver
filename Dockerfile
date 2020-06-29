@@ -11,22 +11,18 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		ca-certificates \
 		curl \
 		diffutils \
-		dnsutils \
 		file \
 		findutils \
 		git \
 		gnupg \
 		gzip \
-		iputils-ping \
 		jq \
 		lftp \
 		libarchive-tools \
 		libtcnative-1 \
 		locales \
 		lsb-release \
-		lzip \
 		lzma \
-		lzop \
 		mime-support \
 		nano \
 		netcat-openbsd \
