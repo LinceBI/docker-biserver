@@ -45,10 +45,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install Supercronic
 ARG SUPERCRONIC_VERSION="0.1.9"
-ARG SUPERCRONIC_BIN_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_BIN_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
-RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_BIN_URL:?}" \
-	&& printf '%s  %s' "${SUPERCRONIC_BIN_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
+ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
+ARG SUPERCRONIC_CHECKSUM="9f6760d7b5cea5c698ea809598803c6ccca23cf5828fc55e79d1f1c3005d905f"
+RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
+	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
 # Install PostgreSQL client
@@ -95,18 +95,18 @@ ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
 ARG TOMCAT_VERSION="8.5.56"
-ARG TOMCAT_PKG_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_PKG_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_PKG_LIN_CHECKSUM="c152484ef0b196fdcee7d428a042711ac4dd9c89496bc6e759ef4e9429f1e710"
-ARG TOMCAT_PKG_WIN_CHECKSUM="d259c8b383d04cd83984cf88da09b000e399ca5aa6f782ae31f14a1c66cd975b"
+ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
+ARG TOMCAT_LIN_CHECKSUM="c152484ef0b196fdcee7d428a042711ac4dd9c89496bc6e759ef4e9429f1e710"
+ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
+ARG TOMCAT_WIN_CHECKSUM="d259c8b383d04cd83984cf88da09b000e399ca5aa6f782ae31f14a1c66cd975b"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
-	&& curl -Lo ./tomcat.tgz "${TOMCAT_PKG_LIN_URL:?}" \
-	&& curl -Lo ./tomcat.zip "${TOMCAT_PKG_WIN_URL:?}" \
-	&& printf '%s  %s' "${TOMCAT_PKG_LIN_CHECKSUM:?}" ./tomcat.tgz | sha256sum -c \
-	&& printf '%s  %s' "${TOMCAT_PKG_WIN_CHECKSUM:?}" ./tomcat.zip | sha256sum -c \
+	&& curl -Lo ./tomcat.tgz "${TOMCAT_LIN_URL:?}" \
+	&& printf '%s  %s' "${TOMCAT_LIN_CHECKSUM:?}" ./tomcat.tgz | sha256sum -c \
 	&& bsdtar -xkf ./tomcat.tgz --strip-components=1 \
+	&& curl -Lo ./tomcat.zip "${TOMCAT_WIN_URL:?}" \
+	&& printf '%s  %s' "${TOMCAT_WIN_CHECKSUM:?}" ./tomcat.zip | sha256sum -c \
 	&& bsdtar -xkf ./tomcat.zip --strip-components=1 \
 	# Install Tomcat
 	&& mkdir -p "${CATALINA_HOME:?}" \
@@ -143,35 +143,34 @@ ENV LOAD_SAMPLES="true"
 # Install Pentaho BI Server
 ARG BISERVER_VERSION="9.0.0.0-423"
 ARG BISERVER_BASE_URL="https://repo.stratebi.com/repository/pentaho-mvn/"
-#ARG BISERVER_BASE_URL="https://nexus.pentaho.org/content/groups/omni/"
-ARG BISERVER_SOLUTIONS_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-solutions/${BISERVER_VERSION}/pentaho-solutions-${BISERVER_VERSION}.zip"
-ARG BISERVER_SOLUTIONS_PKG_CHECKSUM="58c637f3bd373a7504f8589653d43f16e00a0e2257739ff9d20a3db7468198fc"
-ARG BISERVER_DATA_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-data/${BISERVER_VERSION}/pentaho-data-${BISERVER_VERSION}.zip"
-ARG BISERVER_DATA_PKG_CHECKSUM="6907a2776b3e39bc543b4061a52b68c02b059ebda4b3caecb7cdcb88e0ba16ab"
-ARG BISERVER_WAR_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VERSION}/pentaho-war-${BISERVER_VERSION}.war"
-ARG BISERVER_WAR_PKG_CHECKSUM="e47c28331d77511fa5f53dab07efeaef692ea74df2f834dd53e2af9aa224f920"
-ARG BISERVER_STYLE_PKG_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
-ARG BISERVER_STYLE_PKG_CHECKSUM="c194d6ba60934f8543106bb2ef0df904f4fa357fc7dc610e9b264c6e76d4c4bb"
+ARG BISERVER_SOLUTIONS_URL="${BISERVER_BASE_URL}/pentaho/pentaho-solutions/${BISERVER_VERSION}/pentaho-solutions-${BISERVER_VERSION}.zip"
+ARG BISERVER_SOLUTIONS_CHECKSUM="58c637f3bd373a7504f8589653d43f16e00a0e2257739ff9d20a3db7468198fc"
+ARG BISERVER_DATA_URL="${BISERVER_BASE_URL}/pentaho/pentaho-data/${BISERVER_VERSION}/pentaho-data-${BISERVER_VERSION}.zip"
+ARG BISERVER_DATA_CHECKSUM="6907a2776b3e39bc543b4061a52b68c02b059ebda4b3caecb7cdcb88e0ba16ab"
+ARG BISERVER_WAR_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VERSION}/pentaho-war-${BISERVER_VERSION}.war"
+ARG BISERVER_WAR_CHECKSUM="e47c28331d77511fa5f53dab07efeaef692ea74df2f834dd53e2af9aa224f920"
+ARG BISERVER_STYLE_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
+ARG BISERVER_STYLE_CHECKSUM="c194d6ba60934f8543106bb2ef0df904f4fa357fc7dc610e9b264c6e76d4c4bb"
 RUN mkdir /tmp/biserver/ \
 	&& cd /tmp/biserver/ \
 	# Download pentaho-solutions
-	&& curl -Lo ./pentaho-solutions.zip "${BISERVER_SOLUTIONS_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_SOLUTIONS_PKG_CHECKSUM:?}" ./pentaho-solutions.zip | sha256sum -c \
+	&& curl -Lo ./pentaho-solutions.zip "${BISERVER_SOLUTIONS_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_SOLUTIONS_CHECKSUM:?}" ./pentaho-solutions.zip | sha256sum -c \
 	&& mkdir ./pentaho-solutions/ \
 	&& bsdtar -C ./pentaho-solutions/ -xf ./pentaho-solutions.zip --strip-components=1 \
 	# Download pentaho-data
-	&& curl -Lo ./pentaho-data.zip "${BISERVER_DATA_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_DATA_PKG_CHECKSUM:?}" ./pentaho-data.zip | sha256sum -c \
+	&& curl -Lo ./pentaho-data.zip "${BISERVER_DATA_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_DATA_CHECKSUM:?}" ./pentaho-data.zip | sha256sum -c \
 	&& mkdir ./pentaho-data/ \
 	&& bsdtar -C ./pentaho-data/ -xf ./pentaho-data.zip --strip-components=1 \
 	# Download pentaho-war
-	&& curl -Lo ./pentaho-war.war "${BISERVER_WAR_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_WAR_PKG_CHECKSUM:?}" ./pentaho-war.war | sha256sum -c \
+	&& curl -Lo ./pentaho-war.war "${BISERVER_WAR_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_WAR_CHECKSUM:?}" ./pentaho-war.war | sha256sum -c \
 	&& mkdir ./pentaho-war/ \
 	&& bsdtar -C ./pentaho-war/ -xf ./pentaho-war.war \
 	# Download pentaho-style
-	&& curl -Lo ./pentaho-style.war "${BISERVER_STYLE_PKG_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_STYLE_PKG_CHECKSUM:?}" ./pentaho-style.war | sha256sum -c \
+	&& curl -Lo ./pentaho-style.war "${BISERVER_STYLE_URL:?}" \
+	&& printf '%s  %s' "${BISERVER_STYLE_CHECKSUM:?}" ./pentaho-style.war | sha256sum -c \
 	&& mkdir ./pentaho-style/ \
 	&& bsdtar -C ./pentaho-style/ -xf ./pentaho-style.war \
 	# Install Pentaho BI Server
@@ -196,45 +195,51 @@ RUN mkdir /tmp/biserver/ \
 	&& rm -rf /tmp/biserver/
 
 # Install H2 JDBC
-ARG H2_JDBC_JAR_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
-ARG H2_JDBC_JAR_CHECKSUM="c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${H2_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${H2_JDBC_JAR_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
+ARG H2_JDBC_CHECKSUM="c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${H2_JDBC_URL:?}" \
+	&& printf '%s  %s' "${H2_JDBC_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
 	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
 
 # Install HSQLDB JDBC
-ARG HSQLDB_JDBC_JAR_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.3.2/hsqldb-2.3.2.jar"
-ARG HSQLDB_JDBC_JAR_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf687fe1786a7c2ec6"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${HSQLDB_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${HSQLDB_JDBC_JAR_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c \
+ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.3.2/hsqldb-2.3.2.jar"
+ARG HSQLDB_JDBC_CHECKSUM="e743f27f9e846bf66fec2e26d574dc11f7d1a16530aed8bf687fe1786a7c2ec6"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${HSQLDB_JDBC_URL:?}" \
+	&& printf '%s  %s' "${HSQLDB_JDBC_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_JAR_URL="https://jdbc.postgresql.org/download/postgresql-42.2.14.jar"
-ARG POSTGRES_JDBC_JAR_CHECKSUM="48bbba05845b40bcce66ece3d7652153d27b5379d5ae90977b78eefd7c7a0287"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${POSTGRES_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${POSTGRES_JDBC_JAR_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
+ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.14.jar"
+ARG POSTGRES_JDBC_CHECKSUM="48bbba05845b40bcce66ece3d7652153d27b5379d5ae90977b78eefd7c7a0287"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
+	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
 	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
 
 # Install MySQL JDBC
-ARG MYSQL_JDBC_JAR_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar"
-ARG MYSQL_JDBC_JAR_CHECKSUM="5bba9ff50e5e637a0996a730619dee19ccae274883a4d28c890d945252bb0e12"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MYSQL_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${MYSQL_JDBC_JAR_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
+ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar"
+ARG MYSQL_JDBC_CHECKSUM="5bba9ff50e5e637a0996a730619dee19ccae274883a4d28c890d945252bb0e12"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${MYSQL_JDBC_URL:?}" \
+	&& printf '%s  %s' "${MYSQL_JDBC_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_JAR_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.2/mssql-jdbc-8.2.2.jre8.jar"
-ARG MSSQL_JDBC_JAR_CHECKSUM="6b1e429ef52cd28bb0bc062a7a74b1fa3ac69f57941c87562ad9c1814bc50447"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${MSSQL_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${MSSQL_JDBC_JAR_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
+ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.2/mssql-jdbc-8.2.2.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="6b1e429ef52cd28bb0bc062a7a74b1fa3ac69f57941c87562ad9c1814bc50447"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${MSSQL_JDBC_URL:?}" \
+	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_JAR_URL="https://www.vertica.com/client_drivers/10.0.x/10.0.0-0/vertica-jdbc-10.0.0-0.jar"
-ARG VERTICA_JDBC_JAR_CHECKSUM="198cdbd203e038786cc0f61778a122286c8f3bae2cedbce56a453a5505fbca6d"
-RUN cd "${CATALINA_BASE:?}"/lib/ && curl -LO "${VERTICA_JDBC_JAR_URL:?}" \
-	&& printf '%s  %s' "${VERTICA_JDBC_JAR_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
+ARG VERTICA_JDBC_URL="https://www.vertica.com/client_drivers/10.0.x/10.0.0-0/vertica-jdbc-10.0.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="198cdbd203e038786cc0f61778a122286c8f3bae2cedbce56a453a5505fbca6d"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${VERTICA_JDBC_URL:?}" \
+	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
 	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
 
 # Other environment variables
@@ -255,11 +260,6 @@ COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
 
 # Copy services
 COPY --chown=biserver:root ./scripts/service/ /usr/share/biserver/service/
-
-# Don't declare volumes, let the user decide
-#VOLUME "${BISERVER_HOME}"/"${DATA_DIRNAME}/hsqldb/"
-#VOLUME "${BISERVER_HOME}"/"${SOLUTIONS_DIRNAME}"/system/jackrabbit/repository/
-#VOLUME "${CATALINA_BASE}"/logs/
 
 # Switch to Pentaho BI Server directory
 WORKDIR "${BISERVER_HOME}"
