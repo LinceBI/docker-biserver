@@ -16,23 +16,28 @@
 #
 #
 # Copyright 2011 - <%= Time.now.year %> Hitachi Vantara. All rights reserved.
+# Copyright 2019 - <%= Time.now.year %> Stratebi Business Solutions S.L. All rights reserved.
 # *******************************************************************************************
 
-DIR_REL=`dirname $0`
-cd $DIR_REL
-DIR=`pwd`
-#cd -
+set -eu
+export LC_ALL=C
 
-. "$DIR/set-pentaho-env.sh"
-setPentahoEnv
+DIR=$(dirname "$(readlink -f "$0")")
+cd "${DIR:?}"
 
-### =========================================================== ###
-## Set a variable for DI_HOME (to be used as a system property)  ##
-## The plugin loading system for kettle needs this set to know   ##
-## where to load the plugins from                                ##
-### =========================================================== ###
-DI_HOME="$DIR"/pentaho-solutions/system/kettle
+# shellcheck disable=SC1090
+. "${DIR:?}"/set-pentaho-env.sh
 
-# uses Java 6 classpath wildcards
-# quotes required around classpath to prevent shell expansion
-"$_PENTAHO_JAVA" -Xmx2048m -XX:MaxPermSize=256m -Dfile.encoding=utf8 -DDI_HOME="$DI_HOME" -classpath "$DIR/tomcat/webapps/pentaho/WEB-INF/lib/*" org.pentaho.platform.plugin.services.importexport.CommandLineProcessor ${1+"$@"}
+setPentahoEnv "${DIR:?}"/jre
+
+# ------------------------------------------------------------
+# Set a variable for DI_HOME (to be used as a system property)
+# The plugin loading system for kettle needs this set to know
+# where to load the plugins from.
+# ------------------------------------------------------------
+DI_HOME="${DIR:?}/<%= ENV['SOLUTIONS_DIRNAME'] %>/system/kettle"
+
+"${_PENTAHO_JAVA:?}" \
+	-classpath "${DIR:?}/tomcat/webapps/pentaho/WEB-INF/lib/*" \
+	-Dfile.encoding=utf8 -XX:MaxPermSize=256m -Xmx2048m -DDI_HOME="${DI_HOME:?}" \
+	org.pentaho.platform.plugin.services.importexport.CommandLineProcessor "$@"

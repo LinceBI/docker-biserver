@@ -16,40 +16,32 @@
 #
 #
 # Copyright 2011 - <%= Time.now.year %> Hitachi Vantara. All rights reserved.
+# Copyright 2019 - <%= Time.now.year %> Stratebi Business Solutions S.L. All rights reserved.
 # *******************************************************************************************
 
-### ====================================================================== ###
-##                                                                          ##
-##  Hitachi Vantara Start Script                                            ##
-##                                                                          ##
-### ====================================================================== ###
+set -eu
+export LC_ALL=C
 
-DIR_REL=`dirname $0`
-cd $DIR_REL
-DIR=`pwd`
-#cd -
+DIR=$(dirname "$(readlink -f "$0")")
+cd "${DIR:?}"
 
-. "$DIR/set-pentaho-env.sh"
+# shellcheck disable=SC1090
+. "${DIR:?}"/set-pentaho-env.sh
 
-setPentahoEnv "$DIR/jre"
+setPentahoEnv "${DIR:?}"/jre
 
-### =========================================================== ###
-## Set a variable for DI_HOME (to be used as a system property)  ##
-## The plugin loading system for kettle needs this set to know   ##
-## where to load the plugins from                                ##
-### =========================================================== ###
-DI_HOME="$DIR/<%= ENV['SOLUTIONS_DIRNAME'] %>/system/kettle"
+# ------------------------------------------------------------
+# Set a variable for DI_HOME (to be used as a system property)
+# The plugin loading system for kettle needs this set to know
+# where to load the plugins from.
+# ------------------------------------------------------------
+DI_HOME="${DIR:?}/<%= ENV['SOLUTIONS_DIRNAME'] %>/system/kettle"
 
-errCode=0
-if [ -f "$DIR/promptuser.sh" ]; then
-  sh "$DIR/promptuser.sh"
-  errCode="$?"
-  rm "$DIR/promptuser.sh"
-fi
-if [ "$errCode" = 0 ]; then
-  cd "$DIR/tomcat/bin"
-  CATALINA_OPTS="-Xms<%= ENV['CATALINA_OPTS_JAVA_XMS'] %> -Xmx<%= ENV['CATALINA_OPTS_JAVA_XMX'] %> <%= ENV['CATALINA_OPTS_EXTRA'] %> -XX:MaxPermSize=256m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Dfile.encoding=utf8 -DDI_HOME=\"$DI_HOME\""
-  export CATALINA_OPTS
-  JAVA_HOME=$_PENTAHO_JAVA_HOME
-  sh startup.sh
-fi
+cd "${DIR:?}"/tomcat/bin
+export JAVA_HOME=${_PENTAHO_JAVA_HOME?}
+export CATALINA_HOME=${DIR:?}/tomcat
+export CATALINA_OPTS="\
+	-Dfile.encoding=utf8 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -XX:MaxPermSize=256m \
+	-Xms<%= ENV['CATALINA_OPTS_JAVA_XMS'] %> -Xmx<%= ENV['CATALINA_OPTS_JAVA_XMX'] %> <%= ENV['CATALINA_OPTS_EXTRA'] %> \
+	-DDI_HOME='${DI_HOME:?}'"
+sh ./startup.sh

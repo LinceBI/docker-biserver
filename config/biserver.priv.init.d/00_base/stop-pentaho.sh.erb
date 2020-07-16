@@ -16,23 +16,21 @@
 #
 #
 # Copyright 2011 - <%= Time.now.year %> Hitachi Vantara. All rights reserved.
+# Copyright 2019 - <%= Time.now.year %> Stratebi Business Solutions S.L. All rights reserved.
 # *******************************************************************************************
 
-### ====================================================================== ###
-##                                                                          ##
-##  Hitachi Vantara Stop Script                                             ##
-##                                                                          ##
-### ====================================================================== ###
+set -eu
+export LC_ALL=C
 
-DIR_REL=`dirname $0`
-cd $DIR_REL
-DIR=`pwd`
-#cd -
+DIR=$(dirname "$(readlink -f "$0")")
+cd "${DIR:?}"
 
-. "$DIR/set-pentaho-env.sh"
+# shellcheck disable=SC1090
+. "${DIR:?}"/set-pentaho-env.sh
 
-setPentahoEnv "$DIR/jre"
+setPentahoEnv "${DIR:?}"/jre
 
-cd "$DIR/tomcat/bin"
-JAVA_HOME=$_PENTAHO_JAVA_HOME
-sh shutdown.sh
+cd "${DIR:?}"/tomcat/bin
+export JAVA_HOME=${_PENTAHO_JAVA_HOME?}
+export CATALINA_HOME=${DIR:?}/tomcat
+sh ./shutdown.sh
