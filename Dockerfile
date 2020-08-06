@@ -227,8 +227,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.2/mssql-jdbc-8.2.2.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="6b1e429ef52cd28bb0bc062a7a74b1fa3ac69f57941c87562ad9c1814bc50447"
+ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.4.0/mssql-jdbc-8.4.0.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="ea792b29f23ff0407704ea67b6ec98364a515b2b319c4b6bf8f020be8d6f61d8"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
