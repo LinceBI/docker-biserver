@@ -211,8 +211,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.14.jar"
-ARG POSTGRES_JDBC_CHECKSUM="48bbba05845b40bcce66ece3d7652153d27b5379d5ae90977b78eefd7c7a0287"
+ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.16.jar"
+ARG POSTGRES_JDBC_CHECKSUM="82230367c0e9507be45981ce2aa059f7291d906f56ad820d0bab3db0cf1523cb"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
@@ -227,8 +227,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.4.0/mssql-jdbc-8.4.0.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="ea792b29f23ff0407704ea67b6ec98364a515b2b319c4b6bf8f020be8d6f61d8"
+ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v8.4.1/mssql-jdbc-8.4.1.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="d56ccbc811d34cb0536dd6b3eaf307ec7118b9e172ccd0bab32d07972fd7ba01"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
