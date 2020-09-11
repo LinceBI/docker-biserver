@@ -35,7 +35,7 @@ services:
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
 
   biserver:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.13-904"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.15-977"
     restart: "on-failure:3"
     networks:
       - "biserver"
