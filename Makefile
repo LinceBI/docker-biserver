@@ -78,6 +78,7 @@ endef
 .PHONY: load-image
 load-image:
 	$(call load_image,$(IMAGE_TARBALL))
+	$(call tag_image,$(IMAGE_NAME):$(IMAGE_VERSION),$(IMAGE_NAME):$(IMAGE_VERSION_MINOR))
 
 ##################################################
 ## "push-*" targets
