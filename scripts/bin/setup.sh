@@ -12,7 +12,7 @@ export LC_ALL=C
 {
 	set -a
 
-	INSTANCE_ID=$(getVar INSTANCE_ID "$(tr -dc 'a-z0-9' < /dev/urandom | head -c12)")
+	INSTANCE_ID=$(getVar INSTANCE_ID "$(uuidgen | tr -d '-')")
 
 	IS_EXPORTING=$(getVar IS_EXPORTING "false")
 	LOAD_SAMPLES=$(getVar LOAD_SAMPLES "true")

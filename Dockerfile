@@ -37,6 +37,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		tini \
 		tzdata \
 		unzip \
+		uuid-runtime \
 		xxd \
 		xz-utils \
 		zip \
