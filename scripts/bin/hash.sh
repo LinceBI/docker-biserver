@@ -3,7 +3,7 @@
 set -eu
 export LC_ALL=C
 
-salt() { tr -dc 'a-z0-9' < /dev/urandom | head -c16; }
+salt() { uuidgen | tr -d '-'; }
 checksum() { sha256sum | head -c64; }
 hex2bin() { xxd -r -p; }
 
