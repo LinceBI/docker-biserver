@@ -19,7 +19,7 @@ IMAGE_VERSION_MINOR := $(shell awk -v v='$(IMAGE_VERSION)' 'BEGIN{match(v,/^[0-9
 
 IMAGE_BUILD_OPTS :=
 
-IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tgz
+IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tzst
 STANDALONE_ARCHIVE := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.zip
 
 ##################################################
@@ -44,7 +44,7 @@ build-image:
 ##################################################
 
 define save_image
-	'$(DOCKER)' save '$(1)' | gzip > '$(2)'
+	'$(DOCKER)' save '$(1)' | zstd -T0 -1 > '$(2)'
 endef
 
 .PHONY: save-image
@@ -68,7 +68,7 @@ $(STANDALONE_ARCHIVE): build-image
 ##################################################
 
 define load_image
-	'$(DOCKER)' load -i '$(1)'
+	zstd -dc '$(1)' | '$(DOCKER)' load
 endef
 
 define tag_image
