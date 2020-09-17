@@ -45,8 +45,8 @@ getVar() {
 
 	# If a Docker secret exists, print its content
 	varSecret="${SECRETS_DIR-/run/secrets}/${name:?}"
-	if [ -e "${varSecret-}" ]; then
-		cat -- "${varSecret-}"
+	if [ -e "${varSecret:?}" ]; then
+		cat -- "${varSecret:?}"
 		return
 	fi
 
