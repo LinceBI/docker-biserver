@@ -36,7 +36,7 @@ psqlWaitUntilAvailable() {
 }
 
 psqlCreateDatabaseIfNotExists() {
-	database=${1:?}; username=${2:?}; password=${3:?}; script=${4:?}; shift 3
+	database=${1:?}; username=${2:?}; password=${3:?}; script=${4:?}
 	logInfo "Checking \"${database:?}\" database..."
 	if ! psqlConnect "${database:?}" "${username:?}" "${password:?}"; then
 		logInfo "Creating \"${database:?}\" database..."
