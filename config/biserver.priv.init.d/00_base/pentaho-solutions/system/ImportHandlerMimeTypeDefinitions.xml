@@ -59,11 +59,19 @@
 				<extension>ksl</extension>
 				<extension>report</extension>
 				<extension>rptdesign</extension>
+				<extension>std</extension>
+				<extension>stolap</extension>
 				<extension>wcdf</extension>
 				<extension>xcdf</extension>
 				<extension>xjpivot</extension>
 				<extension>xml</extension>
 				<extension>xreportspec</extension>
+			</MimeTypeDefinition>
+			<MimeTypeDefinition mimeType="application/json">
+				<extension>adhoc</extension>
+				<extension>saiku</extension>
+				<extension>snapshot</extension>
+				<extension>sta</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.google-earth.kml+xml">
 				<extension>kml</extension>
