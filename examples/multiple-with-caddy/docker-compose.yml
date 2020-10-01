@@ -24,7 +24,7 @@ services:
       - "caddy-data:/var/lib/caddy/"
 
   postgres:
-    image: "docker.io/postgres:12"
+    image: "docker.io/postgres:13"
     restart: "on-failure:3"
     networks:
       - "biserver"
