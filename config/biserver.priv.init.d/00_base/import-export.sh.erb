@@ -39,5 +39,5 @@ DI_HOME="${DIR:?}/<%= ENV['SOLUTIONS_DIRNAME'] %>/system/kettle"
 
 "${_PENTAHO_JAVA:?}" \
 	-classpath "${DIR:?}/tomcat/webapps/pentaho/WEB-INF/lib/*" \
-	-Dfile.encoding=utf8 -XX:MaxPermSize=256m -Xmx2048m -DDI_HOME="${DI_HOME:?}" \
+	-Dfile.encoding=utf8 -Xmx2048m -DDI_HOME="${DI_HOME:?}" \
 	org.pentaho.platform.plugin.services.importexport.CommandLineProcessor "$@"
