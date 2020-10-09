@@ -19,7 +19,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`TOMCAT_MINOR_VERSION` (`5` por defecto)**: versión menor de Tomcat.
  * **`TOMCAT_PATCH_VERSION` (`latest` por defecto)**: versión parche de Tomcat.
  * **`BISERVER_VERSION` (`9.1.0.0-324` por defecto)**: versión de Pentaho BI Server.
- * **`BISERVER_MAVEN_REPO` (`https://nexus.pentaho.org/content/groups/omni/` por defecto)**: repositorio de Maven del que se descargan las
+ * **`BISERVER_MAVEN_REPO` (`https://repo.stratebi.com/repository/pentaho-mvn/` por defecto)**: repositorio de Maven del que se descargan las
    dependencias necesarias para la instalación de Pentaho BI Server.
 
 ## Variables de entorno
