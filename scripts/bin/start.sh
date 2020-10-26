@@ -8,7 +8,7 @@ export LC_ALL=C
 
 ########
 
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH-}:${CATALINA_HOME:?}/lib
+export LD_LIBRARY_PATH=${CATALINA_HOME:?}/lib:/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH-}
 export CATALINA_OPTS="\
 	-Dfile.encoding=utf8 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Xms${CATALINA_OPTS_JAVA_XMS:?} -Xmx${CATALINA_OPTS_JAVA_XMX:?} ${CATALINA_OPTS_EXTRA?} \
