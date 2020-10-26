@@ -25,7 +25,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		mime-support \
 		nano \
 		netcat-openbsd \
-		openjdk-8-jdk \
 		openssh-client \
 		openssl \
 		patch \
@@ -51,20 +50,25 @@ RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
+# Install Zulu OpenJDK
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
+	&& curl -fsSL 'http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems' | apt-key add - \
+	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install PostgreSQL client
-RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' "deb https://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends postgresql-client-13 \
+	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install MySQL client
-RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' "deb https://repo.mysql.com/apt/ubuntu/ $(lsb_release -cs) mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
 	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends mysql-client \
+	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Create unprivileged user
@@ -83,8 +87,8 @@ RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
 # Set default Java
-ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
+ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
+RUN update-java-alternatives --set zulu8-ca-amd64
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
