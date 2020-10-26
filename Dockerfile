@@ -25,7 +25,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		mime-support \
 		nano \
 		netcat-openbsd \
-		openjdk-8-jdk \
 		openssh-client \
 		openssl \
 		patch \
@@ -51,20 +50,25 @@ RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
+# Install Zulu OpenJDK
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
+	&& curl -fsSL 'http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems' | apt-key add - \
+	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install PostgreSQL client
-RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' "deb https://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends postgresql-client-13 \
+	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install MySQL client
-RUN export DEBIAN_FRONTEND=noninteractive \
-	&& printf '%s\n' "deb https://repo.mysql.com/apt/ubuntu/ $(lsb_release -cs) mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
 	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends mysql-client \
+	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Create unprivileged user
@@ -83,8 +87,8 @@ RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
 # Set default Java
-ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-RUN update-java-alternatives --set java-1.8.0-openjdk-amd64
+ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
+RUN update-java-alternatives --set zulu8-ca-amd64
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
@@ -94,11 +98,11 @@ ENV CATALINA_OPTS_JAVA_XMX="4096m"
 ENV CATALINA_OPTS_EXTRA=
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.58"
+ARG TOMCAT_VERSION="8.5.59"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="af53606de49ab01287127bbc366bebcc596a5cf3119b4817467142dbf18ac053"
+ARG TOMCAT_LIN_CHECKSUM="0c0debbf6c63361f31a914cf11dade006030832e7933c8fd483aa1ebcf032210"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="e54f55c8bdc3025c0c5ced034a6e9979c41a5c7ea3672315b25a42b5e4479d4b"
+ARG TOMCAT_WIN_CHECKSUM="c952876a02459d4b7a5df252fc99ff43cf25e73294e7711952487e823647b718"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -211,8 +215,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.16.jar"
-ARG POSTGRES_JDBC_CHECKSUM="82230367c0e9507be45981ce2aa059f7291d906f56ad820d0bab3db0cf1523cb"
+ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.18.jar"
+ARG POSTGRES_JDBC_CHECKSUM="0c891979f1eb2fe44432da114d09760b5063dad9e669ac0ac6b0b6bfb91bb3ba"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
