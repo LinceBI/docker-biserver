@@ -1,0 +1,115 @@
+version: "3.7"
+
+services:
+
+  caddy:
+    image: "docker.io/caddy:2"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TLS_DOMAIN: "${TLS_DOMAIN}"
+      TLS_ACCOUNT: "${TLS_ACCOUNT}"
+      TLS_CASERVER: "${TLS_CASERVER}"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/var/lib/caddy/"
+
+  biserver-1:
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.16-1030"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:8080:8080/tcp"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_PORT: "443"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
+    depends_on:
+      - "postgres"
+
+  biserver-2:
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.16-1030"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:8081:8080/tcp"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_PORT: "443"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
+    entrypoint: "/bin/sh"
+    command: |
+      -euc "
+        until [ \"$$(curl -so /dev/null -w '%{http_code}' -Im 5 'http://biserver-1:8080/pentaho/')\" = '302' ]; do sleep 10; done
+        exec /usr/bin/tini /usr/share/biserver/bin/init.sh
+      "
+    depends_on:
+      - "postgres"
+
+  postgres:
+    image: "docker.io/postgres:13"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+
+networks:
+
+  biserver:
+    driver: "bridge"
+    internal: false
+
+volumes:
+
+  caddy-data:
+  postgres-data:

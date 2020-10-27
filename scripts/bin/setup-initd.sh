@@ -8,6 +8,31 @@ export LC_ALL=C
 
 ########
 
+# Rename root directories
+renameRootDirs() {
+	source=${1:?}
+
+	# Rename solutions directory
+	if [ -e "${source:?}"/pentaho-solutions/ ] && [ ! -e "${source:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
+		mv -f "${source:?}"/pentaho-solutions/ "${source:?}"/"${SOLUTIONS_DIRNAME:?}"
+	fi
+
+	# Rename data directory
+	if [ -e "${source:?}"/data/ ] && [ ! -e "${source:?}"/"${DATA_DIRNAME:?}" ]; then
+		mv -f "${source:?}"/data/ "${source:?}"/"${DATA_DIRNAME:?}"
+	fi
+
+	# Rename Pentaho webapp directory
+	if [ -e "${source:?}"/tomcat/webapps/pentaho/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
+		mv -f "${source:?}"/tomcat/webapps/pentaho/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+	fi
+
+	# Rename Pentaho style webapp directory
+	if [ -e "${source:?}"/tomcat/webapps/pentaho-style/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
+		mv -f "${source:?}"/tomcat/webapps/pentaho-style/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+	fi
+}
+
 # Execute ERB files
 recursiveExecuteErbs() {
 	source=${1:?}
@@ -86,8 +111,9 @@ recursiveRemoveSuffix() {
 
 # Extract archive and execute initialisation steps
 extractArchive() {
-	source=${1:?}
-	target=${2:?}
+	type=${1:?}
+	source=${2:?}
+	target=${3:?}
 	tmpdir=$(mktemp -d)
 
 	if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
@@ -97,10 +123,10 @@ extractArchive() {
 	fi
 
 	cd "${tmpdir:?}"
-	#recursiveUnzipFiles "${tmpdir:?}"
+	if [ "${type:?}" = 'root' ]; then
+		renameRootDirs "${tmpdir:?}"
+	fi
 	recursiveExecuteErbs "${tmpdir:?}"
-	recursiveZipDirs "${tmpdir:?}"
-	recursiveRemoveSuffix "${tmpdir:?}"
 	cd "${OLDPWD:?}"
 
 	mergeDirs "${tmpdir:?}"/ "${target:?}"/
@@ -108,13 +134,17 @@ extractArchive() {
 
 # Copy directory and execute initialisation steps
 copyDirectory() {
-	source=${1:?}
-	target=${2:?}
+	type=${1:?}
+	source=${2:?}
+	target=${3:?}
 	tmpdir=$(mktemp -du)
 
 	cp -a "${source:?}"/ "${tmpdir:?}"/
 
 	cd "${tmpdir:?}"
+	if [ "${type:?}" = 'root' ]; then
+		renameRootDirs "${tmpdir:?}"
+	fi
 	recursiveUnzipFiles "${tmpdir:?}"
 	recursiveExecuteErbs "${tmpdir:?}"
 	recursiveZipDirs "${tmpdir:?}"
@@ -157,36 +187,36 @@ initdFromDir() {
 			case "${path:?}" in
 				*.__root__)
 					logInfo "Copying directory \"${path:?}\" to root directory..."
-					copyDirectory "${path:?}" "${BISERVER_HOME:?}"
+					copyDirectory 'root' "${path:?}" "${BISERVER_HOME:?}"
 					;;
 				*.__webapp_pentaho__)
 					logInfo "Copying directory \"${path:?}\" to Pentaho webapp directory..."
-					copyDirectory "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+					copyDirectory 'webapp-pentaho' "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 					;;
 				*.__webapp_pentaho_style__)
 					logInfo "Copying directory \"${path:?}\" to Pentaho Style webapp directory..."
-					copyDirectory "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+					copyDirectory 'webapp-pentaho-style' "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 					;;
 				*.__pentaho_solutions__)
 					logInfo "Copying directory \"${path:?}\" to solutions directory..."
-					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+					copyDirectory 'solutions' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
 					;;
 				*.__data__)
 					logInfo "Copying directory \"${path:?}\" to data directory..."
-					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+					copyDirectory 'data' "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
 					;;
 				*.__plugin__)
 					logInfo "Installing plugin \"${path:?}\"..."
-					copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+					copyDirectory 'root' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 					;;
 				*)
 					# Determine if it is a Pentaho plugin
 					if isPentahoPlugin "${path:?}"; then
 						logInfo "Installing plugin \"${path:?}\"..."
-						copyDirectory "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+						copyDirectory 'plugin' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 					else
 						logInfo "Copying directory \"${path:?}\" to root directory..."
-						copyDirectory "${path:?}" "${BISERVER_HOME:?}"
+						copyDirectory 'root' "${path:?}" "${BISERVER_HOME:?}"
 					fi
 					;;
 			esac
@@ -200,36 +230,36 @@ initdFromDir() {
 				case "${path:?}" in
 					*.__root__.*)
 						logInfo "Extracting file \"${path:?}\" to root directory..."
-						extractArchive "${path:?}" "${BISERVER_HOME:?}"
+						extractArchive 'root' "${path:?}" "${BISERVER_HOME:?}"
 						;;
 					*.__webapp_pentaho__.*)
 						logInfo "Extracting file \"${path:?}\" to Pentaho webapp directory..."
-						extractArchive "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+						extractArchive 'webapp-pentaho' "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 						;;
 					*.__webapp_pentaho_style__.*)
 						logInfo "Extracting file \"${path:?}\" to Pentaho Style webapp directory..."
-						extractArchive "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+						extractArchive 'webapp-pentaho-style' "${path:?}" "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 						;;
 					*.__pentaho_solutions__.*)
 						logInfo "Extracting file \"${path:?}\" to solutions directory..."
-						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+						extractArchive 'solutions' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
 						;;
 					*.__data__.*)
 						logInfo "Extracting file \"${path:?}\" to data directory..."
-						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+						extractArchive 'data' "${path:?}" "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
 						;;
 					*.__plugin__.*)
 						logInfo "Installing plugin \"${path:?}\"..."
-						extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+						extractArchive 'plugin' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 						;;
 					*)
 						# Determine if it is a Pentaho plugin
 						if isPentahoPlugin "${path:?}"; then
 							logInfo "Installing plugin \"${path:?}\"..."
-							extractArchive "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
+							extractArchive 'plugin' "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system
 						else
 							logInfo "Extracting file \"${path:?}\" to root directory..."
-							extractArchive "${path:?}" "${BISERVER_HOME:?}"
+							extractArchive 'root' "${path:?}" "${BISERVER_HOME:?}"
 						fi
 						;;
 				esac
