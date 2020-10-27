@@ -2,41 +2,42 @@ version: "3.7"
 
 services:
 
-  nginx:
-    image: "docker.io/nginx:1"
+  caddy:
+    image: "docker.io/caddy:2"
     restart: "on-failure:3"
     networks:
       - "biserver"
     ports:
       - "80:80/tcp"
-    volumes:
-      - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
-
-  postgres:
-    image: "docker.io/postgres:13"
-    restart: "on-failure:3"
-    networks:
-      - "biserver"
-    ports:
-      - "127.0.0.1:5432:5432/tcp"
-    volumes:
-      - "postgres-data:/var/lib/postgresql/data/"
+      - "443:443/tcp"
     environment:
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      TLS_DOMAIN: "${TLS_DOMAIN}"
+      TLS_ACCOUNT: "${TLS_ACCOUNT}"
+      TLS_CASERVER: "${TLS_CASERVER}"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/var/lib/caddy/"
 
   biserver:
     image: "repo.stratebi.com/lincebi/biserver:9.1.0.0-324"
     restart: "on-failure:3"
     networks:
       - "biserver"
+    ports:
+      - "127.0.0.1:8080:8080/tcp"
     volumes:
       - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
-      PROXY_SCHEME: "http"
-      PROXY_PORT: "80"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_PORT: "443"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
       POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
       POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
@@ -50,6 +51,19 @@ services:
     depends_on:
       - "postgres"
 
+  postgres:
+    image: "docker.io/postgres:13"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+
 networks:
 
   biserver:
@@ -58,4 +72,5 @@ networks:
 
 volumes:
 
+  caddy-data:
   postgres-data:
