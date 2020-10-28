@@ -66,20 +66,6 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`MYSQL_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
  * **`MYSQL_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
  * **`MYSQL_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
- * **`COCKROACH_HOST` (`localhost` por defecto)**: host para la conexión con CockroachDB.
- * **`COCKROACH_PORT` (`26257` por defecto)**: puerto para la conexión con CockroachDB.
- * **`COCKROACH_USER` (`root` por defecto)**: usuario para la conexión con CockroachDB.
- * **`COCKROACH_PASSWORD` (`root` por defecto)**: contraseña para la conexión con CockroachDB.
- * **`COCKROACH_DATABASE` (`postgres` por defecto)**: nombre de la BBDD para la conexión con CockroachDB.
- * **`COCKROACH_JACKRABBIT_USER` (`jcr_user` por defecto)**: nombre del usuario de Jackrabbit (se creará si no existe).
- * **`COCKROACH_JACKRABBIT_PASSWORD` (`jcr_password` por defecto)**: contraseña del usuario de Jackrabbit.
- * **`COCKROACH_JACKRABBIT_DATABASE` (`jackrabbit` por defecto)**: nombre de la BBDD de Jackrabbit (se creará si no existe).
- * **`COCKROACH_HIBERNATE_USER` (`hibuser` por defecto)**: nombre del usuario de Hibernate (se creará si no existe).
- * **`COCKROACH_HIBERNATE_PASSWORD` (`hibpassword` por defecto)**: contraseña del usuario de Hibernate.
- * **`COCKROACH_HIBERNATE_DATABASE` (`hibernate` por defecto)**: nombre de la BBDD de Hibernate (se creará si no existe).
- * **`COCKROACH_QUARTZ_USER` (`pentaho_user` por defecto)**: nombre del usuario de Quartz (se creará si no existe).
- * **`COCKROACH_QUARTZ_PASSWORD` (`pentaho_password` por defecto)**: contraseña del usuario de Quartz.
- * **`COCKROACH_QUARTZ_DATABASE` (`quartz` por defecto)**: nombre de la BBDD de Quartz (se creará si no existe).
  * **`CATALINA_OPTS_JAVA_XMS` (`1024m` por defecto)**: tamaño inicial del heap de Java.
  * **`CATALINA_OPTS_JAVA_XMX` (`4096m` por defecto)**: tamaño máximo del heap de Java.
 
