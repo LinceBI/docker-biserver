@@ -53,8 +53,6 @@ services:
       COCKROACH_QUARTZ_USER: "${DB_QUARTZ_USER}"
       COCKROACH_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
       COCKROACH_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
-    depends_on:
-      - "cockroach-ca"
 
   cockroach-ca:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -103,6 +101,11 @@ services:
           ./cockroach sql \
             --host=cockroach-1 \
             --execute=\"ALTER USER root WITH PASSWORD '$${COCKROACH_PASSWORD}';\" \
+            --certs-dir=./cockroach-ca/
+          # Enable remote debugging mode
+          ./cockroach sql \
+            --host=cockroach-1 \
+            --execute=\"SET CLUSTER SETTING server.remote_debugging.mode = 'any';\" \
             --certs-dir=./cockroach-ca/
         fi
         while true; do sleep 30; done

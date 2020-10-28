@@ -24,6 +24,11 @@ if [ "${IS_EXPORTING:?}" != 'true' ]; then
 	if [ "${STORAGE_TYPE:?}" = 'mysql' ]; then
 		/usr/share/biserver/bin/setup-storage-mysql.sh
 	fi
+
+	# TiDB setup
+	if [ "${STORAGE_TYPE:?}" = 'tidb' ]; then
+		/usr/share/biserver/bin/setup-storage-tidb.sh
+	fi
 fi
 
 ########
