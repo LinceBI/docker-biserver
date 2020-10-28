@@ -1,0 +1,40 @@
+{
+	admin off
+	auto_https disable_redirects
+	acme_ca {$TLS_CASERVER}
+	default_sni {$TLS_DOMAIN}
+}
+
+(tls-directives) {
+	tls {$TLS_ACCOUNT}
+}
+
+(common-directives) {
+	encode zstd gzip
+	log {
+		output stdout
+	}
+}
+
+(biserver-proxy-subdirectives) {
+	header_up Host {http.request.host}
+	header_up X-Real-IP {http.request.remote.host}
+	header_up X-Forwarded-For {http.request.remote.host}
+	header_up X-Forwarded-Host {http.request.host}
+	header_up X-Forwarded-Port {http.request.port}
+	header_up X-Forwarded-Proto {http.request.scheme}
+}
+
+http://{$TLS_DOMAIN}:80 {
+	import common-directives
+	redir /* https://{host}{uri} 301
+}
+
+https://{$TLS_DOMAIN}:443 {
+	import common-directives
+	import tls-directives
+	reverse_proxy /* {
+		to biserver:8080
+		import biserver-proxy-subdirectives
+	}
+}
