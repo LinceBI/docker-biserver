@@ -19,7 +19,7 @@ services:
       - "caddy-data:/var/lib/caddy/"
 
   biserver-1:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.16-1030"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
     restart: "on-failure:3"
     networks:
       - "biserver"
@@ -53,7 +53,7 @@ services:
       - "mariadb"
 
   biserver-2:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.16-1030"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
     restart: "on-failure:3"
     networks:
       - "biserver"
