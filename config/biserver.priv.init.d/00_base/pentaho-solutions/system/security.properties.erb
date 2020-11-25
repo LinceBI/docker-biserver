@@ -1,5 +1,5 @@
 provider=jackrabbit
-requestParameterAuthenticationEnabled=true
+requestParameterAuthenticationEnabled=<%= ENV['SECURITY_REQUEST_PARAMETER_AUTHENTICATION_ENABLED'] %>
 
 # This flag indicates whether or not UserDetailsService is called during creation of user's principal.
 # If the service is external (e.g. LDAP or JDBC-based auth is used) then such calls can be expensive.
