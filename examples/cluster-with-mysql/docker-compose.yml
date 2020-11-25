@@ -10,13 +10,13 @@ services:
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/var/lib/caddy/"
     environment:
       TLS_DOMAIN: "${TLS_DOMAIN}"
       TLS_ACCOUNT: "${TLS_ACCOUNT}"
       TLS_CASERVER: "${TLS_CASERVER}"
-    volumes:
-      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      - "caddy-data:/var/lib/caddy/"
 
   biserver-1:
     image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
