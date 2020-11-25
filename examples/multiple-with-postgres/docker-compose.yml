@@ -16,7 +16,7 @@ services:
     environment:
       TLS_DOMAIN: "${TLS_DOMAIN}"
       TLS_ACCOUNT: "${TLS_ACCOUNT}"
-      TLS_CASERVER: "${TLS_CASERVER}"
+      TLS_CA: "${TLS_CA}"
 
   biserver-helium:
     image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
