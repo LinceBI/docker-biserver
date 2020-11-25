@@ -16,7 +16,7 @@ services:
     environment:
       TLS_DOMAIN: "${TLS_DOMAIN}"
       TLS_ACCOUNT: "${TLS_ACCOUNT}"
-      TLS_CASERVER: "${TLS_CASERVER}"
+      TLS_CA: "${TLS_CA}"
 
   biserver-1:
     image: "repo.stratebi.com/lincebi/biserver:9.1.0.0-324"
