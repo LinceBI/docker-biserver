@@ -13,13 +13,13 @@ services:
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/var/lib/caddy/"
     environment:
       TLS_DOMAIN: "${TLS_DOMAIN}"
       TLS_ACCOUNT: "${TLS_ACCOUNT}"
       TLS_CASERVER: "${TLS_CASERVER}"
-    volumes:
-      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      - "caddy-data:/var/lib/caddy/"
 
   biserver:
     image: "repo.stratebi.com/lincebi/biserver:9.0.0.0-423"
@@ -59,13 +59,13 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
-    environment:
-      COCKROACH_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - "cockroach-ca-data:/cockroach/cockroach-ca/"
       - "cockroach-1-certs:/cockroach/cockroach-1-certs/"
       - "cockroach-2-certs:/cockroach/cockroach-2-certs/"
       - "cockroach-3-certs:/cockroach/cockroach-3-certs/"
+    environment:
+      COCKROACH_PASSWORD: "${DB_PASSWORD}"
     entrypoint: "/bin/sh"
     command: |
       -euc "
