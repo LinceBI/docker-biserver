@@ -50,6 +50,10 @@ RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
+# Java environment
+ENV JAVA_XMS="1024m"
+ENV JAVA_XMX="4096m"
+
 # Install Zulu OpenJDK
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
 	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
@@ -93,9 +97,7 @@ RUN update-java-alternatives --set zulu8-ca-amd64
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
-ENV CATALINA_OPTS_JAVA_XMS="1024m"
-ENV CATALINA_OPTS_JAVA_XMX="4096m"
-ENV CATALINA_OPTS_EXTRA=
+ENV CATALINA_OPTS_EXTRA=""
 
 # Install Tomcat
 ARG TOMCAT_VERSION="8.5.60"
