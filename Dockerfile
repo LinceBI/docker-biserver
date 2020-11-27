@@ -50,10 +50,6 @@ RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
 
-# Java environment
-ENV JAVA_XMS="1024m"
-ENV JAVA_XMX="4096m"
-
 # Install Zulu OpenJDK
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
 	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
@@ -92,6 +88,7 @@ RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 
 # Set default Java
 ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
+ENV JAVA_XMS="1024m" JAVA_XMX="4096m"
 RUN update-java-alternatives --set zulu8-ca-amd64
 
 # Tomcat environment

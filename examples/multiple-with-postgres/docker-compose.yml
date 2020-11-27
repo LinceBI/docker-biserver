@@ -23,8 +23,6 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
-    ports:
-      - "127.0.0.1:8080:8080/tcp"
     volumes:
       - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
@@ -58,8 +56,6 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
-    ports:
-      - "127.0.0.1:8081:8080/tcp"
     volumes:
       - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
