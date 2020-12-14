@@ -43,9 +43,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
-ARG SUPERCRONIC_VERSION="0.1.11"
+ARG SUPERCRONIC_VERSION="0.1.12"
 ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="73618c67ad3cc8bfda0f02788dabd18e00b7b18a25b34726b7f01a72dca6d325"
+ARG SUPERCRONIC_CHECKSUM="8d3a575654a6c93524c410ae06f681a3507ca5913627fa92c7086fd140fa12ce"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
@@ -97,11 +97,11 @@ ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_OPTS_EXTRA=""
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.60"
+ARG TOMCAT_VERSION="8.5.61"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="c473bd48f121ead24b079c7e33ca43fa6e3b42aa475cb1f359984541138d7e94"
+ARG TOMCAT_LIN_CHECKSUM="b5536fa249d7b9f8ceac46d61c445173bde8ba0991a38987fe87b9229db7eb91"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="6b257da87c88c713e3475b55b5b375a5d46b1a401363a0858d3850c3ac91ea22"
+ARG TOMCAT_WIN_CHECKSUM="9e3716ccad8e6088f0c7272d5918f317aef5426f92399238affdae5c8d602bb5"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
