@@ -1,12 +1,15 @@
 {
 	admin off
 	auto_https disable_redirects
-	acme_ca {$TLS_CA}
-	default_sni {$TLS_DOMAIN}
 }
 
 (tls-directives) {
-	tls {$TLS_ACCOUNT}
+	tls {
+		issuer {$TLS_ISSUER} {
+			dir {$TLS_ISSUER_CA}
+			email {$TLS_ISSUER_EMAIL}
+		}
+	}
 }
 
 (common-directives) {
