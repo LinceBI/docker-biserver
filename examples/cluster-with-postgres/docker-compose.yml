@@ -15,8 +15,9 @@ services:
       - "caddy-data:/data/"
     environment:
       TLS_DOMAIN: "${TLS_DOMAIN}"
-      TLS_ACCOUNT: "${TLS_ACCOUNT}"
-      TLS_CA: "${TLS_CA}"
+      TLS_ISSUER: "${TLS_ISSUER}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
 
   biserver-1:
     image: "repo.stratebi.com/lincebi/biserver:8.2.0.0-342"
