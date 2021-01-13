@@ -20,7 +20,7 @@ services:
       TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
 
   biserver-1:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.19-1132"
     restart: "on-failure:3"
     networks:
       - "biserver"
@@ -52,7 +52,7 @@ services:
       - "mariadb"
 
   biserver-2:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.17-1072"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.19-1132"
     restart: "on-failure:3"
     networks:
       - "biserver"
