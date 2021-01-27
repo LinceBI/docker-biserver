@@ -19,7 +19,7 @@
 	}
 }
 
-(biserver-proxy-subdirectives) {
+(proxy-subdirectives) {
 	header_up Host {http.request.host}
 	header_up X-Real-IP {http.request.remote.host}
 	header_up X-Forwarded-For {http.request.remote.host}
@@ -46,6 +46,6 @@ https://{$TLS_DOMAIN}:443 {
 	import tls-directives
 	reverse_proxy /* {
 		to biserver-1:8080 biserver-2:8080
-		import biserver-proxy-subdirectives
+		import proxy-subdirectives
 	}
 }
