@@ -3,19 +3,19 @@
 	auto_https disable_redirects
 }
 
+(common-directives) {
+	encode zstd gzip
+	log {
+		output stdout
+	}
+}
+
 (tls-directives) {
 	tls {
 		issuer {$TLS_ISSUER} {
 			dir {$TLS_ISSUER_CA}
 			email {$TLS_ISSUER_EMAIL}
 		}
-	}
-}
-
-(common-directives) {
-	encode zstd gzip
-	log {
-		output stdout
 	}
 }
 
@@ -31,12 +31,14 @@
 
 http://{$TLS_DOMAIN}:80 {
 	import common-directives
+
 	redir /* https://{host}{uri} 301
 }
 
 https://{$TLS_DOMAIN}:443 {
 	import common-directives
 	import tls-directives
+
 	reverse_proxy /* {
 		to biserver:8080
 		import proxy-subdirectives
