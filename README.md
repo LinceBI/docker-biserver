@@ -35,8 +35,10 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
  * **`FQSU_PROTOCOL` (`http` por defecto)**: protocolo del Fully Qualified Server URL.
  * **`FQSU_DOMAIN` (`localhost` por defecto)**: dominio del Fully Qualified Server URL.
  * **`FQSU_PORT` (`${TOMCAT_HTTP_PORT}` por defecto)**: puerto del Fully Qualified Server URL.
- * **`DEFAULT_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto del usuario administrador.
- * **`DEFAULT_NON_ADMIN_PASSWORD` (`password` por defecto)**: contraseña por defecto de los usuarios no administradores.
+ * **`DEFAULT_ADMIN_PASSWORD` (*vacío* por defecto)**: contraseña por defecto del usuario administrador, si el valor de la variable está vacío se
+   generará una contraseña aleatoria que será impresa por consola.
+ * **`DEFAULT_NON_ADMIN_PASSWORD` (*contraseña de admin* por defecto)**: contraseña por defecto de los usuarios no administradores, si el valor de la
+   variable está vacío se generará una contraseña aleatoria que será impresa por consola.
  * **`STORAGE_TYPE` (`local` por defecto)**: tipo de almacenamiento, admite los valores `local`, `postgres`, `mysql` o `cockroach`.
  * **`POSTGRES_HOST` (`localhost` por defecto)**: host para la conexión con PostgreSQL.
  * **`POSTGRES_PORT` (`5432` por defecto)**: puerto para la conexión con PostgreSQL.
