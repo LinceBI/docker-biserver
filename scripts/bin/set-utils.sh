@@ -53,6 +53,21 @@ getVar() {
 	printf -- '%s' "${default-}"
 }
 
+# Get or generate a random password
+getPasswordVar() {
+	name=${1:?}
+	default=${2-}
+
+	password=$(getVar "${name:?}" "${default-}")
+
+	if [ -z "${password-}" ]; then
+		password=$(pwgen 24 1)
+		logWarn "Empty \"${name:?}\" variable, generated password: ${password:?}"
+	fi
+
+	printf -- '%s' "${password:?}"
+}
+
 # Escape strings in sed
 # See: https://stackoverflow.com/a/29613573
 quoteRe() { printf -- '%s' "${1-}" | sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a'\\''"$(printf '\n')"'\\n' | tr -d '\n'; }
