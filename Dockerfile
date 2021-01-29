@@ -28,6 +28,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		openssh-client \
 		openssl \
 		patch \
+		pwgen \
 		rsync \
 		ruby \
 		runit \
