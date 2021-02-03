@@ -41,6 +41,7 @@
 				<extension>js</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="text/plain" hidden="true">
+				<extension>po</extension>
 				<extension>properties</extension>
 				<extension>sql</extension>
 				<extension>txt</extension>
@@ -69,6 +70,7 @@
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/json">
 				<extension>adhoc</extension>
+				<extension>json</extension>
 				<extension>saiku</extension>
 				<extension>snapshot</extension>
 				<extension>sta</extension>
