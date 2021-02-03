@@ -41,4 +41,5 @@ printf -- '%s\n' "Creating \"${CONTAINER_NAME:?}\" container..."
 	--restart on-failure:3 \
 	--log-opt max-size=32m \
 	--publish '8080:8080/tcp' \
+	--env DEFAULT_ADMIN_PASSWORD='password' \
 	"${IMAGE_NAME:?}" "$@"
