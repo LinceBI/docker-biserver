@@ -98,11 +98,11 @@ ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_OPTS_EXTRA=""
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.61"
+ARG TOMCAT_VERSION="8.5.63"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="b5536fa249d7b9f8ceac46d61c445173bde8ba0991a38987fe87b9229db7eb91"
+ARG TOMCAT_LIN_CHECKSUM="876d08323266c314aabaee14b89deaea7cd5cbd0d42cd0c24e9e3ed14fbf1c93"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="9e3716ccad8e6088f0c7272d5918f317aef5426f92399238affdae5c8d602bb5"
+ARG TOMCAT_WIN_CHECKSUM="122af0b65f8d00430687d5bb2d58b5aa1a3520b69eba02e7aef80443c82a8548"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
