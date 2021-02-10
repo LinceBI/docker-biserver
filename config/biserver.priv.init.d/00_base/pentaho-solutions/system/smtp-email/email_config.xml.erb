@@ -11,7 +11,7 @@
 		<mail.debug><%= ENV['MAIL_DEBUG'] %></mail.debug>
 	</properties>
 	<mail.userid><%= ENV['MAIL_SMTP_USER'] %></mail.userid>
-	<mail.password><%= %x(/usr/share/biserver/bin/encr.sh -kettle "$(printf -- '%s' "${MAIL_SMTP_PASSWORD:?}" | base64 -w0)") %></mail.password>
+	<mail.password><%= %x(/usr/share/biserver/bin/encr.sh -kettle "ENC:$(printf -- '%s' "${MAIL_SMTP_PASSWORD:?}" | base64 -w0)") %></mail.password>
 	<mail.from.default><%= ENV['MAIL_SMTP_FROM_ADDRESS'] %></mail.from.default>
 	<mail.from.name><%= ENV['MAIL_SMTP_FROM_NAME'] %></mail.from.name>
 </email-smtp>
