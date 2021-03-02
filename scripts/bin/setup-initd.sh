@@ -164,11 +164,11 @@ isPentahoPlugin() {
 		fi
 	elif [ -f "${source:?}" ]; then
 		if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
-			if tar -tf "${source:?}" | grep -q '^.*/plugin\.xml$'; then
+			if tar -tf "${source:?}" | grep -Eq '^(\.?\/)?([^\n\/]+\/)?plugin\.xml$'; then
 				return 0
 			fi
 		elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
-			if unzip -Z1 "${source:?}" | grep -q '^.*/plugin\.xml$'; then
+			if unzip -Z1 "${source:?}" | grep -Eq '^(\.?\/)?([^\n\/]+\/)?plugin\.xml$'; then
 				return 0
 			fi
 		fi
