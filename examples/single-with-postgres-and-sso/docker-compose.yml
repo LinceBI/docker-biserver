@@ -1,0 +1,107 @@
+version: "3.9"
+
+services:
+
+  caddy:
+    image: "docker.io/caddy:2"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/data/"
+    environment:
+      TLS_DOMAIN: "${TLS_DOMAIN}"
+      TLS_ISSUER: "${TLS_ISSUER}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
+
+  biserver:
+    image: "repo.stratebi.com/lincebi/biserver:9.0.0.0-423"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_PORT: "443"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
+      COOKIE_SESSION_TIMEOUT: "120"
+      CAS_ENABLED: "true"
+      CAS_PUBLIC_URL: "https://keycloak.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
+      CAS_PRIVATE_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
+    depends_on:
+      - "postgres"
+
+  keycloak:
+    image: "quay.io/keycloak/keycloak:12.0.4"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    volumes:
+      - "./realm.json:/opt/jboss/keycloak/imports/realm.json:ro"
+      - "./keycloak.init.d/:/opt/jboss/startup-scripts/:ro"
+    environment:
+      KEYCLOAK_USER: "admin"
+      KEYCLOAK_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
+      PROXY_ADDRESS_FORWARDING: "true"
+      DB_VENDOR: "postgres"
+      DB_ADDR: "postgres"
+      DB_USER: "${DB_KEYCLOAK_USER}"
+      DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      DB_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+      - "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm.json"
+    depends_on:
+      - "postgres"
+
+  postgres:
+    image: "docker.io/postgres:13"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    volumes:
+      - "./postgres.init.d/:/docker-entrypoint-initdb.d/:ro"
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_KEYCLOAK_USER: "${DB_KEYCLOAK_USER}"
+      POSTGRES_KEYCLOAK_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      POSTGRES_KEYCLOAK_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+
+networks:
+
+  biserver:
+    driver: "bridge"
+    internal: false
+
+volumes:
+
+  caddy-data:
+  postgres-data:
