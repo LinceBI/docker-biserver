@@ -61,6 +61,10 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 	<import resource="applicationContext-pentaho-security-jdbc.xml" />
 	<import resource="applicationContext-spring-security-jdbc.xml" />
 
+	<%- if ENV['CAS_ENABLED'] == 'true' -%>
+	<import resource="applicationContext-spring-security-cas.xml" />
+	<%- end -%>
+
 	<import resource="pentahoObjects.spring.xml" />
 	<!-- <import resource="GettingStartedDB-spring.xml" /> -->
 	<import resource="importExport.xml" />
