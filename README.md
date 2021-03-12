@@ -15,9 +15,6 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
 
 ## Argumentos del Dockerfile
 
- * **`TOMCAT_MAJOR_VERSION` (`8` por defecto)**: versión mayor de Tomcat.
- * **`TOMCAT_MINOR_VERSION` (`5` por defecto)**: versión menor de Tomcat.
- * **`TOMCAT_PATCH_VERSION` (`latest` por defecto)**: versión parche de Tomcat.
  * **`BISERVER_VERSION` (`8.2.0.0-342` por defecto)**: versión de Pentaho BI Server.
  * **`BISERVER_MAVEN_REPO` (`https://repo.stratebi.com/repository/pentaho-mvn/` por defecto)**: repositorio de Maven del que se descargan las
    dependencias necesarias para la instalación de Pentaho BI Server.
