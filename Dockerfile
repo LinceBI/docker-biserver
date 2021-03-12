@@ -12,6 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		diffutils \
 		file \
 		findutils \
+		fontconfig \
 		fonts-dejavu-core \
 		fonts-liberation2 \
 		fonts-noto-core \
