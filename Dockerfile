@@ -12,6 +12,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		diffutils \
 		file \
 		findutils \
+		fonts-dejavu-core \
+		fonts-liberation2 \
+		fonts-noto-core \
 		git \
 		gnupg \
 		gzip \
