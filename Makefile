@@ -60,6 +60,7 @@ save-standalone: $(STANDALONE_ARCHIVE)
 $(STANDALONE_ARCHIVE): build-image
 	mkdir -p '$(DISTDIR)'
 	'$(DOCKER)' run --rm \
+		--env DEFAULT_ADMIN_PASSWORD='password' \
 		'$(IMAGE_NAME):$(IMAGE_VERSION)' \
 		/usr/share/biserver/bin/export.sh > '$(STANDALONE_ARCHIVE)'
 
