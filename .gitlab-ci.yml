@@ -13,7 +13,7 @@ build:images:
     - "make IMAGE_BUILD_OPTS='--pull' build-image"
     - "make save-image save-standalone"
   artifacts:
-    expire_in: "15 mins"
+    expire_in: "2 hours"
     paths:
       - "./dist/"
 
