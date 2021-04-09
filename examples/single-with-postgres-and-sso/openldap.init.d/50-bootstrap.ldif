@@ -1,0 +1,60 @@
+
+dn: ou=groups,dc=example,dc=localdomain
+changetype: add
+objectclass: organizationalUnit
+ou: groups
+
+dn: ou=users,dc=example,dc=localdomain
+changetype: add
+objectclass: organizationalUnit
+ou: users
+
+dn: cn=admin,ou=users,dc=example,dc=localdomain
+changetype: add
+objectclass: inetOrgPerson
+cn: admin
+mail: admin@example.localdomain
+givenName: Admin
+sn: User
+userPassword: password
+
+dn: cn=alice,ou=users,dc=example,dc=localdomain
+changetype: add
+objectclass: inetOrgPerson
+cn: alice
+mail: alice@example.localdomain
+givenName: Alice
+sn: User
+userPassword: password
+
+dn: cn=bob,ou=users,dc=example,dc=localdomain
+changetype: add
+objectclass: inetOrgPerson
+cn: bob
+mail: bob@example.localdomain
+givenName: Bob
+sn: User
+userPassword: password
+
+dn: cn=carol,ou=users,dc=example,dc=localdomain
+changetype: add
+objectclass: inetOrgPerson
+cn: carol
+mail: carol@example.localdomain
+givenName: Carol
+sn: User
+userPassword: password
+
+dn: cn=administrators,ou=groups,dc=example,dc=localdomain
+changetype: add
+cn: administrators
+objectclass: groupOfUniqueNames
+uniqueMember: cn=admin,ou=users,dc=example,dc=localdomain
+
+dn: cn=users,ou=groups,dc=example,dc=localdomain
+changetype: add
+cn: users
+objectclass: groupOfUniqueNames
+uniqueMember: cn=alice,ou=users,dc=example,dc=localdomain
+uniqueMember: cn=bob,ou=users,dc=example,dc=localdomain
+uniqueMember: cn=carol,ou=users,dc=example,dc=localdomain
