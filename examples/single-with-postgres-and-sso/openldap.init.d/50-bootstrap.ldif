@@ -14,8 +14,8 @@ changetype: add
 objectclass: inetOrgPerson
 cn: admin
 mail: admin@example.localdomain
-givenName: Admin
-sn: User
+givenName: Administrator
+sn: System
 userPassword: password
 
 dn: cn=alice,ou=users,dc=example,dc=localdomain
@@ -24,7 +24,7 @@ objectclass: inetOrgPerson
 cn: alice
 mail: alice@example.localdomain
 givenName: Alice
-sn: User
+sn: Doherty
 userPassword: password
 
 dn: cn=bob,ou=users,dc=example,dc=localdomain
@@ -33,7 +33,7 @@ objectclass: inetOrgPerson
 cn: bob
 mail: bob@example.localdomain
 givenName: Bob
-sn: User
+sn: Miller
 userPassword: password
 
 dn: cn=carol,ou=users,dc=example,dc=localdomain
@@ -42,18 +42,19 @@ objectclass: inetOrgPerson
 cn: carol
 mail: carol@example.localdomain
 givenName: Carol
-sn: User
+sn: Phillips
 userPassword: password
 
-dn: cn=administrators,ou=groups,dc=example,dc=localdomain
+dn: cn=Administrator,ou=groups,dc=example,dc=localdomain
 changetype: add
-cn: administrators
+cn: Administrator
 objectclass: groupOfUniqueNames
 uniqueMember: cn=admin,ou=users,dc=example,dc=localdomain
+uniqueMember: cn=alice,ou=users,dc=example,dc=localdomain
 
-dn: cn=users,ou=groups,dc=example,dc=localdomain
+dn: cn=Employee,ou=groups,dc=example,dc=localdomain
 changetype: add
-cn: users
+cn: Employee
 objectclass: groupOfUniqueNames
 uniqueMember: cn=alice,ou=users,dc=example,dc=localdomain
 uniqueMember: cn=bob,ou=users,dc=example,dc=localdomain
