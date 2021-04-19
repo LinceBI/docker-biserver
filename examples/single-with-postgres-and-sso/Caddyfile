@@ -45,13 +45,13 @@ https://{$TLS_DOMAIN}:443 {
 	}
 }
 
-http://keycloak.{$TLS_DOMAIN}:80 {
+http://sso.{$TLS_DOMAIN}:80 {
 	import common-directives
 
 	redir /* https://{host}{uri} 301
 }
 
-https://keycloak.{$TLS_DOMAIN}:443 {
+https://sso.{$TLS_DOMAIN}:443 {
 	import common-directives
 	import tls-directives
 

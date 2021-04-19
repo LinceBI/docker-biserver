@@ -10,66 +10,147 @@
       "redirectUris": ["*"]
     }
   ],
-  "users": [
-    {
-      "username": "admin",
-      "enabled": true,
-      "firstName": "Admin",
-      "lastName": "User",
-      "email": "admin@example.localdomain",
-      "emailVerified": true,
-      "credentials": [
-        {
-          "type": "password",
-          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+  "components": {
+    "org.keycloak.storage.UserStorageProvider": [
+      {
+        "name": "ldap",
+        "providerId": "ldap",
+        "config": {
+          "enabled": ["true"],
+          "priority": ["0"],
+          "importEnabled": ["true"],
+          "editMode": ["WRITABLE"],
+          "syncRegistrations": ["true"],
+          "vendor": ["other"],
+          "usernameLDAPAttribute": ["cn"],
+          "rdnLDAPAttribute": ["cn"],
+          "uuidLDAPAttribute": ["entryUUID"],
+          "userObjectClasses": ["inetOrgPerson"],
+          "connectionUrl": ["ldap://openldap:389"],
+          "usersDn": ["ou=users,dc=example,dc=localdomain"],
+          "customUserSearchFilter": [""],
+          "searchScope": ["1"],
+          "authType": ["simple"],
+          "bindDn": ["cn=admin,dc=example,dc=localdomain"],
+          "bindCredential": ["password"],
+          "startTls": ["false"],
+          "usePasswordModifyExtendedOp": ["true"],
+          "validatePasswordPolicy": ["false"],
+          "trustEmail": ["false"],
+          "useTruststoreSpi": ["ldapsOnly"],
+          "connectionTimeout": ["30000"],
+          "readTimeout": ["30000"],
+          "pagination": ["true"],
+          "connectionPooling": ["true"],
+          "connectionPoolingAuthentication": ["simple"],
+          "connectionPoolingDebug": ["off"],
+          "connectionPoolingInitSize": ["1"],
+          "connectionPoolingMaxSize": ["1000"],
+          "connectionPoolingPrefSize": ["5"],
+          "connectionPoolingProtocol": ["plain"],
+          "connectionPoolingTimeout": ["300000"],
+          "allowKerberosAuthentication": ["false"],
+          "kerberosRealm": [""],
+          "serverPrincipal": [""],
+          "keyTab": [""],
+          "debug": ["false"],
+          "useKerberosForPasswordAuthentication": ["false"],
+          "batchSizeForSync": ["1000"],
+          "fullSyncPeriod": ["604800"],
+          "changedSyncPeriod": ["86400"],
+          "lastSync": ["0"],
+          "cachePolicy": ["DEFAULT"]
+        },
+        "subComponents": {
+          "org.keycloak.storage.ldap.mappers.LDAPStorageMapper": [
+            {
+              "name": "username",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["cn"],
+                "is.mandatory.in.ldap": ["true"],
+                "read.only": ["false"],
+                "always.read.value.from.ldap": ["false"],
+                "user.model.attribute": ["username"]
+              }
+            },
+            {
+              "name": "email",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["mail"],
+                "is.mandatory.in.ldap": ["false"],
+                "read.only": ["false"],
+                "always.read.value.from.ldap": ["false"],
+                "user.model.attribute": ["email"]
+              }
+            },
+            {
+              "name": "first name",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["givenName"],
+                "is.mandatory.in.ldap": ["true"],
+                "read.only": ["false"],
+                "always.read.value.from.ldap": ["true"],
+                "user.model.attribute": ["firstName"]
+              }
+            },
+            {
+              "name": "last name",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["sn"],
+                "is.mandatory.in.ldap": ["true"],
+                "read.only": ["false"],
+                "always.read.value.from.ldap": ["true"],
+                "user.model.attribute": ["lastName"]
+              }
+            },
+            {
+              "name": "modify date",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["modifyTimestamp"],
+                "is.mandatory.in.ldap": ["false"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "user.model.attribute": ["modifyTimestamp"]
+              }
+            },
+            {
+              "name": "creation date",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["createTimestamp"],
+                "is.mandatory.in.ldap": ["false"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "user.model.attribute": ["createTimestamp"]
+              }
+            },
+            {
+              "name": "group",
+              "providerId": "group-ldap-mapper",
+              "config": {
+                "membership.attribute.type": ["DN"],
+                "group.name.ldap.attribute": ["cn"],
+                "preserve.group.inheritance": ["true"],
+                "membership.user.ldap.attribute": ["cn"],
+                "groups.dn": ["ou=groups,dc=example,dc=localdomain"],
+                "mode": ["LDAP_ONLY"],
+                "user.roles.retrieve.strategy": ["LOAD_GROUPS_BY_MEMBER_ATTRIBUTE"],
+                "ignore.missing.groups": ["false"],
+                "membership.ldap.attribute": ["uniqueMember"],
+                "group.object.classes": ["groupOfUniqueNames"],
+                "memberof.ldap.attribute": ["memberOf"],
+                "drop.non.existing.groups.during.sync": ["false"],
+                "groups.path": ["/"]
+              }
+            }
+          ]
         }
-      ]
-    },
-    {
-      "username": "alice",
-      "enabled": true,
-      "firstName": "Alice",
-      "lastName": "User",
-      "email": "alice@example.localdomain",
-      "emailVerified": true,
-      "credentials": [
-        {
-          "type": "password",
-          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
-        }
-      ]
-    },
-    {
-      "username": "bob",
-      "enabled": true,
-      "firstName": "Bob",
-      "lastName": "User",
-      "email": "bob@example.localdomain",
-      "emailVerified": true,
-      "credentials": [
-        {
-          "type": "password",
-          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
-        }
-      ]
-    },
-    {
-      "username": "carol",
-      "enabled": true,
-      "firstName": "Carol",
-      "lastName": "User",
-      "email": "carol@example.localdomain",
-      "emailVerified": true,
-      "credentials": [
-        {
-          "type": "password",
-          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
-          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
-        }
-      ]
-    }
-  ]
+      }
+    ]
+  }
 }
