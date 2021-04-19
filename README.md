@@ -15,7 +15,7 @@ dispone de un [Makefile](https://en.wikipedia.org/wiki/Makefile) con las siguien
 
 ## Argumentos del Dockerfile
 
- * **`BISERVER_VERSION` (`8.3.0.21-1196` por defecto)**: versión de Pentaho BI Server.
+ * **`BISERVER_VERSION` (`8.3.0.22-1241` por defecto)**: versión de Pentaho BI Server.
  * **`BISERVER_MAVEN_REPO` (`https://repo.stratebi.com/repository/pentaho-mvn/` por defecto)**: repositorio de Maven del que se descargan las
    dependencias necesarias para la instalación de Pentaho BI Server.
 
@@ -113,7 +113,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/lincebi/biserver:8.3.0.21-1196
+  repo.stratebi.com/lincebi/biserver:8.3.0.22-1241
 ```
 
 Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.
