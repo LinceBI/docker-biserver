@@ -221,7 +221,7 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://jdbc.postgresql.org/download/postgresql-42.2.19.jar"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.2.19/postgresql-42.2.19.jar"
 ARG POSTGRES_JDBC_CHECKSUM="232747fa0924d88a26dfa42b8128b6fa1140802d804125891596e8ca5f291322"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
@@ -237,15 +237,15 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://github.com/microsoft/mssql-jdbc/releases/download/v9.2.1/mssql-jdbc-9.2.1.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="8e94d041ab8cdfbd4b2ff8b2bfe28ee78e7832563722847441b1a9ce9ef4fdaf"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/9.2.1.jre8/mssql-jdbc-9.2.1.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="14c178b55c227131b26c120ee7256b4bc5ed2dd497f66d85afdec3793a6e1817"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://www.vertica.com/client_drivers/10.1.x/10.1.0-0/vertica-jdbc-10.1.0-0.jar"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/10.1.0-0/vertica-jdbc-10.1.0-0.jar"
 ARG VERTICA_JDBC_CHECKSUM="4bebd6024ec61a27b1d6d4a0084eb2329301fbaf3c0afdc48ddb612931163978"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
