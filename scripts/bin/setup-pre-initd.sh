@@ -9,44 +9,53 @@ export LC_ALL=C
 ########
 
 # Rename solutions directory
-if [ -e "${BISERVER_HOME:?}"/pentaho-solutions/ ] && [ ! -e "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
+if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
 	logInfo 'Moving solutions directory...'
-	mv -f "${BISERVER_HOME:?}"/pentaho-solutions/ "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"
+	rsync -rlp --remove-source-files --ignore-existing \
+		"${BISERVER_HOME:?}"/pentaho-solutions/ \
+		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/
+	rm -rf "${BISERVER_HOME:?}"/pentaho-solutions/
 fi
 
 # Rename data directory
-if [ -e "${BISERVER_HOME:?}"/data/ ] && [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" ]; then
+if [ "${DATA_DIRNAME:?}" != 'data' ]; then
 	logInfo 'Moving data directory...'
-	mv -f "${BISERVER_HOME:?}"/data/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"
+	rsync -rlp --remove-source-files --ignore-existing \
+		"${BISERVER_HOME:?}"/data/ \
+		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/
+	rm -rf "${BISERVER_HOME:?}"/data/
 fi
 
 # Rename Pentaho webapp directory
-if [ -e "${CATALINA_BASE:?}"/webapps/pentaho/ ] && [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
+if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
 	logInfo 'Moving Pentaho webapp directory...'
-	mv -f "${CATALINA_BASE:?}"/webapps/pentaho/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
+	rsync -rlp --remove-source-files --ignore-existing \
+		"${CATALINA_BASE:?}"/webapps/pentaho/ \
+		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/
+	rm -rf "${CATALINA_BASE:?}"/webapps/pentaho/
 
-	# WARN: this replacement is too generic and has not been thoroughly tested.
-	# logInfo 'Updating references of Pentaho webapp...'
-	# find \
-	#	"${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}" \
-	#	"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
-	#	"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
-	#	-type f '(' -iname '*.html' -o -iname '*.jsp' ')' \
-	#	-exec sed -i "s|/pentaho/|/$(quoteSubst "${WEBAPP_PENTAHO_DIRNAME:?}")/|g" '{}' ';'
+	# Create redirection rule
+	mkdir -p "${CATALINA_BASE:?}"/conf/Catalina/localhost/
+	printf '\n%s\n%s\n' \
+		'RewriteCond %{REQUEST_PATH} ^/pentaho/.*' \
+		"RewriteRule ^/pentaho/(.*) /${WEBAPP_PENTAHO_DIRNAME:?}/\$1 [R=301,L]" \
+		>> "${CATALINA_BASE:?}"/conf/Catalina/localhost/rewrite.config
 fi
 
 # Rename Pentaho style webapp directory
-if [ -e "${CATALINA_BASE:?}"/webapps/pentaho-style/ ] && [ ! -e "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
+if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
 	logInfo 'Moving Pentaho style webapp directory...'
-	mv -f "${CATALINA_BASE:?}"/webapps/pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
+	rsync -rlp --remove-source-files --ignore-existing \
+		"${CATALINA_BASE:?}"/webapps/pentaho-style/ \
+		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"/
+	rm -rf "${CATALINA_BASE:?}"/webapps/pentaho-style/
 
-	logInfo 'Updating references of Pentaho style webapp...'
-	find \
-		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}" \
-		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
-		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
-		-type f '(' -iname '*.css' -o -iname '*.html' -o -iname '*.jsp' -o -iname '*.properties' -o -iname '*.xsl' ')' \
-		-exec sed -i "s|/pentaho-style/|/$(quoteSubst "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}")/|g" '{}' ';'
+	# Create redirection rule
+	mkdir -p "${CATALINA_BASE:?}"/conf/Catalina/localhost/
+	printf '\n%s\n%s\n' \
+		'RewriteCond %{REQUEST_PATH} ^/pentaho-style/.*' \
+		"RewriteRule ^/pentaho-style/(.*) /${WEBAPP_PENTAHO_STYLE_DIRNAME:?}/\$1 [R=301,L]" \
+		>> "${CATALINA_BASE:?}"/conf/Catalina/localhost/rewrite.config
 fi
 
 ########
