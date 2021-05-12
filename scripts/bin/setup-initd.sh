@@ -12,22 +12,22 @@ export LC_ALL=C
 renameRootDirs() {
 	source=${1:?}
 
-	# Rename solutions directory
+	# Rename solutions directory if target directory does not exist
 	if [ -e "${source:?}"/pentaho-solutions/ ] && [ ! -e "${source:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
 		mv -f "${source:?}"/pentaho-solutions/ "${source:?}"/"${SOLUTIONS_DIRNAME:?}"
 	fi
 
-	# Rename data directory
+	# Rename data directory if target directory does not exist
 	if [ -e "${source:?}"/data/ ] && [ ! -e "${source:?}"/"${DATA_DIRNAME:?}" ]; then
 		mv -f "${source:?}"/data/ "${source:?}"/"${DATA_DIRNAME:?}"
 	fi
 
-	# Rename Pentaho webapp directory
+	# Rename Pentaho webapp directory if target directory does not exist
 	if [ -e "${source:?}"/tomcat/webapps/pentaho/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
 		mv -f "${source:?}"/tomcat/webapps/pentaho/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 	fi
 
-	# Rename Pentaho style webapp directory
+	# Rename Pentaho style webapp directory if target directory does not exist
 	if [ -e "${source:?}"/tomcat/webapps/pentaho-style/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
 		mv -f "${source:?}"/tomcat/webapps/pentaho-style/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 	fi
