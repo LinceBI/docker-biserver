@@ -9,7 +9,7 @@ export LC_ALL=C
 ########
 
 # Rename solutions directory
-if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
+if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ] && [ -e "${BISERVER_HOME:?}"/pentaho-solutions/ ]; then
 	logInfo 'Moving solutions directory...'
 	rsync -rlp --remove-source-files --ignore-existing \
 		"${BISERVER_HOME:?}"/pentaho-solutions/ \
@@ -18,7 +18,7 @@ if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ]; then
 fi
 
 # Rename data directory
-if [ "${DATA_DIRNAME:?}" != 'data' ]; then
+if [ "${DATA_DIRNAME:?}" != 'data' ] && [ -e "${BISERVER_HOME:?}"/data/ ]; then
 	logInfo 'Moving data directory...'
 	rsync -rlp --remove-source-files --ignore-existing \
 		"${BISERVER_HOME:?}"/data/ \
@@ -27,7 +27,7 @@ if [ "${DATA_DIRNAME:?}" != 'data' ]; then
 fi
 
 # Rename Pentaho webapp directory
-if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
+if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ] && [ -e "${CATALINA_BASE:?}"/webapps/pentaho/ ]; then
 	logInfo 'Moving Pentaho webapp directory...'
 	rsync -rlp --remove-source-files --ignore-existing \
 		"${CATALINA_BASE:?}"/webapps/pentaho/ \
@@ -43,7 +43,7 @@ if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ]; then
 fi
 
 # Rename Pentaho style webapp directory
-if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ]; then
+if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ] && [ -e "${CATALINA_BASE:?}"/webapps/pentaho-style/ ]; then
 	logInfo 'Moving Pentaho style webapp directory...'
 	rsync -rlp --remove-source-files --ignore-existing \
 		"${CATALINA_BASE:?}"/webapps/pentaho-style/ \

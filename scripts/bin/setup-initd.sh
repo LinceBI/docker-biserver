@@ -13,22 +13,22 @@ renameRootDirs() {
 	source=${1:?}
 
 	# Rename solutions directory if target directory does not exist
-	if [ -e "${source:?}"/pentaho-solutions/ ] && [ ! -e "${source:?}"/"${SOLUTIONS_DIRNAME:?}" ]; then
+	if [ "${SOLUTIONS_DIRNAME:?}" != 'pentaho-solutions' ] && [ -e "${source:?}"/pentaho-solutions/ ]; then
 		mv -f "${source:?}"/pentaho-solutions/ "${source:?}"/"${SOLUTIONS_DIRNAME:?}"
 	fi
 
 	# Rename data directory if target directory does not exist
-	if [ -e "${source:?}"/data/ ] && [ ! -e "${source:?}"/"${DATA_DIRNAME:?}" ]; then
+	if [ "${DATA_DIRNAME:?}" != 'data' ] && [ -e "${source:?}"/data/ ]; then
 		mv -f "${source:?}"/data/ "${source:?}"/"${DATA_DIRNAME:?}"
 	fi
 
 	# Rename Pentaho webapp directory if target directory does not exist
-	if [ -e "${source:?}"/tomcat/webapps/pentaho/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" ]; then
+	if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ] && [ -e "${source:?}"/tomcat/webapps/pentaho/ ]; then
 		mv -f "${source:?}"/tomcat/webapps/pentaho/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"
 	fi
 
 	# Rename Pentaho style webapp directory if target directory does not exist
-	if [ -e "${source:?}"/tomcat/webapps/pentaho-style/ ] && [ ! -e "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" ]; then
+	if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ] && [ -e "${source:?}"/tomcat/webapps/pentaho-style/ ]; then
 		mv -f "${source:?}"/tomcat/webapps/pentaho-style/ "${source:?}"/tomcat/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"
 	fi
 }
