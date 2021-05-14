@@ -8,7 +8,8 @@ export UMASK=0002
 umask "${UMASK:?}"
 
 # Clean up temp directory on exit
-trap 'find "${TMPDIR:-/tmp}" -mindepth 1 -writable -delete ||:; trap - EXIT' EXIT TERM INT HUP
+# shellcheck disable=SC2154
+trap 'ret="$?"; find "${TMPDIR:-/tmp}" -mindepth 1 -writable -delete ||:; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
 
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
