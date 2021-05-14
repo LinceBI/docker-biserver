@@ -33,13 +33,6 @@ if [ "${WEBAPP_PENTAHO_DIRNAME:?}" != 'pentaho' ] && [ -e "${CATALINA_BASE:?}"/w
 		"${CATALINA_BASE:?}"/webapps/pentaho/ \
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/
 	rm -rf "${CATALINA_BASE:?}"/webapps/pentaho/
-
-	# Create redirection rule
-	mkdir -p "${CATALINA_BASE:?}"/conf/Catalina/localhost/
-	printf '\n%s\n%s\n' \
-		'RewriteCond %{REQUEST_PATH} ^/pentaho/.*' \
-		"RewriteRule ^/pentaho/(.*) /${WEBAPP_PENTAHO_DIRNAME:?}/\$1 [R=301,L]" \
-		>> "${CATALINA_BASE:?}"/conf/Catalina/localhost/rewrite.config
 fi
 
 # Rename Pentaho style webapp directory
@@ -49,13 +42,6 @@ if [ "${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" != 'pentaho-style' ] && [ -e "${CATALIN
 		"${CATALINA_BASE:?}"/webapps/pentaho-style/ \
 		"${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}"/
 	rm -rf "${CATALINA_BASE:?}"/webapps/pentaho-style/
-
-	# Create redirection rule
-	mkdir -p "${CATALINA_BASE:?}"/conf/Catalina/localhost/
-	printf '\n%s\n%s\n' \
-		'RewriteCond %{REQUEST_PATH} ^/pentaho-style/.*' \
-		"RewriteRule ^/pentaho-style/(.*) /${WEBAPP_PENTAHO_STYLE_DIRNAME:?}/\$1 [R=301,L]" \
-		>> "${CATALINA_BASE:?}"/conf/Catalina/localhost/rewrite.config
 fi
 
 ########
