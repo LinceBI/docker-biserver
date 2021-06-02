@@ -69,7 +69,7 @@ services:
       - "postgres"
 
   keycloak:
-    image: "quay.io/keycloak/keycloak:12.0.4"
+    image: "docker.io/jboss/keycloak:13.0.1"
     restart: "on-failure:3"
     networks:
       - "biserver"
