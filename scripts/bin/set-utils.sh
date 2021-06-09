@@ -77,6 +77,9 @@ quoteSubst() { printf -- '%s' "${1-}" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/[&
 # Check if a string matches a pattern
 matches() { printf -- '%s' "${1:?}" | grep -q "${2:?}"; }
 
+# RFC 3986 compliant URL encoding method.
+encodeURI() { printf -- '%s' "${1:?}" | ruby -r erb -e 'print ERB::Util.url_encode(gets.chomp)'; }
+
 # Print log messages
 logInfo() { printf -- '[INFO] %s\n' "$@"; }
 logWarn() { >&2 printf -- '[WARN] %s\n' "$@"; }
