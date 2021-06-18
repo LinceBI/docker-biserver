@@ -33,6 +33,6 @@ rem ------------------------------------------------------------
 set DI_HOME=%~dp0<%= ENV['SOLUTIONS_DIRNAME'] %>\system\kettle
 
 "%_PENTAHO_JAVA%" ^
-	-classpath "%~dp0tomcat\webapps\pentaho\WEB-INF\lib\*" ^
+	-classpath "%~dp0tomcat\webapps\<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>\WEB-INF\lib\*" ^
 	-Dfile.encoding=utf8 -Xmx2048m -DDI_HOME="%DI_HOME%" ^
 	org.pentaho.platform.plugin.services.importexport.CommandLineProcessor %*
