@@ -265,6 +265,9 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& printf '%s  %s' "${SPRING_SECURITY_CAS_CHECKSUM:?}" ./spring-security-cas-*.jar | sha256sum -c \
 	&& chown biserver:root ./spring-security-cas-*.jar && chmod 0664 ./spring-security-cas-*.jar
 
+# Clean up temp directory
+RUN find /tmp/ -mindepth 1 -delete
+
 # Other environment variables
 ENV SERVICE_BISERVER_ENABLED="true"
 ENV SERVICE_SUPERCRONIC_ENABLED="true"
