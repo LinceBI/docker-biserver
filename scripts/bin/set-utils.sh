@@ -7,6 +7,10 @@ export LC_ALL=C
 export UMASK=0002
 umask "${UMASK:?}"
 
+# Set home directory
+export HOME="${BIUSER_HOME:?}"
+export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?}"
+
 # Clean up temp directory on exit
 # shellcheck disable=SC2154
 trap 'ret="$?"; find "${TMPDIR:-/tmp}" -mindepth 1 -writable -delete ||:; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP

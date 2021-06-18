@@ -102,11 +102,11 @@ ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_OPTS_EXTRA=""
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.66"
+ARG TOMCAT_VERSION="8.5.68"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="128e6f162d68e04e5a9563ac97a55bc3aafd7189f44bbea47caa15b1f01fa260"
+ARG TOMCAT_LIN_CHECKSUM="0bc81db301a1e68fe8b914328da03dba92e5bbb9fcbea6b7a53f82bf19914f25"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="b052de5372248d91f61106177a5ff185d753d0527138db3b9f79dc3ec4dd1a8a"
+ARG TOMCAT_WIN_CHECKSUM="14af8c51ccbfb31b5c172669a27345caf901e159d43821c45cde63a7276b2bd0"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -264,6 +264,9 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${SPRING_SECURITY_CAS_URL:?}" \
 	&& printf '%s  %s' "${SPRING_SECURITY_CAS_CHECKSUM:?}" ./spring-security-cas-*.jar | sha256sum -c \
 	&& chown biserver:root ./spring-security-cas-*.jar && chmod 0664 ./spring-security-cas-*.jar
+
+# Clean up temp directory
+RUN find /tmp/ -mindepth 1 -delete
 
 # Other environment variables
 ENV SERVICE_BISERVER_ENABLED="true"
