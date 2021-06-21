@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pen="http://www.pentaho.com/schema/pentaho-system"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.pentaho.com/schema/pentaho-system http://www.pentaho.com/schema/pentaho-system.xsd"
+	default-lazy-init="true">
+
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService">
+			<pen:bean class="org.springframework.security.core.userdetails.UserDetailsService" />
+		</property>
+		<property name="passwordEncoder">
+			<ref bean="jdbcPasswordEncoder" />
+		</property>
+		<pen:publish as-type="org.springframework.security.authentication.AuthenticationProvider">
+			<pen:attributes>
+				<pen:attr key="providerName" value="jdbc" />
+			</pen:attributes>
+		</pen:publish>
+	</bean>
+
+	<bean id="jdbcUserDetailsService" class="org.pentaho.platform.engine.security.DefaultRoleJdbcDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>${jdbc.authorities_by_username_query}</value>
+		</property>
+		<property name="usersByUsernameQuery">
+			<value>${jdbc.users_by_username_query}</value>
+		</property>
+		<property name="rolePrefix" value="" />
+		<property name="defaultRole" ref="defaultRole" />
+		<property name="roleMapper" ref="jdbcRoleMapper" />
+		<constructor-arg ref="tenantedUserNameUtils" />
+		<pen:publish as-type="INTERFACES">
+			<pen:attributes>
+				<pen:attr key="providerName" value="jdbc" />
+			</pen:attributes>
+		</pen:publish>
+	</bean>
+
+	<bean id="dataSource" class="org.pentaho.di.core.database.util.DecryptingDataSource">
+		<property name="driverClassName" value="${jdbc.datasource.driver_class_name}" />
+		<property name="url" value="${jdbc.datasource.url}" />
+		<property name="username" value="${jdbc.datasource.username}" />
+		<property name="password" value="${jdbc.datasource.password}" />
+		<!-- The following are optional -->
+		<property name="validationQuery" value="${jdbc.datasource.validation_query}" />
+		<property name="maxWait" value="${jdbc.datasource.max_wait}" />
+		<property name="maxActive" value="${jdbc.datasource.max_active}" />
+		<property name="maxIdle" value="${jdbc.datasource.max_idle}" />
+		<property name="minIdle" value="${jdbc.datasource.min_idle}" />
+	</bean>
+
+	<bean id="jdbcPasswordEncoder" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder" />
+
+	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
+		<constructor-arg value="jdbc" />
+		<constructor-arg value="applicationContext-security-jdbc.properties" />
+		<pen:publish as-type="INTERFACES" />
+	</bean>
+
+</beans>
