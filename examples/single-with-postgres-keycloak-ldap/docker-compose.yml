@@ -47,7 +47,6 @@ services:
       LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE: "ou=users,dc=example,dc=localdomain"
       LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER: "(objectClass=inetOrgPerson)"
       LDAP_ADMIN_ROLE: "cn=Administrator,ou=groups,dc=example,dc=localdomain"
-      LDAP_ADMIN_USER: "cn=admin,ou=users,dc=example,dc=localdomain"
       CAS_ENABLED: "true"
       CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
       CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
@@ -67,6 +66,7 @@ services:
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
     depends_on:
       - "postgres"
+      - "openldap"
 
   keycloak:
     image: "docker.io/jboss/keycloak:13.0.1"
@@ -91,6 +91,7 @@ services:
       - "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm.json"
     depends_on:
       - "postgres"
+      - "openldap"
 
   openldap:
     image: "docker.io/osixia/openldap:stable"
@@ -118,8 +119,6 @@ services:
         cp -f /container/ldif/*.ldif /container/service/slapd/assets/config/bootstrap/ldif/custom/
         exec /container/tool/run
       "
-    depends_on:
-      - "postgres"
 
   postgres:
     image: "docker.io/postgres:13"
