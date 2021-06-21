@@ -43,7 +43,7 @@
 		</pen:publish>
 	</bean>
 
-	<bean id="dataSource" class="org.pentaho.di.core.database.util.DecryptingDataSource">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${jdbc.datasource.driver_class_name}" />
 		<property name="url" value="${jdbc.datasource.url}" />
 		<property name="username" value="${jdbc.datasource.username}" />
