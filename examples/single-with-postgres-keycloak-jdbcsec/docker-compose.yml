@@ -31,27 +31,44 @@ services:
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${TLS_DOMAIN}"
       FQSU_PORT: "443"
-      SECURITY_PROVIDER: "ldap"
-      LDAP_CONTEXT_SOURCE_PROVIDER_URL: "ldap://openldap:389"
-      LDAP_CONTEXT_SOURCE_USER_DN: "cn=admin,dc=example,dc=localdomain"
-      LDAP_CONTEXT_SOURCE_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
-      LDAP_USER_SEARCH_SEARCH_BASE: "ou=users,dc=example,dc=localdomain"
-      LDAP_USER_SEARCH_SEARCH_FILTER: "(cn={0})"
-      LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE: "cn"
-      LDAP_POPULATOR_GROUP_SEARCH_BASE: "ou=groups,dc=example,dc=localdomain"
-      LDAP_POPULATOR_GROUP_SEARCH_FILTER: "(uniqueMember={0})"
-      LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE: "cn"
-      LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE: "ou=groups,dc=example,dc=localdomain"
-      LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER: "(objectClass=groupOfUniqueNames)"
-      LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE: "cn"
-      LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE: "ou=users,dc=example,dc=localdomain"
-      LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER: "(objectClass=inetOrgPerson)"
-      LDAP_ADMIN_ROLE: "cn=Administrator,ou=groups,dc=example,dc=localdomain"
-      LDAP_ADMIN_USER: "cn=admin,ou=users,dc=example,dc=localdomain"
+      SECURITY_PROVIDER: "jdbc"
+      JDBCSEC_DATASOURCE_DRIVER_CLASSNAME: "org.postgresql.Driver"
+      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_KEYCLOAK_DATABASE}"
+      JDBCSEC_DATASOURCE_USER: "${DB_KEYCLOAK_USER}"
+      JDBCSEC_DATASOURCE_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY: >-
+        SELECT ue.username, kg.name AS authority
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND ue.username = ?
+        ORDER BY authority
+      JDBCSEC_USERS_BY_USERNAME_QUERY: >-
+        SELECT username, 'password' AS password, enabled
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000' AND username = ?
+        ORDER BY username
+      JDBCSEC_ALL_AUTHORITIES_QUERY: >-
+        SELECT name AS authority
+        FROM keycloak_group
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY authority
+      JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
+        SELECT ue.username
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND kg.name = ?
+        ORDER BY ue.username
+      JDBCSEC_ALL_USERNAMES_QUERY: >-
+        SELECT username
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY username
       CAS_ENABLED: "true"
       CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
       CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
-      CAS_PROVIDER_USERDETAILS: "ldapUserDetailsService"
+      CAS_PROVIDER_USERDETAILS: "jdbcUserDetailsService"
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
       POSTGRES_USER: "postgres"
@@ -92,35 +109,6 @@ services:
     depends_on:
       - "postgres"
 
-  openldap:
-    image: "docker.io/osixia/openldap:stable"
-    restart: "on-failure:3"
-    networks:
-      - "biserver"
-    ports:
-      - "389:389/tcp"
-      - "636:636/tcp"
-    volumes:
-      - "./openldap.init.d/:/container/ldif/:ro"
-      - "openldap-conf:/etc/ldap/slapd.d/"
-      - "openldap-data:/var/lib/ldap/"
-    environment:
-      LDAP_DOMAIN: "${TLS_DOMAIN}"
-      LDAP_BACKEND: "mdb"
-      LDAP_TLS: "true"
-      LDAP_TLS_ENFORCE: "false"
-      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
-      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD}"
-    entrypoint: '/bin/sh'
-    command: |
-      -euc "
-        mkdir -p /container/service/slapd/assets/config/bootstrap/ldif/custom/
-        cp -f /container/ldif/*.ldif /container/service/slapd/assets/config/bootstrap/ldif/custom/
-        exec /container/tool/run
-      "
-    depends_on:
-      - "postgres"
-
   postgres:
     image: "docker.io/postgres:13"
     restart: "on-failure:3"
@@ -147,6 +135,4 @@ networks:
 volumes:
 
   caddy-data:
-  openldap-data:
-  openldap-conf:
   postgres-data:

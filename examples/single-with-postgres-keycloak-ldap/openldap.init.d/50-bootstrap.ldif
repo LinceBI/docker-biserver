@@ -15,7 +15,7 @@ objectclass: inetOrgPerson
 cn: admin
 mail: admin@example.localdomain
 givenName: Administrator
-sn: System
+sn: User
 userPassword: password
 
 dn: cn=alice,ou=users,dc=example,dc=localdomain
