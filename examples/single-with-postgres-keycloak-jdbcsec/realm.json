@@ -1,0 +1,106 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "realm": "biserver",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "cas",
+      "enabled": true,
+      "protocol": "cas",
+      "rootUrl": "https://example.localdomain",
+      "redirectUris": ["*"]
+    }
+  ],
+  "groups": [
+    {
+      "name": "Administrator",
+      "path": "/Administrator"
+    },
+    {
+      "name": "Employee",
+      "path": "/Employee"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.localdomain",
+      "emailVerified": true,
+      "groups" : ["/Administrator"],
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ]
+    },
+    {
+      "username": "alice",
+      "enabled": true,
+      "firstName": "Alice",
+      "lastName": "Doherty",
+      "email": "alice@example.localdomain",
+      "emailVerified": true,
+      "groups" : ["/Administrator", "/Employee"],
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "firstName": "Bob",
+      "lastName": "Miller",
+      "email": "bob@example.localdomain",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ]
+    },
+    {
+      "username": "carol",
+      "enabled": true,
+      "firstName": "Carol",
+      "lastName": "Phillips",
+      "email": "carol@example.localdomain",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ]
+    },
+    {
+      "username": "craig",
+      "enabled": false,
+      "firstName": "Craig",
+      "lastName": "Gregory",
+      "email": "craig@example.localdomain",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"zaHxCAZ8hQJQa/nq5WoRR4kmBDhlFKJqobilPmrqfPzXvV3kPFbKHdBccxrOX9NRvZsOY4eXxjhAvJViq/709g==\",\"salt\":\"YaHurCcL64rgAEjCCiZZ2Q==\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ]
+    }
+  ]
+}
