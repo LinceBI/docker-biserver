@@ -255,8 +255,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.2/cas-client-core-3.6.2.jar"
 ARG CAS_CLIENT_CORE_CHECKSUM="4ac36bdfd2c80595ee08f1b84540368a7839acdecf3f8a8080879f8a3082bce5"
-ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/4.2.20.RELEASE/spring-security-cas-4.2.20.RELEASE.jar"
-ARG SPRING_SECURITY_CAS_CHECKSUM="e19b4304a697960567eb30c6fb1b63ee4ce99cc80bbc0783bcdca8a8e8bf0866"
+ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/4.1.5.RELEASE/spring-security-cas-4.1.5.RELEASE.jar"
+ARG SPRING_SECURITY_CAS_CHECKSUM="45e6fab4f78b9c7ce8d01dd96f14c4b49b730247cfbc2819b3e451dd30ced499"
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${CAS_CLIENT_CORE_URL:?}" \
 	&& printf '%s  %s' "${CAS_CLIENT_CORE_CHECKSUM:?}" ./cas-client-core-*.jar | sha256sum -c \
