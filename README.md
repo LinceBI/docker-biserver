@@ -32,8 +32,6 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 
 </details>
 
-</details>
-
 <details>
   <summary>Java</summary>
 
@@ -95,132 +93,134 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > <details>
 >   <summary>LDAP</summary>
 >
->   * **`LDAP_CONTEXT_SOURCE_PROVIDER_URL`:** URL del servidor LDAP.  
->     **Por defecto:** `ldap://localhost:389`
->
->   * **`LDAP_CONTEXT_SOURCE_USER_DN`:** DN de un usuario con permiso de lectura sobre el directorio.  
->     **Por defecto:** `cn=admin,dc=example,dc=localdomain`
->
->   * **`LDAP_CONTEXT_SOURCE_PASSWORD`:** contraseña del usuario.  
->     **Por defecto:** `password`
->
->   * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los roles.  
->     **Por defecto:** `ou=groups,dc=example,dc=localdomain`
->
->   * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los roles.  
->     **Por defecto:** `(objectClass=groupOfUniqueNames)`
->
->   * **`LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE`:** atributo del nombre del rol.  
->     **Por defecto:** `cn`
->
->   * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los usuarios.  
->     **Por defecto:** `ou=users,dc=example,dc=localdomain`
->
->   * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los usuarios.  
->     **Por defecto:** `(objectClass=inetOrgPerson)`
->
->   * **`LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE`:** atributo del nombre del usuario.  
->     **Por defecto:** `cn`
->
->   * **`LDAP_USER_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de usuarios.  
->     **Por defecto:** `${LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE}`
->
->   * **`LDAP_USER_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de usuarios.  
->     **Por defecto:** `(cn={0})`
->
->   * **`LDAP_POPULATOR_GROUP_SEARCH_BASE`:** localización base para la búsqueda de roles.  
->     **Por defecto:** `${LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE}`
->
->   * **`LDAP_POPULATOR_GROUP_SEARCH_FILTER`:** filtro para la búsqueda de roles.  
->     **Por defecto:** `(uniqueMember={0})`
->
->   * **`LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE`:** atributo del nombre del rol.  
->     **Por defecto:** `${LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE}`
->
->   * **`LDAP_POPULATOR_SEARCH_SUBTREE`:** indica si la búsqueda debe incluir los hijos del directorio.  
->     **Por defecto:** `false`
->
->   * **`LDAP_POPULATOR_ROLE_PREFIX`:** prefijo para añadir al nombre de los roles.  
->     **Por defecto:** *vacío*
->
->   * **`LDAP_POPULATOR_CONVERT_TO_UPPER_CASE`:** convertir roles a mayúscula.  
->     **Por defecto:** `false`
->
->   * **`LDAP_ADMIN_ROLE`:** rol administrador.  
->     **Por defecto:** `cn=Administrator,${LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE}`
+>>  * **`LDAP_CONTEXT_SOURCE_PROVIDER_URL`:** URL del servidor LDAP.  
+>>    **Por defecto:** `ldap://localhost:389`
+>>
+>>  * **`LDAP_CONTEXT_SOURCE_USER_DN`:** DN de un usuario con permiso de lectura sobre el directorio.  
+>>    **Por defecto:** `cn=admin,dc=example,dc=localdomain`
+>>
+>>  * **`LDAP_CONTEXT_SOURCE_PASSWORD`:** contraseña del usuario.  
+>>    **Por defecto:** `password`
+>>
+>>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los roles.  
+>>    **Por defecto:** `ou=groups,dc=example,dc=localdomain`
+>>
+>>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los roles.  
+>>    **Por defecto:** `(objectClass=groupOfUniqueNames)`
+>>
+>>  * **`LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE`:** atributo del nombre del rol.  
+>>    **Por defecto:** `cn`
+>>
+>>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los usuarios.  
+>>    **Por defecto:** `ou=users,dc=example,dc=localdomain`
+>>
+>>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los usuarios.  
+>>    **Por defecto:** `(objectClass=inetOrgPerson)`
+>>
+>>  * **`LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE`:** atributo del nombre del usuario.  
+>>    **Por defecto:** `cn`
+>>
+>>  * **`LDAP_USER_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de usuarios.  
+>>    **Por defecto:** `${LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE}`
+>>
+>>  * **`LDAP_USER_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de usuarios.  
+>>    **Por defecto:** `(cn={0})`
+>>
+>>  * **`LDAP_POPULATOR_GROUP_SEARCH_BASE`:** localización base para la búsqueda de roles.  
+>>    **Por defecto:** `${LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE}`
+>>
+>>  * **`LDAP_POPULATOR_GROUP_SEARCH_FILTER`:** filtro para la búsqueda de roles.  
+>>    **Por defecto:** `(uniqueMember={0})`
+>>
+>>  * **`LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE`:** atributo del nombre del rol.  
+>>    **Por defecto:** `${LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE}`
+>>
+>>  * **`LDAP_POPULATOR_SEARCH_SUBTREE`:** indica si la búsqueda debe incluir los hijos del directorio.  
+>>    **Por defecto:** `false`
+>>
+>>  * **`LDAP_POPULATOR_ROLE_PREFIX`:** prefijo para añadir al nombre de los roles.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`LDAP_POPULATOR_CONVERT_TO_UPPER_CASE`:** convertir roles a mayúscula.  
+>>    **Por defecto:** `false`
+>>
+>>  * **`LDAP_ADMIN_ROLE`:** rol administrador.  
+>>    **Por defecto:** `cn=Administrator,${LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE}`
 >
 > </details>
 >
 > <details>
 >   <summary>JDBC</summary>
 >
->   * **`JDBCSEC_DATASOURCE_DRIVER_CLASSNAME`:** clase de Java del driver JDBC.  
->     **Por defecto:** `org.postgresql.Driver`
->
->   * **`JDBCSEC_DATASOURCE_URL`:** URL de la conexión JDBC.  
->     **Por defecto:** `jdbc:postgresql://localhost:5432/userdb`
->
->   * **`JDBCSEC_DATASOURCE_USER`:** usuario de la conexión JDBC.  
->     **Por defecto:** `postgres`
->
->   * **`JDBCSEC_DATASOURCE_PASSWORD`:** contraseña de la conexión JDBC.  
->     **Por defecto:** `postgres`
->
->   * **`JDBCSEC_DATASOURCE_POOL_VALIDATION_QUERY`:** consulta que se utilizará para validar las conexiones de la pool.  
->     **Por defecto:** `SELECT 1`
->
->   * **`JDBCSEC_DATASOURCE_POOL_MAX_WAIT`:** tiempo máximo en milisegundos en los que la pool esperará para obtener una conexión antes de devolver una excepción.  
->     **Por defecto:** `-1`
->
->   * **`JDBCSEC_DATASOURCE_POOL_MAX_ACTIVE`:** número máximo de conexiones activas en la pool.  
->     **Por defecto:** `8`
->
->   * **`JDBCSEC_DATASOURCE_POOL_MAX_IDLE`:** número máximo de conexiones inactivas en la pool.  
->     **Por defecto:** `4`
->
->   * **`JDBCSEC_DATASOURCE_POOL_MIN_IDLE`:** número mínimo de conexiones inactivas en la pool.  
->     **Por defecto:** `0`
->
->   * **`JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY`:** consulta que devuelve el usuario y los roles a los que pertenece.  
->     **Por defecto:** `SELECT username, authority FROM granted_authorities WHERE username = ? ORDER BY authority`
->
->   * **`JDBCSEC_USERS_BY_USERNAME_QUERY`:** consulta que devuelve el usuario, la contraseña y si puede iniciar sesión.  
->     **Por defecto:** `SELECT username, password, enabled FROM users WHERE username = ? ORDER BY username`
->
->   * **`JDBCSEC_ALL_AUTHORITIES_QUERY`:** consulta que devuelve todos los roles.  
->     **Por defecto:** `SELECT authority FROM authorities ORDER BY authority`
->
->   * **`JDBCSEC_ALL_USERNAMES_QUERY`:** consulta que devuelve todos los usuarios.  
->     **Por defecto:** `SELECT username FROM users ORDER BY username`
->
->   * **`JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY`:** consulta que devuelve todos los usuarios con un rol específico.  
->     **Por defecto:** `SELECT username FROM granted_authorities WHERE authority = ? ORDER BY username`
->
->   * **`JDBCSEC_ADMIN_ROLE`:** rol administrador.  
->     **Por defecto:** `Administrator`
+>>  * **`JDBCSEC_DATASOURCE_DRIVER_CLASSNAME`:** clase de Java del driver JDBC.  
+>>    **Por defecto:** `org.postgresql.Driver`
+>>
+>>  * **`JDBCSEC_DATASOURCE_URL`:** URL de la conexión JDBC.  
+>>    **Por defecto:** `jdbc:postgresql://localhost:5432/userdb`
+>>
+>>  * **`JDBCSEC_DATASOURCE_USER`:** usuario de la conexión JDBC.  
+>>    **Por defecto:** `postgres`
+>>
+>>  * **`JDBCSEC_DATASOURCE_PASSWORD`:** contraseña de la conexión JDBC.  
+>>    **Por defecto:** `postgres`
+>>
+>>  * **`JDBCSEC_DATASOURCE_POOL_VALIDATION_QUERY`:** consulta que se utilizará para validar las conexiones de la pool.  
+>>    **Por defecto:** `SELECT 1`
+>>
+>>  * **`JDBCSEC_DATASOURCE_POOL_MAX_WAIT`:** tiempo máximo en milisegundos en los que la pool esperará para obtener una conexión antes de devolver una excepción.  
+>>    **Por defecto:** `-1`
+>>
+>>  * **`JDBCSEC_DATASOURCE_POOL_MAX_ACTIVE`:** número máximo de conexiones activas en la pool.  
+>>    **Por defecto:** `8`
+>>
+>>  * **`JDBCSEC_DATASOURCE_POOL_MAX_IDLE`:** número máximo de conexiones inactivas en la pool.  
+>>    **Por defecto:** `4`
+>>
+>>  * **`JDBCSEC_DATASOURCE_POOL_MIN_IDLE`:** número mínimo de conexiones inactivas en la pool.  
+>>    **Por defecto:** `0`
+>>
+>>  * **`JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY`:** consulta que devuelve el usuario y los roles a los que pertenece.  
+>>    **Por defecto:** `SELECT username, authority FROM granted_authorities WHERE username = ? ORDER BY authority`
+>>
+>>  * **`JDBCSEC_USERS_BY_USERNAME_QUERY`:** consulta que devuelve el usuario, la contraseña y si puede iniciar sesión.  
+>>    **Por defecto:** `SELECT username, password, enabled FROM users WHERE username = ? ORDER BY username`
+>>
+>>  * **`JDBCSEC_ALL_AUTHORITIES_QUERY`:** consulta que devuelve todos los roles.  
+>>    **Por defecto:** `SELECT authority FROM authorities ORDER BY authority`
+>>
+>>  * **`JDBCSEC_ALL_USERNAMES_QUERY`:** consulta que devuelve todos los usuarios.  
+>>    **Por defecto:** `SELECT username FROM users ORDER BY username`
+>>
+>>  * **`JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY`:** consulta que devuelve todos los usuarios con un rol específico.  
+>>    **Por defecto:** `SELECT username FROM granted_authorities WHERE authority = ? ORDER BY username`
+>>
+>>  * **`JDBCSEC_ADMIN_ROLE`:** rol administrador.  
+>>    **Por defecto:** `Administrator`
 >
 > </details>
 >
 > <details>
 >   <summary>Single Sign-On (CAS)</summary>
 >
->   * **`CAS_ENABLED`:** habilita CAS.  
->     **Por defecto:** `false`
+>>  * **`CAS_ENABLED`:** habilita CAS.  
+>>    **Por defecto:** `false`
+>>
+>>  * **`CAS_URL`:** URL base de CAS.  
+>>    **Por defecto:** `${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/auth/realms/biserver/protocol/cas`
+>>
+>>  * **`CAS_TICKETVALIDATOR_URL`:** URL del validador de tickets de CAS.  
+>>    **Por defecto:** `${CAS_URL}`
+>>
+>>  * **`CAS_LOGIN_URL`:** URL de inicio de sesión de CAS.  
+>>    **Por defecto:** `${CAS_URL}/login`
+>>
+>>  * **`CAS_LOGOUT_URL`:** URL de cierre de sesión de CAS.  
+>>    **Por defecto:** `${CAS_URL}/logout?service=${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}`
+>>
+>>  * **`CAS_PROVIDER_USERDETAILS`:** proveedor de la información del usuario, admite los valores `userDetailsService`, `ldapUserDetailsService` y `jdbcUserDetailsService`.  
+>>    **Por defecto:** `userDetailsService`
 >
->   * **`CAS_URL`:** URL base de CAS.  
->     **Por defecto:** `${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}/auth/realms/biserver/protocol/cas`
->
->   * **`CAS_TICKETVALIDATOR_URL`:** URL del validador de tickets de CAS.  
->     **Por defecto:** `${CAS_URL}`
->
->   * **`CAS_LOGIN_URL`:** URL de inicio de sesión de CAS.  
->     **Por defecto:** `${CAS_URL}/login`
->
->   * **`CAS_LOGOUT_URL`:** URL de cierre de sesión de CAS.  
->     **Por defecto:** `${CAS_URL}/logout?service=${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}`
->
->   * **`CAS_PROVIDER_USERDETAILS`:** proveedor de la información del usuario, admite los valores `userDetailsService`, `ldapUserDetailsService` y `jdbcUserDetailsService`.  
->     **Por defecto:** `userDetailsService`
+> </details>
 
 </details>
 
@@ -274,94 +274,94 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > <details>
 >   <summary>PostgreSQL</summary>
 >
->   * **`POSTGRES_HOST`:** host para la conexión con PostgreSQL.  
->     **Por defecto:** `localhost`
->
->   * **`POSTGRES_PORT`:** puerto para la conexión con PostgreSQL.  
->     **Por defecto:** `5432`
->
->   * **`POSTGRES_USER`:** usuario para la conexión con PostgreSQL.  
->     **Por defecto:** `postgres`
->
->   * **`POSTGRES_PASSWORD`:** contraseña para la conexión con PostgreSQL.  
->     **Por defecto:** `postgres`
->
->   * **`POSTGRES_DATABASE`:** nombre de la BBDD para la conexión con PostgreSQL.  
->     **Por defecto:** `postgres`
->
->   * **`POSTGRES_JACKRABBIT_USER`:** nombre del usuario de Jackrabbit (se creará si no existe).  
->     **Por defecto:** `jcr_user`
->
->   * **`POSTGRES_JACKRABBIT_PASSWORD`:** contraseña del usuario de Jackrabbit.  
->     **Por defecto:** `jcr_password`
->
->   * **`POSTGRES_JACKRABBIT_DATABASE`:** nombre de la BBDD de Jackrabbit (se creará si no existe).  
->     **Por defecto:** `jackrabbit`
->
->   * **`POSTGRES_HIBERNATE_USER`:** nombre del usuario de Hibernate (se creará si no existe).  
->     **Por defecto:** `hibuser`
->
->   * **`POSTGRES_HIBERNATE_PASSWORD`:** contraseña del usuario de Hibernate.  
->     **Por defecto:** `hibpassword`
->
->   * **`POSTGRES_HIBERNATE_DATABASE`:** nombre de la BBDD de Hibernate (se creará si no existe).  
->     **Por defecto:** `hibernate`
->
->   * **`POSTGRES_QUARTZ_USER`:** nombre del usuario de Quartz (se creará si no existe).  
->     **Por defecto:** `pentaho_user`
->
->   * **`POSTGRES_QUARTZ_PASSWORD`:** contraseña del usuario de Quartz.  
->     **Por defecto:** `pentaho_password`
->
->   * **`POSTGRES_QUARTZ_DATABASE`:** nombre de la BBDD de Quartz (se creará si no existe).  
->     **Por defecto:** `quartz`
+>>  * **`POSTGRES_HOST`:** host para la conexión con PostgreSQL.  
+>>    **Por defecto:** `localhost`
+>>
+>>  * **`POSTGRES_PORT`:** puerto para la conexión con PostgreSQL.  
+>>    **Por defecto:** `5432`
+>>
+>>  * **`POSTGRES_USER`:** usuario para la conexión con PostgreSQL.  
+>>    **Por defecto:** `postgres`
+>>
+>>  * **`POSTGRES_PASSWORD`:** contraseña para la conexión con PostgreSQL.  
+>>    **Por defecto:** `postgres`
+>>
+>>  * **`POSTGRES_DATABASE`:** nombre de la BBDD para la conexión con PostgreSQL.  
+>>    **Por defecto:** `postgres`
+>>
+>>  * **`POSTGRES_JACKRABBIT_USER`:** nombre del usuario de Jackrabbit (se creará si no existe).  
+>>    **Por defecto:** `jcr_user`
+>>
+>>  * **`POSTGRES_JACKRABBIT_PASSWORD`:** contraseña del usuario de Jackrabbit.  
+>>    **Por defecto:** `jcr_password`
+>>
+>>  * **`POSTGRES_JACKRABBIT_DATABASE`:** nombre de la BBDD de Jackrabbit (se creará si no existe).  
+>>    **Por defecto:** `jackrabbit`
+>>
+>>  * **`POSTGRES_HIBERNATE_USER`:** nombre del usuario de Hibernate (se creará si no existe).  
+>>    **Por defecto:** `hibuser`
+>>
+>>  * **`POSTGRES_HIBERNATE_PASSWORD`:** contraseña del usuario de Hibernate.  
+>>    **Por defecto:** `hibpassword`
+>>
+>>  * **`POSTGRES_HIBERNATE_DATABASE`:** nombre de la BBDD de Hibernate (se creará si no existe).  
+>>    **Por defecto:** `hibernate`
+>>
+>>  * **`POSTGRES_QUARTZ_USER`:** nombre del usuario de Quartz (se creará si no existe).  
+>>    **Por defecto:** `pentaho_user`
+>>
+>>  * **`POSTGRES_QUARTZ_PASSWORD`:** contraseña del usuario de Quartz.  
+>>    **Por defecto:** `pentaho_password`
+>>
+>>  * **`POSTGRES_QUARTZ_DATABASE`:** nombre de la BBDD de Quartz (se creará si no existe).  
+>>    **Por defecto:** `quartz`
 >
 > </details>
 >
 > <details>
 >   <summary>MySQL</summary>
 >
->   * **`MYSQL_HOST`:** host para la conexión con MySQL.  
->     **Por defecto:** `localhost`
->
->   * **`MYSQL_PORT`:** puerto para la conexión con MySQL.  
->     **Por defecto:** `3306`
->
->   * **`MYSQL_USER`:** usuario para la conexión con MySQL.  
->     **Por defecto:** `root`
->
->   * **`MYSQL_PASSWORD`:** contraseña para la conexión con MySQL.  
->     **Por defecto:** `root`
->
->   * **`MYSQL_DATABASE`:** nombre de la BBDD para la conexión con MySQL.  
->     **Por defecto:** `mysql`
->
->   * **`MYSQL_JACKRABBIT_USER`:** nombre del usuario de Jackrabbit (se creará si no existe).  
->     **Por defecto:** `jcr_user`
->
->   * **`MYSQL_JACKRABBIT_PASSWORD`:** contraseña del usuario de Jackrabbit.  
->     **Por defecto:** `jcr_password`
->
->   * **`MYSQL_JACKRABBIT_DATABASE`:** nombre de la BBDD de Jackrabbit (se creará si no existe).  
->     **Por defecto:** `jackrabbit`
->
->   * **`MYSQL_HIBERNATE_USER`:** nombre del usuario de Hibernate (se creará si no existe).  
->     **Por defecto:** `hibuser`
->
->   * **`MYSQL_HIBERNATE_PASSWORD`:** contraseña del usuario de Hibernate.  
->     **Por defecto:** `hibpassword`
->
->   * **`MYSQL_HIBERNATE_DATABASE`:** nombre de la BBDD de Hibernate (se creará si no existe).  
->     **Por defecto:** `hibernate`
->
->   * **`MYSQL_QUARTZ_USER`:** nombre del usuario de Quartz (se creará si no existe).  
->     **Por defecto:** `pentaho_user`
->
->   * **`MYSQL_QUARTZ_PASSWORD`:** contraseña del usuario de Quartz.  
->     **Por defecto:** `pentaho_password`
->
->   * **`MYSQL_QUARTZ_DATABASE`:** nombre de la BBDD de Quartz (se creará si no existe).  
->     **Por defecto:** `quartz`
+>>  * **`MYSQL_HOST`:** host para la conexión con MySQL.  
+>>    **Por defecto:** `localhost`
+>>
+>>  * **`MYSQL_PORT`:** puerto para la conexión con MySQL.  
+>>    **Por defecto:** `3306`
+>>
+>>  * **`MYSQL_USER`:** usuario para la conexión con MySQL.  
+>>    **Por defecto:** `root`
+>>
+>>  * **`MYSQL_PASSWORD`:** contraseña para la conexión con MySQL.  
+>>    **Por defecto:** `root`
+>>
+>>  * **`MYSQL_DATABASE`:** nombre de la BBDD para la conexión con MySQL.  
+>>    **Por defecto:** `mysql`
+>>
+>>  * **`MYSQL_JACKRABBIT_USER`:** nombre del usuario de Jackrabbit (se creará si no existe).  
+>>    **Por defecto:** `jcr_user`
+>>
+>>  * **`MYSQL_JACKRABBIT_PASSWORD`:** contraseña del usuario de Jackrabbit.  
+>>    **Por defecto:** `jcr_password`
+>>
+>>  * **`MYSQL_JACKRABBIT_DATABASE`:** nombre de la BBDD de Jackrabbit (se creará si no existe).  
+>>    **Por defecto:** `jackrabbit`
+>>
+>>  * **`MYSQL_HIBERNATE_USER`:** nombre del usuario de Hibernate (se creará si no existe).  
+>>    **Por defecto:** `hibuser`
+>>
+>>  * **`MYSQL_HIBERNATE_PASSWORD`:** contraseña del usuario de Hibernate.  
+>>    **Por defecto:** `hibpassword`
+>>
+>>  * **`MYSQL_HIBERNATE_DATABASE`:** nombre de la BBDD de Hibernate (se creará si no existe).  
+>>    **Por defecto:** `hibernate`
+>>
+>>  * **`MYSQL_QUARTZ_USER`:** nombre del usuario de Quartz (se creará si no existe).  
+>>    **Por defecto:** `pentaho_user`
+>>
+>>  * **`MYSQL_QUARTZ_PASSWORD`:** contraseña del usuario de Quartz.  
+>>    **Por defecto:** `pentaho_password`
+>>
+>>  * **`MYSQL_QUARTZ_DATABASE`:** nombre de la BBDD de Quartz (se creará si no existe).  
+>>    **Por defecto:** `quartz`
 >
 > </details>
 
