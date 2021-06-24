@@ -2,16 +2,6 @@ context_source.provider_url=<%= ENV['LDAP_CONTEXT_SOURCE_PROVIDER_URL'] %>
 context_source.user_dn=<%= ENV['LDAP_CONTEXT_SOURCE_USER_DN'] %>
 context_source.password=<%= ENV['LDAP_CONTEXT_SOURCE_PASSWORD'] %>
 
-user_search.search_base=<%= ENV['LDAP_USER_SEARCH_SEARCH_BASE'] %>
-user_search.search_filter=<%= ENV['LDAP_USER_SEARCH_SEARCH_FILTER'] %>
-
-populator.group_role_attribute=<%= ENV['LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE'] %>
-populator.group_search_base=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_BASE'] %>
-populator.group_search_filter=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_FILTER'] %>
-populator.role_prefix=<%= ENV['LDAP_POPULATOR_ROLE_PREFIX'] %>
-populator.convert_to_upper_case=<%= ENV['LDAP_POPULATOR_CONVERT_TO_UPPER_CASE'] %>
-populator.search_subtree=<%= ENV['LDAP_POPULATOR_SEARCH_SUBTREE'] %>
-
 all_authorities_search.role_attribute=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE'] %>
 all_authorities_search.search_base=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE'] %>
 all_authorities_search.search_filter=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER'] %>
@@ -19,5 +9,15 @@ all_authorities_search.search_filter=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH
 all_usernames_search.username_attribute=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE'] %>
 all_usernames_search.search_base=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE'] %>
 all_usernames_search.search_filter=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER'] %>
+
+user_search.search_base=<%= ENV['LDAP_USER_SEARCH_SEARCH_BASE'] %>
+user_search.search_filter=<%= ENV['LDAP_USER_SEARCH_SEARCH_FILTER'] %>
+
+populator.group_role_attribute=<%= ENV['LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE'] %>
+populator.group_search_base=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_BASE'] %>
+populator.group_search_filter=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_FILTER'] %>
+populator.search_subtree=<%= ENV['LDAP_POPULATOR_SEARCH_SUBTREE'] %>
+populator.role_prefix=<%= ENV['LDAP_POPULATOR_ROLE_PREFIX'] %>
+populator.convert_to_upper_case=<%= ENV['LDAP_POPULATOR_CONVERT_TO_UPPER_CASE'] %>
 
 admin_role=<%= ENV['LDAP_ADMIN_ROLE'] %>

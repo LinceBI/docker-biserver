@@ -74,12 +74,12 @@
 			<ref bean="contextSource" />
 		</constructor-arg>
 		<constructor-arg index="1" value="${ldap.populator.group_search_base}" />
-		<property name="groupRoleAttribute" value="${ldap.populator.group_role_attribute}" />
 		<!-- {0} will be replaced with user DN; {1} will be replaced with username -->
 		<property name="groupSearchFilter" value="${ldap.populator.group_search_filter}" />
+		<property name="groupRoleAttribute" value="${ldap.populator.group_role_attribute}" />
+		<property name="searchSubtree" value="${ldap.populator.search_subtree}" />
 		<property name="rolePrefix" value="${ldap.populator.role_prefix}" />
 		<property name="convertToUpperCase" value="${ldap.populator.convert_to_upper_case}" />
-		<property name="searchSubtree" value="${ldap.populator.search_subtree}" />
 		<property name="defaultRole" ref="defaultRole" />
 	</bean>
 
