@@ -54,15 +54,15 @@
 	</bean>
 
 	<bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-		<constructor-arg value="${ldap.contextSource.providerUrl}" />
-		<property name="userDn" value="${ldap.contextSource.userDn}" />
-		<property name="password" value="${ldap.contextSource.password}" />
+		<constructor-arg value="${ldap.context_source.provider_url}" />
+		<property name="userDn" value="${ldap.context_source.user_dn}" />
+		<property name="password" value="${ldap.context_source.password}" />
 	</bean>
 
 	<!-- Be sure to escape ampersands -->
 	<bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
-		<constructor-arg index="0" value="${ldap.userSearch.searchBase}" />
-		<constructor-arg index="1" value="${ldap.userSearch.searchFilter}" />
+		<constructor-arg index="0" value="${ldap.user_search.search_base}" />
+		<constructor-arg index="1" value="${ldap.user_search.search_filter}" />
 		<constructor-arg index="2">
 			<ref bean="contextSource" />
 		</constructor-arg>
@@ -73,13 +73,13 @@
 		<constructor-arg index="0">
 			<ref bean="contextSource" />
 		</constructor-arg>
-		<constructor-arg index="1" value="${ldap.populator.groupSearchBase}" />
-		<property name="groupRoleAttribute" value="${ldap.populator.groupRoleAttribute}" />
+		<constructor-arg index="1" value="${ldap.populator.group_search_base}" />
 		<!-- {0} will be replaced with user DN; {1} will be replaced with username -->
-		<property name="groupSearchFilter" value="${ldap.populator.groupSearchFilter}" />
-		<property name="rolePrefix" value="${ldap.populator.rolePrefix}" />
-		<property name="convertToUpperCase" value="${ldap.populator.convertToUpperCase}" />
-		<property name="searchSubtree" value="${ldap.populator.searchSubtree}" />
+		<property name="groupSearchFilter" value="${ldap.populator.group_search_filter}" />
+		<property name="groupRoleAttribute" value="${ldap.populator.group_role_attribute}" />
+		<property name="searchSubtree" value="${ldap.populator.search_subtree}" />
+		<property name="rolePrefix" value="${ldap.populator.role_prefix}" />
+		<property name="convertToUpperCase" value="${ldap.populator.convert_to_upper_case}" />
 		<property name="defaultRole" ref="defaultRole" />
 	</bean>
 
@@ -109,14 +109,14 @@
 
 	<!-- Map LDAP role to pentaho security role -->
 	<util:map id="ldapRoleMap">
-		<entry key="${ldap.adminRole}" value="Administrator" />
+		<entry key="${ldap.admin_role}" value="Administrator" />
 	</util:map>
 
 	<bean id="ldapRoleMapper" class="org.pentaho.platform.engine.security.DefaultLdapRoleMapper">
 		<constructor-arg>
 			<ref bean="ldapRoleMap" />
 		</constructor-arg>
-		<constructor-arg value="${ldap.allAuthoritiesSearch.roleAttribute}" />
+		<constructor-arg value="${ldap.all_authorities_search.role_attribute}" />
 	</bean>
 
 	<!--

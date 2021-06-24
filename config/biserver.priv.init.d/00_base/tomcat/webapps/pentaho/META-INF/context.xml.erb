@@ -17,10 +17,12 @@
 		url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/jackrabbit"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		validationQuery="SELECT COUNT(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
 		testOnBorrow="true"
-		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<Resource
@@ -34,10 +36,12 @@
 		url="<%= ENV['POSTGRES_JACKRABBIT_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 	<Resource
@@ -51,10 +55,12 @@
 		url="<%= ENV['COCKROACH_JACKRABBIT_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<Resource
@@ -68,10 +74,12 @@
 		url="<%= ENV['MYSQL_JACKRABBIT_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'tidb' -%>
 	<Resource
@@ -85,10 +93,12 @@
 		url="<%= ENV['TIDB_JACKRABBIT_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- end -%>
 
@@ -108,10 +118,12 @@
 		url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/hibernate"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		validationQuery="SELECT COUNT(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
 		testOnBorrow="true"
-		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<Resource
@@ -125,10 +137,12 @@
 		url="<%= ENV['POSTGRES_HIBERNATE_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 	<Resource
@@ -142,10 +156,12 @@
 		url="<%= ENV['COCKROACH_HIBERNATE_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<Resource
@@ -159,10 +175,12 @@
 		url="<%= ENV['MYSQL_HIBERNATE_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'tidb' -%>
 	<Resource
@@ -176,10 +194,12 @@
 		url="<%= ENV['TIDB_HIBERNATE_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- end -%>
 
@@ -199,10 +219,12 @@
 		url="jdbc:hsqldb:hsql://localhost:<%= ENV['HSQLDB_PORT'] %>/quartz"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
+		validationQuery="SELECT COUNT(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
 		testOnBorrow="true"
-		validationQuery="SELECT count(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'postgres' -%>
 	<Resource
@@ -216,10 +238,12 @@
 		url="<%= ENV['POSTGRES_QUARTZ_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'cockroach' -%>
 	<Resource
@@ -233,10 +257,12 @@
 		url="<%= ENV['COCKROACH_QUARTZ_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'mysql' -%>
 	<Resource
@@ -250,10 +276,12 @@
 		url="<%= ENV['MYSQL_QUARTZ_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- elsif ENV['STORAGE_TYPE'] == 'tidb' -%>
 	<Resource
@@ -267,10 +295,12 @@
 		url="<%= ENV['TIDB_QUARTZ_JDBC_URL'] %>"
 		initialSize="0"
 		maxTotal="20"
+		minIdle="0"
 		maxIdle="5"
 		maxWaitMillis="10000"
-		testOnBorrow="true"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
 	/>
 	<%- end -%>
 

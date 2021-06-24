@@ -53,6 +53,11 @@ services:
         FROM keycloak_group
         WHERE realm_id = '00000000-0000-0000-0000-000000000000'
         ORDER BY authority
+      JDBCSEC_ALL_USERNAMES_QUERY: >-
+        SELECT username
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY username
       JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
         SELECT ue.username
         FROM user_entity AS ue
@@ -60,11 +65,6 @@ services:
         INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
         WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND kg.name = ?
         ORDER BY ue.username
-      JDBCSEC_ALL_USERNAMES_QUERY: >-
-        SELECT username
-        FROM user_entity
-        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
-        ORDER BY username
       CAS_ENABLED: "true"
       CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
       CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
@@ -86,7 +86,7 @@ services:
       - "postgres"
 
   keycloak:
-    image: "docker.io/jboss/keycloak:13.0.1"
+    image: "docker.io/jboss/keycloak:14.0.0"
     restart: "on-failure:3"
     networks:
       - "biserver"

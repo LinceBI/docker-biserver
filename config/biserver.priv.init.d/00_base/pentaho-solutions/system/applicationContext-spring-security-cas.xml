@@ -111,7 +111,7 @@
 	</bean>
 
 	<bean id="ticketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
-		<constructor-arg index="0" value="${cas.tickervalidator.url}" />
+		<constructor-arg index="0" value="${cas.ticketvalidator.url}" />
 	</bean>
 
 	<!-- Overridden from applicationContext-spring-security.xml to specify logoutSuccessUrl as CAS logout page -->
