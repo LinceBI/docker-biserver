@@ -12,7 +12,7 @@
 
 	<!-- Map jdbc role to pentaho security role -->
 	<util:map id="jdbcRoleMap">
-		<entry key="${jdbc.adminRole}" value="Administrator" />
+		<entry key="${jdbc.admin_role}" value="Administrator" />
 	</util:map>
 
 	<bean id="jdbcRoleMapper" class="org.pentaho.platform.engine.security.DefaultJdbcRoleMapper">
