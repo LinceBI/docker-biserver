@@ -27,11 +27,11 @@
 		<property name="allAuthoritiesQuery">
 			<value>${jdbc.all_authorities_query}</value>
 		</property>
-		<property name="allUsernamesInRoleQuery">
-			<value>${jdbc.all_usernames_in_role_query}</value>
-		</property>
 		<property name="allUsernamesQuery">
 			<value>${jdbc.all_usernames_query}</value>
+		</property>
+		<property name="allUsernamesInRoleQuery">
+			<value>${jdbc.all_usernames_in_role_query}</value>
 		</property>
 		<property name="dataSource" ref="dataSource" />
 		<property name="roleMapper" ref="jdbcRoleMapper" />
