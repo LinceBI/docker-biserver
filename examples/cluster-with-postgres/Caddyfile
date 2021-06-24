@@ -33,7 +33,7 @@
 	health_timeout 15s
 	health_status 2xx
 
-	lb_policy ip_hash
+	lb_policy cookie
 }
 
 http://{$TLS_DOMAIN}:80 {

@@ -47,6 +47,27 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		zip \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install Zulu OpenJDK
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
+	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys 'B1998361219BD9C9' \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
+	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install PostgreSQL client
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '7FCC7D46ACCC4CF8' \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Install MySQL client
+RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
+	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '8C718D3B5072E1F5' \
+	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
+	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install Supercronic
 ARG SUPERCRONIC_VERSION="0.1.12"
 ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
@@ -54,27 +75,6 @@ ARG SUPERCRONIC_CHECKSUM="8d3a575654a6c93524c410ae06f681a3507ca5913627fa92c7086f
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
-
-# Install Zulu OpenJDK
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
-	&& curl -fsSL 'http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems' | apt-key add - \
-	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install PostgreSQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& curl -fsSL 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' | apt-key add - \
-	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install MySQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
-	&& curl -fsSL 'https://repo.mysql.com/RPM-GPG-KEY-mysql' | apt-key add - \
-	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
-	&& rm -rf /var/lib/apt/lists/*
 
 # Create unprivileged user
 ENV BIUSER_UID="1000"

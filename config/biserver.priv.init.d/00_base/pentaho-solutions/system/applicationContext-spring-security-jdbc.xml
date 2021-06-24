@@ -49,11 +49,11 @@
 		<property name="username" value="${jdbc.datasource.username}" />
 		<property name="password" value="${jdbc.datasource.password}" />
 		<!-- The following are optional -->
-		<property name="validationQuery" value="${jdbc.datasource.validation_query}" />
-		<property name="maxWait" value="${jdbc.datasource.max_wait}" />
-		<property name="maxActive" value="${jdbc.datasource.max_active}" />
-		<property name="maxIdle" value="${jdbc.datasource.max_idle}" />
-		<property name="minIdle" value="${jdbc.datasource.min_idle}" />
+		<property name="validationQuery" value="${jdbc.datasource.pool_validation_query}" />
+		<property name="maxWait" value="${jdbc.datasource.pool_max_wait}" />
+		<property name="maxActive" value="${jdbc.datasource.pool_max_active}" />
+		<property name="maxIdle" value="${jdbc.datasource.pool_max_idle}" />
+		<property name="minIdle" value="${jdbc.datasource.pool_min_idle}" />
 	</bean>
 
 	<bean id="jdbcPasswordEncoder" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder" />

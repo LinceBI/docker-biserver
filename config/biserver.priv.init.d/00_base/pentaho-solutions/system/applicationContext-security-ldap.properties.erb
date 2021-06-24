@@ -1,23 +1,23 @@
-contextSource.providerUrl=<%= ENV['LDAP_CONTEXT_SOURCE_PROVIDER_URL'] %>
-contextSource.userDn=<%= ENV['LDAP_CONTEXT_SOURCE_USER_DN'] %>
-contextSource.password=<%= ENV['LDAP_CONTEXT_SOURCE_PASSWORD'] %>
+context_source.provider_url=<%= ENV['LDAP_CONTEXT_SOURCE_PROVIDER_URL'] %>
+context_source.user_dn=<%= ENV['LDAP_CONTEXT_SOURCE_USER_DN'] %>
+context_source.password=<%= ENV['LDAP_CONTEXT_SOURCE_PASSWORD'] %>
 
-userSearch.searchBase=<%= ENV['LDAP_USER_SEARCH_SEARCH_BASE'] %>
-userSearch.searchFilter=<%= ENV['LDAP_USER_SEARCH_SEARCH_FILTER'] %>
+all_authorities_search.role_attribute=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE'] %>
+all_authorities_search.search_base=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE'] %>
+all_authorities_search.search_filter=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER'] %>
 
-populator.convertToUpperCase=<%= ENV['LDAP_POPULATOR_CONVERT_TO_UPPER_CASE'] %>
-populator.groupRoleAttribute=<%= ENV['LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE'] %>
-populator.groupSearchBase=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_BASE'] %>
-populator.groupSearchFilter=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_FILTER'] %>
-populator.rolePrefix=<%= ENV['LDAP_POPULATOR_ROLE_PREFIX'] %>
-populator.searchSubtree=<%= ENV['LDAP_POPULATOR_SEARCH_SUBTREE'] %>
+all_usernames_search.username_attribute=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE'] %>
+all_usernames_search.search_base=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE'] %>
+all_usernames_search.search_filter=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER'] %>
 
-allAuthoritiesSearch.roleAttribute=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE'] %>
-allAuthoritiesSearch.searchBase=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE'] %>
-allAuthoritiesSearch.searchFilter=<%= ENV['LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER'] %>
+user_search.search_base=<%= ENV['LDAP_USER_SEARCH_SEARCH_BASE'] %>
+user_search.search_filter=<%= ENV['LDAP_USER_SEARCH_SEARCH_FILTER'] %>
 
-allUsernamesSearch.usernameAttribute=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE'] %>
-allUsernamesSearch.searchBase=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE'] %>
-allUsernamesSearch.searchFilter=<%= ENV['LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER'] %>
+populator.group_role_attribute=<%= ENV['LDAP_POPULATOR_GROUP_ROLE_ATTRIBUTE'] %>
+populator.group_search_base=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_BASE'] %>
+populator.group_search_filter=<%= ENV['LDAP_POPULATOR_GROUP_SEARCH_FILTER'] %>
+populator.search_subtree=<%= ENV['LDAP_POPULATOR_SEARCH_SUBTREE'] %>
+populator.role_prefix=<%= ENV['LDAP_POPULATOR_ROLE_PREFIX'] %>
+populator.convert_to_upper_case=<%= ENV['LDAP_POPULATOR_CONVERT_TO_UPPER_CASE'] %>
 
-adminRole=<%= ENV['LDAP_ADMIN_ROLE'] %>
+admin_role=<%= ENV['LDAP_ADMIN_ROLE'] %>
