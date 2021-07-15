@@ -102,11 +102,11 @@ ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_OPTS_EXTRA=""
 
 # Install Tomcat
-ARG TOMCAT_VERSION="8.5.68"
+ARG TOMCAT_VERSION="8.5.69"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="0bc81db301a1e68fe8b914328da03dba92e5bbb9fcbea6b7a53f82bf19914f25"
+ARG TOMCAT_LIN_CHECKSUM="cc9616eb29bf491839ce5c8a1c3e37cb710f6ec99aad5aefb7944b5184b13398"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="14af8c51ccbfb31b5c172669a27345caf901e159d43821c45cde63a7276b2bd0"
+ARG TOMCAT_WIN_CHECKSUM="c2aaab8f39dc17234ecf8703fc63bd1ea1ffb3092f67c9bbe3342abb9caf053e"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -221,8 +221,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.2.20/postgresql-42.2.20.jar"
-ARG POSTGRES_JDBC_CHECKSUM="708b2938aea81f32b8b35440da233828284a100e6f2212a7ab1eeaf4b3a6514e"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.2.23/postgresql-42.2.23.jar"
+ARG POSTGRES_JDBC_CHECKSUM="7a16267953ae981734febd0200cd86261ebb950a6a6a819467b8816b9bfcf6c7"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
