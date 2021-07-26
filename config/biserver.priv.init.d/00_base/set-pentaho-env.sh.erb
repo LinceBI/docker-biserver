@@ -22,7 +22,7 @@
 set -eu
 export LC_ALL=C
 
-DIR=$(dirname "$(readlink -f "$0")")
+DIR=$(CDPATH='' cd -- "$(dirname -- "${0:?}")" && pwd -P)
 cd "${DIR:?}"
 
 # --------------------------------------------------------------------------
