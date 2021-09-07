@@ -245,8 +245,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/10.1.1-0/vertica-jdbc-10.1.1-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="f3ecad3afccb67c26b75655db06f72d2cf380a74ee35ded4b041287d5e72fbaf"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/11.0.0-0/vertica-jdbc-11.0.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="a7d1b35e2d60fd5931b1649b3baacca23655ca7f5af99356b72124e50b1c374b"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
 	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
