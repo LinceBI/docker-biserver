@@ -8,7 +8,7 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.4.xsd
 		http://www.pentaho.com/schema/pentaho-system http://www.pentaho.com/schema/pentaho-system.xsd"
 	default-lazy-init="true">
 
@@ -24,10 +24,10 @@
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<util:list>
-				<sec:filter-chain pattern="/webservices/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
-				<sec:filter-chain pattern="/api/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
-				<sec:filter-chain pattern="/plugin/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
-				<sec:filter-chain pattern="/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilter,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,httpSessionReuseDetectionFilter,logoutFilter,casProcessingFilter,authenticationProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,exceptionTranslationFilter,filterInvocationInterceptor" />
+				<sec:filter-chain pattern="/webservices/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,mdcFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/api/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,mdcFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/plugin/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilterForWS,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,casProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,mdcFilter,exceptionTranslationFilterForWS,filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/**" filters="csrfTokenSecurityFilter,securityContextHolderAwareRequestFilter,httpSessionPentahoSessionContextIntegrationFilter,httpSessionContextIntegrationFilter,httpSessionReuseDetectionFilter,logoutFilter,casProcessingFilter,authenticationProcessingFilter,basicProcessingFilter,requestParameterProcessingFilter,anonymousProcessingFilter,sessionMgmtFilter,mdcFilter,exceptionTranslationFilter,filterInvocationInterceptor" />
 			</util:list>
 		</constructor-arg>
 	</bean>
