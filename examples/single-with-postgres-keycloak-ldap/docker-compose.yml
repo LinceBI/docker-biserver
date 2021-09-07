@@ -64,7 +64,7 @@ services:
       - "openldap"
 
   keycloak:
-    image: "docker.io/jboss/keycloak:14.0.0"
+    image: "docker.io/jboss/keycloak:15.0.2"
     restart: "on-failure:3"
     networks:
       - "biserver"
