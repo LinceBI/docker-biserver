@@ -27,30 +27,30 @@ getVar() {
 	name=${1:?}
 	default=${2-}
 
-	# If "$VARNAME" is defined, print it
-	eval var="\${${name:?}-}"
-	if [ -n "${var-}" ]; then
-		printf -- '%s' "${var:?}"
+	# If "$VARNAME" is set, print it
+	if eval '[ -n "${'"${name:?}"'+x}" ]'; then
+		eval 'var="${'"${name:?}"'?}"'
+		printf -- '%s' "${var?}"
 		return
 	fi
 
-	# If "$VARNAME_B64" is defined, decode and print it
-	eval varB64="\${${name:?}_B64-}"
-	if [ -n "${varB64-}" ]; then
-		printf -- '%s' "${varB64:?}" | base64 -d
+	# If "$VARNAME_B64" is set, decode and print it
+	if eval '[ -n "${'"${name:?}"'_B64+x}" ]'; then
+		eval 'varB64="${'"${name:?}"'_B64?}"'
+		printf -- '%s' "${varB64?}" | base64 -d
 		return
 	fi
 
 	# If "$VARNAME_FILE" file exists, print its content
-	eval varFile="\${${name:?}_FILE-}"
-	if [ -n "${varFile-}" ] && [ -e "${varFile-}" ]; then
+	if eval '[ -e "${'"${name:?}"'_FILE-}" ]'; then
+		eval 'varFile="${'"${name:?}"'_FILE?}"'
 		cat -- "${varFile:?}"
 		return
 	fi
 
 	# If a Docker secret exists, print its content
 	varSecret="${SECRETS_DIR-/run/secrets}/${name:?}"
-	if [ -e "${varSecret:?}" ]; then
+	if [ -e "${varSecret-}" ]; then
 		cat -- "${varSecret:?}"
 		return
 	fi
