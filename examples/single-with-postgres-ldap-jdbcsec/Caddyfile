@@ -1,0 +1,65 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+
+(common-directives) {
+	encode zstd gzip
+	log {
+		output stdout
+	}
+}
+
+(tls-directives) {
+	tls {
+		issuer {$TLS_ISSUER} {
+			dir {$TLS_ISSUER_CA}
+			email {$TLS_ISSUER_EMAIL}
+		}
+	}
+}
+
+(proxy-subdirectives) {
+	header_up Host {http.request.host}
+	header_up X-Real-IP {http.request.remote.host}
+	header_up X-Forwarded-For {http.request.remote.host}
+	header_up X-Forwarded-Host {http.request.host}
+	header_up X-Forwarded-Port {http.request.port}
+	header_up X-Forwarded-Proto {http.request.scheme}
+	header_down Set-Cookie "^(.*)$" "$1; SameSite=None; Secure"
+}
+
+http://{$TLS_DOMAIN}:80 {
+	import common-directives
+
+	redir /* https://{host}{uri} 301
+}
+
+https://{$TLS_DOMAIN}:443 {
+	import common-directives
+	import tls-directives
+
+	reverse_proxy /* {
+		to biserver:8080
+		import proxy-subdirectives
+	}
+}
+
+http://sso.{$TLS_DOMAIN}:80 {
+	import common-directives
+
+	redir /* https://{host}{uri} 301
+}
+
+https://sso.{$TLS_DOMAIN}:443 {
+	import common-directives
+	import tls-directives
+
+	reverse_proxy /* {
+		to keycloak:8443
+		import proxy-subdirectives
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}

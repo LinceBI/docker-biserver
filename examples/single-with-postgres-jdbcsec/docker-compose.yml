@@ -34,42 +34,32 @@ services:
       SECURITY_PROVIDER: "jdbc"
       JDBCSEC_ADMIN_ROLE: "Administrator"
       JDBCSEC_DATASOURCE_DRIVER_CLASSNAME: "org.postgresql.Driver"
-      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_KEYCLOAK_DATABASE}"
-      JDBCSEC_DATASOURCE_USER: "${DB_KEYCLOAK_USER}"
-      JDBCSEC_DATASOURCE_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_JDBCSEC_DATABASE}"
+      JDBCSEC_DATASOURCE_USER: "${DB_JDBCSEC_USER}"
+      JDBCSEC_DATASOURCE_PASSWORD: "${DB_JDBCSEC_PASSWORD}"
       JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY: >-
-        SELECT ue.username, kg.name AS authority
-        FROM user_entity AS ue
-        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
-        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
-        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND ue.username = ?
+        SELECT username, authority
+        FROM granted_authorities
+        WHERE username = ?
         ORDER BY authority
       JDBCSEC_USERS_BY_USERNAME_QUERY: >-
-        SELECT username, 'password' AS password, enabled
-        FROM user_entity
-        WHERE realm_id = '00000000-0000-0000-0000-000000000000' AND username = ?
+        SELECT username, password, enabled
+        FROM users
+        WHERE username = ?
         ORDER BY username
       JDBCSEC_ALL_AUTHORITIES_QUERY: >-
-        SELECT name AS authority
-        FROM keycloak_group
-        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        SELECT authority
+        FROM authorities
         ORDER BY authority
       JDBCSEC_ALL_USERNAMES_QUERY: >-
         SELECT username
-        FROM user_entity
-        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        FROM users
         ORDER BY username
       JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
-        SELECT ue.username
-        FROM user_entity AS ue
-        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
-        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
-        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND kg.name = ?
-        ORDER BY ue.username
-      CAS_ENABLED: "true"
-      CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
-      CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
-      CAS_PROVIDER_USERDETAILS: "jdbcUserDetailsService"
+        SELECT username
+        FROM granted_authorities
+        WHERE authority = ?
+        ORDER BY username
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
       POSTGRES_USER: "postgres"
@@ -86,30 +76,6 @@ services:
     depends_on:
       - "postgres"
 
-  keycloak:
-    image: "docker.io/jboss/keycloak:15.0.2"
-    restart: "on-failure:3"
-    networks:
-      - "biserver"
-    volumes:
-      - "./realm.json:/opt/jboss/keycloak/imports/realm.json:ro"
-      - "./keycloak.init.d/:/opt/jboss/startup-scripts/:ro"
-    environment:
-      KEYCLOAK_USER: "admin"
-      KEYCLOAK_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
-      PROXY_ADDRESS_FORWARDING: "true"
-      DB_VENDOR: "postgres"
-      DB_ADDR: "postgres"
-      DB_USER: "${DB_KEYCLOAK_USER}"
-      DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
-      DB_DATABASE: "${DB_KEYCLOAK_DATABASE}"
-    command:
-      - "-b 0.0.0.0"
-      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
-      - "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm.json"
-    depends_on:
-      - "postgres"
-
   postgres:
     image: "docker.io/postgres:13"
     restart: "on-failure:3"
@@ -123,9 +89,9 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
-      POSTGRES_KEYCLOAK_USER: "${DB_KEYCLOAK_USER}"
-      POSTGRES_KEYCLOAK_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
-      POSTGRES_KEYCLOAK_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+      POSTGRES_JDBCSEC_USER: "${DB_JDBCSEC_USER}"
+      POSTGRES_JDBCSEC_PASSWORD: "${DB_JDBCSEC_PASSWORD}"
+      POSTGRES_JDBCSEC_DATABASE: "${DB_JDBCSEC_DATABASE}"
 
 networks:
 
