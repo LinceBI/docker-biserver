@@ -80,6 +80,11 @@
 		</constructor-arg>
 	</bean>
 
+	<%- if ENV['SECURITY_ROLE_PROVIDER'] == 'jdbc' -%>
+	<bean id="populator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator">
+		<constructor-arg ref="jdbcUserDetailsService" />
+	</bean>
+	<%- else -%>
 	<!-- Be sure to escape ampersands -->
 	<bean id="populator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
 		<constructor-arg index="0">
@@ -94,6 +99,7 @@
 		<property name="convertToUpperCase" value="${ldap.populator.convert_to_upper_case}" />
 		<property name="defaultRole" ref="defaultRole" />
 	</bean>
+	<%- end -%>
 
 	<!--
 	Uncomment below and update ldapAuthenticationProvider to enable local caching of LDAP credentials; reduces LDAP
