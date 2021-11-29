@@ -51,18 +51,3 @@ mail: carol@example.localdomain
 givenName: Carol
 sn: Phillips
 userPassword: password
-
-dn: cn=Administrator,ou=groups,dc=example,dc=localdomain
-changetype: add
-cn: Administrator
-objectclass: groupOfUniqueNames
-uniqueMember: cn=admin,ou=users,dc=example,dc=localdomain
-uniqueMember: cn=alice,ou=users,dc=example,dc=localdomain
-
-dn: cn=Employee,ou=groups,dc=example,dc=localdomain
-changetype: add
-cn: Employee
-objectclass: groupOfUniqueNames
-uniqueMember: cn=alice,ou=users,dc=example,dc=localdomain
-uniqueMember: cn=bob,ou=users,dc=example,dc=localdomain
-uniqueMember: cn=carol,ou=users,dc=example,dc=localdomain

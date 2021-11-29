@@ -84,7 +84,10 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`SESSION_TIMEOUT`:** duración de sesión en minutos.  
 >   **Por defecto:** `120`
 >
-> * **`SECURITY_PROVIDER`:** proveedor de seguridad, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
+> * **`SECURITY_PROVIDER`:** proveedor de seguridad general, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
+>   **Por defecto:** `jackrabbit`
+>
+> * **`SECURITY_ROLE_PROVIDER`:** proveedor de seguridad para roles, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
 >   **Por defecto:** `jackrabbit`
 >
 > * **`SECURITY_REQUEST_PARAMETER_AUTHENTICATION_ENABLED`:** habilita la autenticación por parámetros en la URL (`userid` y `password`).  
