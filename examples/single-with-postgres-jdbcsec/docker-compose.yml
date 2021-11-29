@@ -24,8 +24,6 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
-    volumes:
-      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
@@ -33,7 +31,35 @@ services:
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${TLS_DOMAIN}"
       FQSU_PORT: "443"
-      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
+      SECURITY_PROVIDER: "jdbc"
+      JDBCSEC_ADMIN_ROLE: "Administrator"
+      JDBCSEC_DATASOURCE_DRIVER_CLASSNAME: "org.postgresql.Driver"
+      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_JDBCSEC_DATABASE}"
+      JDBCSEC_DATASOURCE_USER: "${DB_JDBCSEC_USER}"
+      JDBCSEC_DATASOURCE_PASSWORD: "${DB_JDBCSEC_PASSWORD}"
+      JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY: >-
+        SELECT username, authority
+        FROM granted_authorities
+        WHERE username = ?
+        ORDER BY authority
+      JDBCSEC_USERS_BY_USERNAME_QUERY: >-
+        SELECT username, password, enabled
+        FROM users
+        WHERE username = ?
+        ORDER BY username
+      JDBCSEC_ALL_AUTHORITIES_QUERY: >-
+        SELECT authority
+        FROM authorities
+        ORDER BY authority
+      JDBCSEC_ALL_USERNAMES_QUERY: >-
+        SELECT username
+        FROM users
+        ORDER BY username
+      JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
+        SELECT username
+        FROM granted_authorities
+        WHERE authority = ?
+        ORDER BY username
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
       POSTGRES_USER: "postgres"
@@ -58,10 +84,14 @@ services:
     ports:
       - "127.0.0.1:5432:5432/tcp"
     volumes:
+      - "./postgres.init.d/:/docker-entrypoint-initdb.d/:ro"
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_JDBCSEC_USER: "${DB_JDBCSEC_USER}"
+      POSTGRES_JDBCSEC_PASSWORD: "${DB_JDBCSEC_PASSWORD}"
+      POSTGRES_JDBCSEC_DATABASE: "${DB_JDBCSEC_DATABASE}"
 
 networks:
 
