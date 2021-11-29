@@ -50,6 +50,7 @@
 				<value>.snapshot</value>
 				<value>.sta</value>
 				<value>.std</value>
+				<value>.stp</value>
 				<value>.stolap</value>
 				<value>.url</value>
 				<value>.xaction</value>
@@ -72,6 +73,7 @@
 		<value>snapshot</value>
 		<value>sta</value>
 		<value>std</value>
+		<value>stp</value>
 		<value>stolap</value>
 		<value>xaction</value>
 		<value>xanalyzer</value>
