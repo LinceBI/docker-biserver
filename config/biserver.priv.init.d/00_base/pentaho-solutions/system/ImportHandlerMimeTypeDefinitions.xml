@@ -74,6 +74,7 @@
 				<extension>saiku</extension>
 				<extension>snapshot</extension>
 				<extension>sta</extension>
+				<extension>stp</extension>
 			</MimeTypeDefinition>
 			<MimeTypeDefinition mimeType="application/vnd.google-earth.kml+xml">
 				<extension>kml</extension>
