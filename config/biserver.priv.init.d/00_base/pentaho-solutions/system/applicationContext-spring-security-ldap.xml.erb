@@ -80,11 +80,7 @@
 		</constructor-arg>
 	</bean>
 
-	<%- if ENV['SECURITY_ROLE_PROVIDER'] == 'jdbc' -%>
-	<bean id="populator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator">
-		<constructor-arg ref="jdbcUserDetailsService" />
-	</bean>
-	<%- else -%>
+	<%- if ENV['SECURITY_ROLE_PROVIDER'] == 'ldap' -%>
 	<!-- Be sure to escape ampersands -->
 	<bean id="populator" class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
 		<constructor-arg index="0">
@@ -98,6 +94,14 @@
 		<property name="rolePrefix" value="${ldap.populator.role_prefix}" />
 		<property name="convertToUpperCase" value="${ldap.populator.convert_to_upper_case}" />
 		<property name="defaultRole" ref="defaultRole" />
+	</bean>
+	<%- elsif ENV['SECURITY_ROLE_PROVIDER'] == 'jdbc' -%>
+	<bean id="populator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator">
+		<constructor-arg ref="jdbcUserDetailsService" />
+	</bean>
+	<%- else -%>
+	<bean id="populator" class="org.springframework.security.ldap.authentication.UserDetailsServiceLdapAuthoritiesPopulator">
+		<constructor-arg ref="userDetailsService" />
 	</bean>
 	<%- end -%>
 
