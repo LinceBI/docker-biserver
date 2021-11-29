@@ -35,8 +35,6 @@ services:
       LDAP_CONTEXT_SOURCE_PROVIDER_URL: "ldap://openldap:389"
       LDAP_CONTEXT_SOURCE_USER_DN: "cn=admin,dc=example,dc=localdomain"
       LDAP_CONTEXT_SOURCE_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
-      LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE: "ou=groups,dc=example,dc=localdomain"
-      LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER: "(objectClass=groupOfUniqueNames)"
       LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE: "ou=users,dc=example,dc=localdomain"
       LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER: "(objectClass=inetOrgPerson)"
       LDAP_USER_SEARCH_SEARCH_FILTER: "(cn={0})"
