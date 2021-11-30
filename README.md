@@ -88,7 +88,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >   **Por defecto:** `jackrabbit`
 >
 > * **`SECURITY_ROLE_PROVIDER`:** proveedor de seguridad para roles, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
->   **Por defecto:** `jackrabbit`
+>   **Por defecto:** `${SECURITY_PROVIDER}`
 >
 > * **`SECURITY_REQUEST_PARAMETER_AUTHENTICATION_ENABLED`:** habilita la autenticación por parámetros en la URL (`userid` y `password`).  
 >   **Por defecto:** `false`
