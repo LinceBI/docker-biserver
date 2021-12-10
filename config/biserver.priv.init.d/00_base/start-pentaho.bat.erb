@@ -36,9 +36,13 @@ cd "%~dp0tomcat\bin"
 set JAVA_HOME=%_PENTAHO_JAVA_HOME%
 set CATALINA_HOME=%~dp0tomcat
 set CATALINA_OPTS=^
-	-Dfile.encoding=utf8 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 ^
-	-Xms<%= ENV['JAVA_XMS'] %> -Xmx<%= ENV['JAVA_XMX'] %> <%= ENV['CATALINA_OPTS_EXTRA'] %> ^
-	-DDI_HOME="%DI_HOME%"
+	-Xms<%= ENV['JAVA_XMS'] %> -Xmx<%= ENV['JAVA_XMX'] %> ^
+	-Dfile.encoding=utf8 ^
+	-Dsun.rmi.dgc.client.gcInterval=3600000 ^
+	-Dsun.rmi.dgc.server.gcInterval=3600000 ^
+	-Dlog4j2.formatMsgNoLookups=true ^
+	-DDI_HOME="%DI_HOME%" ^
+	<%= ENV['CATALINA_OPTS_EXTRA'] %>
 call .\startup.bat
 
 endlocal
