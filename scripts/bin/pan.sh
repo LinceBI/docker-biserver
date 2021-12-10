@@ -17,6 +17,7 @@ fi
 cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/
 exec java \
 		-classpath "${CLASSPATH:?}:${TMPCLASSPATH:?}" \
-		-Dlog4j.configuration=file:"${WEBINFDIR:?}/classes/log4j.xml" \
 		-Xms"${JAVA_XMS:?}" -Xmx"${JAVA_XMX:?}" \
+		-Dlog4j.configuration=file:"${WEBINFDIR:?}/classes/log4j.xml" \
+		-Dlog4j2.formatMsgNoLookups=true \
 		org.pentaho.di.pan.Pan -initialDir "${BISERVER_HOME:?}" "$@"
