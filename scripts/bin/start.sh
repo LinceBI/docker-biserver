@@ -10,9 +10,13 @@ export LC_ALL=C
 
 export LD_LIBRARY_PATH=${CATALINA_HOME:?}/lib:/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH-}
 export CATALINA_OPTS="\
-	-Dfile.encoding=utf8 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 \
-	-Xms${JAVA_XMS:?} -Xmx${JAVA_XMX:?} ${CATALINA_OPTS_EXTRA?} \
-	-DDI_HOME='${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}/system/kettle/'"
+	-Xms${JAVA_XMS:?} -Xmx${JAVA_XMX:?} \
+	-Dfile.encoding=utf8 \
+	-Dsun.rmi.dgc.client.gcInterval=3600000 \
+	-Dsun.rmi.dgc.server.gcInterval=3600000 \
+	-Dlog4j2.formatMsgNoLookups=true \
+	-DDI_HOME='${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}/system/kettle/' \
+	${CATALINA_OPTS_EXTRA?}"
 
 logInfo "Starting Pentaho BI Server..."
 cd "${CATALINA_HOME:?}"/bin
