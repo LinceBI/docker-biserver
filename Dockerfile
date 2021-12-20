@@ -206,15 +206,6 @@ RUN mkdir /tmp/biserver/ \
 	# Cleanup
 	&& rm -rf /tmp/biserver/
 
-# Replace Apache Lucene/Solr with the system provided (which includes a fix for CVE-2017-12629)
-RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
-	&& export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
-	&& apt-get update && apt-get install -y --no-install-recommends liblucene3-java \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& rm -v ./lucene*-core-3.6.*.jar \
-	&& cp -v /usr/share/java/lucene*-core-3.6.*.jar ./ \
-	&& chown biserver:root ./lucene*-core-*.jar && chmod 0664 ./lucene*-core-*.jar
-
 # Install H2 JDBC
 ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/1.2.131/h2-1.2.131.jar"
 ARG H2_JDBC_CHECKSUM="c8debc05829db1db2e6b6507a3f0561e1f72bd966d36f322bdf294baca29ed22"
@@ -275,6 +266,20 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${SPRING_SECURITY_CAS_URL:?}" \
 	&& printf '%s  %s' "${SPRING_SECURITY_CAS_CHECKSUM:?}" ./spring-security-cas-*.jar | sha256sum -c \
 	&& chown biserver:root ./spring-security-cas-*.jar && chmod 0664 ./spring-security-cas-*.jar
+
+# Replace Apache Lucene/Solr with the system provided (which includes a fix for CVE-2017-12629)
+RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
+	&& export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
+	&& apt-get update && apt-get install -y --no-install-recommends liblucene3-java \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -v ./lucene*-core-3.6.*.jar \
+	&& cp -v /usr/share/java/lucene*-core-3.6.*.jar ./ \
+	&& chown biserver:root ./lucene*-core-*.jar && chmod 0664 ./lucene*-core-*.jar
+
+# Remove vulnerable log4j classes (CVE-2021-4104, CVE-2021-44228 and CVE-2021-45046)
+RUN find "${BISERVER_HOME:?}" -iname '*.jar' \
+		-exec sh -euc 'unzip -l "${1:?}" | grep -qF "${2:?}" && zip -qd "${1:?}" "${2:?}" ||:' _ '{}' 'org/apache/log4j/net/JMSAppender.class' ';' \
+		-exec sh -euc 'unzip -l "${1:?}" | grep -qF "${2:?}" && zip -qd "${1:?}" "${2:?}" ||:' _ '{}' 'org/apache/logging/log4j/core/lookup/JndiLookup.class' ';'
 
 # Clean up temp directory
 RUN find /tmp/ -mindepth 1 -delete
