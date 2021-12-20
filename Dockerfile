@@ -264,8 +264,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
 
 # Install CAS libraries
-ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.2/cas-client-core-3.6.2.jar"
-ARG CAS_CLIENT_CORE_CHECKSUM="4ac36bdfd2c80595ee08f1b84540368a7839acdecf3f8a8080879f8a3082bce5"
+ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
+ARG CAS_CLIENT_CORE_CHECKSUM="daab2af8636eac3939a8931469de7c1dea6ecb25516cea9a704a23c7ace48939"
 ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/4.2.20.RELEASE/spring-security-cas-4.2.20.RELEASE.jar"
 ARG SPRING_SECURITY_CAS_CHECKSUM="e19b4304a697960567eb30c6fb1b63ee4ce99cc80bbc0783bcdca8a8e8bf0866"
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
