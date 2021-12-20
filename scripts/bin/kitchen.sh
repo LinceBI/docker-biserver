@@ -19,5 +19,5 @@ exec java \
 		-classpath "${CLASSPATH:?}:${TMPCLASSPATH:?}" \
 		-Xms"${JAVA_XMS:?}" -Xmx"${JAVA_XMX:?}" \
 		-Dlog4j.configuration=file:"${WEBINFDIR:?}/classes/log4j.xml" \
-		-Dlog4j.formatMsgNoLookups=true -Dlog4j2.formatMsgNoLookups=true \
+		-Dlog4j2.formatMsgNoLookups=true \
 		org.pentaho.di.kitchen.Kitchen -initialDir "${BISERVER_HOME:?}" "$@"

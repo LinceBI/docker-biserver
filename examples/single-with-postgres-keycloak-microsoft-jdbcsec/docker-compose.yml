@@ -1,0 +1,139 @@
+version: "3.9"
+
+services:
+
+  caddy:
+    image: "docker.io/caddy:2"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy-data:/data/"
+    environment:
+      TLS_DOMAIN: "${TLS_DOMAIN}"
+      TLS_ISSUER: "${TLS_ISSUER}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
+
+  biserver:
+    image: "repo.stratebi.com/lincebi/biserver:9.0.0.0-423"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_PORT: "443"
+      SECURITY_PROVIDER: "jdbc"
+      JDBCSEC_ADMIN_ROLE: "Administrator"
+      JDBCSEC_DATASOURCE_DRIVER_CLASSNAME: "org.postgresql.Driver"
+      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_KEYCLOAK_DATABASE}"
+      JDBCSEC_DATASOURCE_USER: "${DB_KEYCLOAK_USER}"
+      JDBCSEC_DATASOURCE_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY: >-
+        SELECT ue.username, kg.name AS authority
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND ue.username = ?
+        ORDER BY authority
+      JDBCSEC_USERS_BY_USERNAME_QUERY: >-
+        SELECT username, 'password' AS password, enabled
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000' AND username = ?
+        ORDER BY username
+      JDBCSEC_ALL_AUTHORITIES_QUERY: >-
+        SELECT name AS authority
+        FROM keycloak_group
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY authority
+      JDBCSEC_ALL_USERNAMES_QUERY: >-
+        SELECT username
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY username
+      JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
+        SELECT ue.username
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND kg.name = ?
+        ORDER BY ue.username
+      CAS_ENABLED: "true"
+      CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
+      CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
+      CAS_PROVIDER_USERDETAILS: "jdbcUserDetailsService"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
+    depends_on:
+      - "postgres"
+
+  keycloak:
+    image: "docker.io/jboss/keycloak:15.0.2"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    volumes:
+      - "./realm.json:/opt/jboss/keycloak/imports/realm.json:ro"
+      - "./keycloak.init.d/:/opt/jboss/startup-scripts/:ro"
+    environment:
+      KEYCLOAK_USER: "admin"
+      KEYCLOAK_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
+      PROXY_ADDRESS_FORWARDING: "true"
+      DB_VENDOR: "postgres"
+      DB_ADDR: "postgres"
+      DB_USER: "${DB_KEYCLOAK_USER}"
+      DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      DB_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+      - "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm.json"
+    depends_on:
+      - "postgres"
+
+  postgres:
+    image: "docker.io/postgres:14"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    volumes:
+      - "./postgres.init.d/:/docker-entrypoint-initdb.d/:ro"
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_KEYCLOAK_USER: "${DB_KEYCLOAK_USER}"
+      POSTGRES_KEYCLOAK_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      POSTGRES_KEYCLOAK_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+
+networks:
+
+  biserver:
+    driver: "bridge"
+    internal: false
+
+volumes:
+
+  caddy-data:
+  postgres-data:
