@@ -3,7 +3,7 @@ stages:
   - "push:images"
 
 default:
-  image: "docker.io/docker:stable"
+  image: "docker.io/docker:latest"
 
 build:images:
   stage: "build:images"
