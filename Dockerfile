@@ -63,7 +63,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 
 # Install MySQL client
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '8C718D3B5072E1F5' \
+	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '467B942D3A79BD29' \
 	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
 	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
@@ -247,8 +247,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/11.0.1-0/vertica-jdbc-11.0.1-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="32884f8671b8dc6f6ae1a210036dbb647ff40963a7ec7e66141e701fcd7e4836"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/11.0.2-0/vertica-jdbc-11.0.2-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="62e8e5c59e551a79774dfa812f02456406b742514f2cefd241624afe50d4c90f"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
 	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
