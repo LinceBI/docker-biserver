@@ -63,7 +63,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 
 # Install MySQL client
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '8C718D3B5072E1F5' \
+	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '467B942D3A79BD29' \
 	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
 	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
