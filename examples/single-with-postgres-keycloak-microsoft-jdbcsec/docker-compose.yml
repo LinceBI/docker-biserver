@@ -20,7 +20,7 @@ services:
       TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
 
   biserver:
-    image: "repo.stratebi.com/lincebi/biserver:8.3.0.25-1402"
+    image: "repo.stratebi.com/lincebi/biserver:8.3.0.26-1500"
     restart: "on-failure:3"
     networks:
       - "biserver"

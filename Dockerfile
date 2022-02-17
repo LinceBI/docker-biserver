@@ -149,16 +149,16 @@ ENV KETTLE_HOME="${BIUSER_HOME}"
 ENV LOAD_SAMPLES="true"
 
 # Install Pentaho BI Server
-ARG BISERVER_VERSION="8.3.0.25-1402"
+ARG BISERVER_VERSION="8.3.0.26-1500"
 ARG BISERVER_BASE_URL="https://repo.stratebi.com/repository/pentaho-mvn/"
 ARG BISERVER_SOLUTIONS_URL="${BISERVER_BASE_URL}/pentaho/pentaho-solutions/${BISERVER_VERSION}/pentaho-solutions-${BISERVER_VERSION}.zip"
-ARG BISERVER_SOLUTIONS_CHECKSUM="6ebbf02de5a229ed7c9bbb6fc7bdf5b52f7f0988436f4d92ab731652d16b7e3f"
+ARG BISERVER_SOLUTIONS_CHECKSUM="dca0137d9c03a003d0d6c1cf2b3a3d72735eba7127272bb1913ddaf93652d7ee"
 ARG BISERVER_DATA_URL="${BISERVER_BASE_URL}/pentaho/pentaho-data/${BISERVER_VERSION}/pentaho-data-${BISERVER_VERSION}.zip"
-ARG BISERVER_DATA_CHECKSUM="383ec91b83c5135aaa740d85c2af4bfcd886ad5e7504b637a31411d07465ad95"
+ARG BISERVER_DATA_CHECKSUM="97b35b3ecdfb348fdc1a02e3baf61f2ed1941b339678f6352c5e3215cebc3b58"
 ARG BISERVER_WAR_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VERSION}/pentaho-war-${BISERVER_VERSION}.war"
-ARG BISERVER_WAR_CHECKSUM="1ff8819eb4846618cb37d785078c931857d974bf10e67cc1a912341614713efc"
+ARG BISERVER_WAR_CHECKSUM="6a298b20618141ed33e9bad9e24610ce6c2d1b6e593a4af0e76569561bb48459"
 ARG BISERVER_STYLE_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
-ARG BISERVER_STYLE_CHECKSUM="763e5e5e2390987d55b6f10a1b0e504695bbaebc67ae3150702ae5a1da91125c"
+ARG BISERVER_STYLE_CHECKSUM="5f2f9cfe3681f4eebd1ddc6e61c0482aa60630358305d309d4b969c807837a85"
 RUN mkdir /tmp/biserver/ \
 	&& cd /tmp/biserver/ \
 	# Download pentaho-solutions
@@ -187,8 +187,9 @@ RUN mkdir /tmp/biserver/ \
 	&& mv ./pentaho-data/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}" \
 	&& mv ./pentaho-war/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}" \
 	&& mv ./pentaho-style/ "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_STYLE_DIRNAME:?}" \
-	# Remove Big Data plugins from Kettle
-	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/ \
+	# Remove Hadoop libraries from Kettle
+	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/hadoop-configurations/* \
+	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/pentaho-mapreduce-libraries.zip \
 	# Remove JPivot, it's not maintained anymore
 	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/pentaho-jpivot-plugin/ \
 	# Create HSQLDB archive
