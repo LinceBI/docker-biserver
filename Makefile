@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 SHELL := /bin/sh
-.SHELLFLAGS := -eu -c
+.SHELLFLAGS := -euc
 
 AWK := $(shell command -v awk 2>/dev/null)
 DOCKER := $(shell command -v docker 2>/dev/null)
@@ -21,6 +21,9 @@ IMAGE_BUILD_OPTS :=
 
 IMAGE_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_docker.tzst
 STANDALONE_ARCHIVE := $(DISTDIR)/$(IMAGE_PROJECT)_$(IMAGE_VERSION)_standalone.zip
+
+export DOCKER_BUILDKIT := 1
+export BUILDKIT_PROGRESS := plain
 
 ##################################################
 ## "all" target
