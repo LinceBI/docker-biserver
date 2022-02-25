@@ -296,7 +296,7 @@ COPY --chown=biserver:root ./config/biserver.priv.init.d/ "${BISERVER_PRIV_INITD
 COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
 
 # Copy crontab
-COPY --chown=biserver:root ./config/crontab "${BIUSER_HOME}"/
+COPY --chown=biserver:root ./config/crontab /etc/supercronic/crontab
 
 # Copy scripts
 COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/

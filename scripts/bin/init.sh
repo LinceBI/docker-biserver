@@ -21,10 +21,6 @@ fi
 
 if [ "${SERVICE_SUPERCRONIC_ENABLED:?}" = 'true' ]; then
 	runitEnSv supercronic
-
-	if [ ! -e "${BIUSER_HOME:?}"/crontab ]; then
-		touch "${BIUSER_HOME:?}"/crontab
-	fi
 fi
 
 ########

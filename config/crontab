@@ -1,5 +1,8 @@
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+
 # Crontab format:
-#   https://github.com/aptible/supercronic#crontab-format
+# https://github.com/aptible/supercronic#crontab-format
 # ┌────────────── Second
 # │ ┌──────────── Minute
 # │ │ ┌────────── Hour
