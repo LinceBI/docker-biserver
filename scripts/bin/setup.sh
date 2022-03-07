@@ -86,6 +86,7 @@ export LC_ALL=C
 	JDBCSEC_ALL_USERNAMES_QUERY=$(getVar JDBCSEC_ALL_USERNAMES_QUERY "SELECT username FROM users ORDER BY username")
 	JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY=$(getVar JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY "SELECT username FROM granted_authorities WHERE authority = ? ORDER BY username")
 	JDBCSEC_ADMIN_ROLE=$(getVar JDBCSEC_ADMIN_ROLE "Administrator")
+	JDBCSEC_PASSWORD_ENCODER_CLASS=$(getVar JDBCSEC_PASSWORD_ENCODER_CLASS "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder")
 
 	CAS_ENABLED=$(getVar CAS_ENABLED "false")
 	CAS_URL=$(getVar CAS_URL "${FQSU_PROTOCOL:?}://${FQSU_DOMAIN:?}:${FQSU_PORT:?}/auth/realms/biserver/protocol/cas")
