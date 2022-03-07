@@ -56,7 +56,7 @@
 		<property name="minIdle" value="${jdbc.datasource.pool_min_idle}" />
 	</bean>
 
-	<bean id="jdbcPasswordEncoder" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder" />
+	<bean id="jdbcPasswordEncoder" class="${jdbc.password_encoder_class}" />
 
 	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
 		<constructor-arg value="jdbc" />
