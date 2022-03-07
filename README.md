@@ -200,6 +200,9 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>  * **`JDBCSEC_ADMIN_ROLE`:** rol administrador.  
 >>    **Por defecto:** `Administrator`
 >
+>>  * **`JDBCSEC_PASSWORD_ENCODER_CLASS`:** clase codificadora de contraseñas.  
+>>    **Por defecto:** `org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder`
+>
 > </details>
 >
 > <details>
