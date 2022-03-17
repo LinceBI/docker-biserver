@@ -33,6 +33,8 @@ org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.PostgreSQ
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 <%- elsif ENV['STORAGE_TYPE'] == 'tidb' -%>
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
 <%- end -%>
 org.quartz.jobStore.useProperties = false
 org.quartz.jobStore.dataSource = myDS
