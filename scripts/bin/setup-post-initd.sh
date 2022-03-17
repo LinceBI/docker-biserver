@@ -29,6 +29,10 @@ if [ "${IS_EXPORTING:?}" != 'true' ]; then
 	if [ "${STORAGE_TYPE:?}" = 'tidb' ]; then
 		/usr/share/biserver/bin/setup-storage-tidb.sh
 	fi
+
+	# Oracle setup (not implemented)
+	# if [ "${STORAGE_TYPE:?}" = 'oracle' ]; then
+	# fi
 fi
 
 ########

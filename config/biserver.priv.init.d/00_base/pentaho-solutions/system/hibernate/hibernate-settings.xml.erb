@@ -11,6 +11,8 @@
 	<config-file>system/hibernate/mysql5.hibernate.cfg.xml</config-file>
 	<%- elsif ENV['STORAGE_TYPE'] == 'tidb' -%>
 	<config-file>system/hibernate/tidb.hibernate.cfg.xml</config-file>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<config-file>system/hibernate/oracle10g.hibernate.cfg.xml</config-file>
 	<%- end -%>
 
 	<managed>false</managed>

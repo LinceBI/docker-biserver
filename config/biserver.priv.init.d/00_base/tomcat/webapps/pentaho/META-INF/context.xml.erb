@@ -100,6 +100,25 @@
 		testOnBorrow="true"
 		testOnReturn="false"
 	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<Resource
+		name="jdbc/Jackrabbit"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.pentaho.di.core.database.util.DecryptingDataSourceFactory"
+		driverClassName="oracle.jdbc.OracleDriver"
+		username="<%= ENV['ORACLE_JACKRABBIT_USER'] %>"
+		password="<%= ENV['ORACLE_JACKRABBIT_PASSWORD'] %>"
+		url="<%= ENV['ORACLE_JACKRABBIT_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		minIdle="0"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT 1 FROM DUAL"
+		testOnBorrow="true"
+		testOnReturn="false"
+	/>
 	<%- end -%>
 
 	<!-- ========================================================= -->
@@ -201,6 +220,25 @@
 		testOnBorrow="true"
 		testOnReturn="false"
 	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<Resource
+		name="jdbc/Hibernate"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.pentaho.di.core.database.util.DecryptingDataSourceFactory"
+		driverClassName="oracle.jdbc.OracleDriver"
+		username="<%= ENV['ORACLE_HIBERNATE_USER'] %>"
+		password="<%= ENV['ORACLE_HIBERNATE_PASSWORD'] %>"
+		url="<%= ENV['ORACLE_HIBERNATE_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		minIdle="0"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT 1 FROM DUAL"
+		testOnBorrow="true"
+		testOnReturn="false"
+	/>
 	<%- end -%>
 
 	<!-- ========================================================= -->
@@ -299,6 +337,25 @@
 		maxIdle="5"
 		maxWaitMillis="10000"
 		validationQuery="SELECT 1"
+		testOnBorrow="true"
+		testOnReturn="false"
+	/>
+	<%- elsif ENV['STORAGE_TYPE'] == 'oracle' -%>
+	<Resource
+		name="jdbc/Quartz"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.pentaho.di.core.database.util.DecryptingDataSourceFactory"
+		driverClassName="oracle.jdbc.OracleDriver"
+		username="<%= ENV['ORACLE_QUARTZ_USER'] %>"
+		password="<%= ENV['ORACLE_QUARTZ_PASSWORD'] %>"
+		url="<%= ENV['ORACLE_QUARTZ_JDBC_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		minIdle="0"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT 1 FROM DUAL"
 		testOnBorrow="true"
 		testOnReturn="false"
 	/>
