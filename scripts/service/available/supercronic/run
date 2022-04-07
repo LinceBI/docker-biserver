@@ -3,4 +3,4 @@
 set -eu
 
 exec 2>&1
-exec /usr/bin/supercronic /etc/supercronic/crontab
+exec /usr/bin/supercronic "${SUPERCRONIC_CRONTAB:-/etc/supercronic/crontab}"
