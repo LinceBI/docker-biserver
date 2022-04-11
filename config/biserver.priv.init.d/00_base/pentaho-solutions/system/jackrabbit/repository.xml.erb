@@ -38,7 +38,9 @@
 	<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
 		<param name="driver" value="javax.naming.InitialContext" />
 		<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+		<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 		<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+		<%- end -%>
 		<param name="schema" value="oracle" />
 		<param name="schemaObjectPrefix" value="fs_repos_" />
 	</FileSystem>
@@ -159,7 +161,9 @@
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
 			<param name="driver" value="javax.naming.InitialContext" />
 			<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+			<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 			<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+			<%- end -%>
 			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_fs_ws_" />
 		</FileSystem>
@@ -202,7 +206,9 @@
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
 			<param name="driver" value="javax.naming.InitialContext" />
 			<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+			<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 			<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+			<%- end -%>
 			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="${wsp.name}_pm_ws_" />
 		</PersistenceManager>
@@ -255,7 +261,9 @@
 		<FileSystem class="org.apache.jackrabbit.core.fs.db.OracleFileSystem">
 			<param name="driver" value="javax.naming.InitialContext" />
 			<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+			<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 			<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+			<%- end -%>
 			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="fs_ver_" />
 		</FileSystem>
@@ -298,7 +306,9 @@
 		<PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.OraclePersistenceManager">
 			<param name="driver" value="javax.naming.InitialContext" />
 			<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+			<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 			<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+			<%- end -%>
 			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="pm_ver_" />
 		</PersistenceManager>
@@ -358,7 +368,9 @@
 			<param name="revision" value="${rep.home}/revision.log" />
 			<param name="driver" value="javax.naming.InitialContext" />
 			<param name="url" value="java:comp/env/jdbc/Jackrabbit" />
+			<%- if ENV['ORACLE_TABLESPACE'] != '' -%>
 			<param name="tablespace" value="<%= ENV['ORACLE_TABLESPACE'] %>" />
+			<%- end -%>
 			<param name="schema" value="oracle" />
 			<param name="schemaObjectPrefix" value="j_cl_" />
 			<param name="janitorEnabled" value="true" />
