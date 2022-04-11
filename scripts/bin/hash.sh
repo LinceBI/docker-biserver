@@ -3,11 +3,6 @@
 set -eu
 export LC_ALL=C
 
-# shellcheck source=./set-utils.sh
-. /usr/share/biserver/bin/set-utils.sh
-
-########
-
 salt() { uuidgen | tr -d '-'; }
 checksum() { sha256sum | head -c64; }
 hex2bin() { xxd -r -p; }
