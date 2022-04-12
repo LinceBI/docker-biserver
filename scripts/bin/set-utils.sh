@@ -11,10 +11,6 @@ umask "${UMASK:?}"
 export HOME="${BIUSER_HOME:?}"
 export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?}"
 
-# Clean up temp directory on exit
-# shellcheck disable=SC2154
-trap 'ret="$?"; find "${TMPDIR:-/tmp}" -mindepth 1 -writable -delete ||:; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
-
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
 export PATTERN_EXT_TAR="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
