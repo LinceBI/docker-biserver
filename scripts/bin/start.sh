@@ -8,7 +8,7 @@ export LC_ALL=C
 
 ########
 
-export LD_LIBRARY_PATH=${CATALINA_HOME:?}/lib:/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH-}
+export LD_LIBRARY_PATH="${CATALINA_HOME:?}"/lib:/lib/x86_64-linux-gnu:"${LD_LIBRARY_PATH-}"
 export CATALINA_OPTS="\
 	-Xms${JAVA_XMS:?} -Xmx${JAVA_XMX:?} \
 	-Dfile.encoding=utf8 \
