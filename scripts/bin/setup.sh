@@ -235,3 +235,8 @@ export LC_ALL=C
 
 # Post-init.d setup
 /usr/share/biserver/bin/setup-post-initd.sh
+
+########
+
+# Clean up temp directory
+find "${TMPDIR:-/tmp}" -mindepth 1 -writable -delete 2>/dev/null ||:

@@ -3,6 +3,11 @@
 set -eu
 export LC_ALL=C
 
+# shellcheck source=./set-utils.sh
+. /usr/share/biserver/bin/set-utils.sh
+
+########
+
 WEBINFDIR="${CATALINA_BASE:?}/webapps/${WEBAPP_PENTAHO_DIRNAME:?}/WEB-INF"
 CLASSPATH=$(find "${WEBINFDIR:?}/lib" -type d -printf '%p:%p/*:')
 
