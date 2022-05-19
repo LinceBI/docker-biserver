@@ -23,7 +23,8 @@ services:
     image: "repo.stratebi.com/lincebi/biserver:8.3.0.26-1500"
     restart: "on-failure:3"
     networks:
-      - "biserver"
+      biserver:
+        aliases: ["${TLS_DOMAIN}"]
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
@@ -87,26 +88,33 @@ services:
       - "postgres"
 
   keycloak:
-    image: "quay.io/keycloak/keycloak:16.1.1"
+    image: "quay.io/keycloak/keycloak:18.0.0"
     restart: "on-failure:3"
     networks:
       - "biserver"
     volumes:
-      - "./realm.json:/opt/jboss/keycloak/imports/realm.json:ro"
-      - "./keycloak.init.d/:/opt/jboss/startup-scripts/:ro"
+      - "./realm.json:/opt/keycloak/data/import/realm.json:ro"
+      - "./keycloak.init.d/:/etc/keycloak.init.d/:ro"
     environment:
-      KEYCLOAK_USER: "admin"
-      KEYCLOAK_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
-      PROXY_ADDRESS_FORWARDING: "true"
-      DB_VENDOR: "postgres"
-      DB_ADDR: "postgres"
-      DB_USER: "${DB_KEYCLOAK_USER}"
-      DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
-      DB_DATABASE: "${DB_KEYCLOAK_DATABASE}"
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://postgres/${DB_KEYCLOAK_DATABASE}"
+      KC_DB_USERNAME: "${DB_KEYCLOAK_USER}"
+      KC_DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_HOST: "0.0.0.0"
+      KC_HTTP_PORT: "8080"
+      KC_HTTP_RELATIVE_PATH: "/auth"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_PROXY: "edge"
+    entrypoint: "/bin/sh"
     command:
-      - "-b 0.0.0.0"
-      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
-      - "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm.json"
+      - "-euc"
+      - |
+        for f in /etc/keycloak.init.d/*.sh; do "$${f:?}"; done
+        exec /opt/keycloak/bin/kc.sh start --auto-build --import-realm
     depends_on:
       - "postgres"
 
