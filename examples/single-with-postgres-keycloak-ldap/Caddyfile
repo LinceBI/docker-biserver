@@ -19,6 +19,18 @@
 	}
 }
 
+(security-directives) {
+	header /* {
+		Referrer-Policy "same-origin"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		X-XSS-Protection "1; mode=block"
+		Set-Cookie "^(.*)$" "$1; SameSite=None; Secure; HttpOnly"
+		-Server
+		-X-Powered-By
+	}
+}
+
 (proxy-subdirectives) {
 	header_up Host {http.request.host}
 	header_up X-Real-IP {http.request.remote.host}
@@ -26,11 +38,11 @@
 	header_up X-Forwarded-Host {http.request.host}
 	header_up X-Forwarded-Port {http.request.port}
 	header_up X-Forwarded-Proto {http.request.scheme}
-	header_down Set-Cookie "^(.*)$" "$1; SameSite=None; Secure"
 }
 
 http://{$TLS_DOMAIN}:80 {
 	import common-directives
+	import security-directives
 
 	redir /* https://{host}{uri} 301
 }
@@ -38,6 +50,7 @@ http://{$TLS_DOMAIN}:80 {
 https://{$TLS_DOMAIN}:443 {
 	import common-directives
 	import tls-directives
+	import security-directives
 
 	reverse_proxy /* {
 		to biserver:8080
@@ -55,11 +68,10 @@ https://sso.{$TLS_DOMAIN}:443 {
 	import common-directives
 	import tls-directives
 
+	redir / /auth
+
 	reverse_proxy /* {
-		to keycloak:8443
+		to keycloak:8080
 		import proxy-subdirectives
-		transport http {
-			tls_insecure_skip_verify
-		}
 	}
 }

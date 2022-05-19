@@ -19,6 +19,18 @@
 	}
 }
 
+(security-directives) {
+	header /* {
+		Referrer-Policy "same-origin"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		X-XSS-Protection "1; mode=block"
+		Set-Cookie "^(.*)$" "$1; SameSite=None; Secure; HttpOnly"
+		-Server
+		-X-Powered-By
+	}
+}
+
 (proxy-subdirectives) {
 	header_up Host {http.request.host}
 	header_up X-Real-IP {http.request.remote.host}
@@ -26,7 +38,6 @@
 	header_up X-Forwarded-Host {http.request.host}
 	header_up X-Forwarded-Port {http.request.port}
 	header_up X-Forwarded-Proto {http.request.scheme}
-	header_down Set-Cookie "^(.*)$" "$1; SameSite=None; Secure"
 
 	health_path /pentaho/j_spring_security_check
 	health_interval 30s
@@ -38,6 +49,7 @@
 
 http://{$TLS_DOMAIN}:80 {
 	import common-directives
+	import security-directives
 
 	redir /* https://{host}{uri} 301
 }
@@ -45,6 +57,7 @@ http://{$TLS_DOMAIN}:80 {
 https://{$TLS_DOMAIN}:443 {
 	import common-directives
 	import tls-directives
+	import security-directives
 
 	reverse_proxy /* {
 		to biserver-1:8080 biserver-2:8080
