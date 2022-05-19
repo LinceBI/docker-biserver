@@ -57,24 +57,3 @@ https://{$TLS_DOMAIN}:443 {
 		import proxy-subdirectives
 	}
 }
-
-http://sso.{$TLS_DOMAIN}:80 {
-	import common-directives
-	import security-directives
-
-	redir /* https://{host}{uri} 301
-}
-
-https://sso.{$TLS_DOMAIN}:443 {
-	import common-directives
-	import tls-directives
-	import security-directives
-
-	reverse_proxy /* {
-		to keycloak:8443
-		import proxy-subdirectives
-		transport http {
-			tls_insecure_skip_verify
-		}
-	}
-}
