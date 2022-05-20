@@ -25,7 +25,7 @@
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "SAMEORIGIN"
 		X-XSS-Protection "1; mode=block"
-		Set-Cookie "^(.*)$" "$1; SameSite=None; Secure; HttpOnly"
+		Set-Cookie "^(.*)$" "$1; SameSite=Strict; Secure; HttpOnly"
 		-Server
 		-X-Powered-By
 	}
