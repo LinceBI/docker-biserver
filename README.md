@@ -111,6 +111,9 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los roles.  
 >>    **Por defecto:** `(objectClass=groupOfUniqueNames)`
 >>
+>>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_SCOPE`:** alcance de la búsqueda, admite los valores `0` (`OBJECT_SCOPE`), `1` (`ONELEVEL_SCOPE`) y `2` (`SUBTREE_SCOPE`).  
+>>    **Por defecto:** `2`
+>>
 >>  * **`LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE`:** atributo del nombre del rol.  
 >>    **Por defecto:** `cn`
 >>
@@ -119,6 +122,9 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>
 >>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los usuarios.  
 >>    **Por defecto:** `(objectClass=inetOrgPerson)`
+>>
+>>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_SCOPE`:** alcance de la búsqueda, admite los valores `0` (`OBJECT_SCOPE`), `1` (`ONELEVEL_SCOPE`) y `2` (`SUBTREE_SCOPE`).  
+>>    **Por defecto:** `2`
 >>
 >>  * **`LDAP_ALL_USERNAMES_SEARCH_USERNAME_ATTRIBUTE`:** atributo del nombre del usuario.  
 >>    **Por defecto:** `cn`
@@ -139,7 +145,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>    **Por defecto:** `${LDAP_ALL_AUTHORITIES_SEARCH_ROLE_ATTRIBUTE}`
 >>
 >>  * **`LDAP_POPULATOR_SEARCH_SUBTREE`:** indica si la búsqueda debe incluir los hijos del directorio.  
->>    **Por defecto:** `false`
+>>    **Por defecto:** `true`
 >>
 >>  * **`LDAP_POPULATOR_ROLE_PREFIX`:** prefijo para añadir al nombre de los roles.  
 >>    **Por defecto:** *vacío*
