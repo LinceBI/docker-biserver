@@ -15,6 +15,11 @@
 			<bean class="org.pentaho.platform.plugin.services.security.userrole.ldap.search.LdapSearchParamsFactoryImpl">
 				<constructor-arg index="0" value="${ldap.all_usernames_search.search_base}" />
 				<constructor-arg index="1" value="${ldap.all_usernames_search.search_filter}" />
+				<constructor-arg index="2">
+					<bean class="javax.naming.directory.SearchControls">
+						<property name="searchScope" value="${ldap.all_usernames_search.search_scope}" />
+					</bean>
+				</constructor-arg>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -31,6 +36,11 @@
 			<bean class="org.pentaho.platform.plugin.services.security.userrole.ldap.search.LdapSearchParamsFactoryImpl">
 				<constructor-arg index="0" value="${ldap.all_authorities_search.search_base}" />
 				<constructor-arg index="1" value="${ldap.all_authorities_search.search_filter}" />
+				<constructor-arg index="2">
+					<bean class="javax.naming.directory.SearchControls">
+						<property name="searchScope" value="${ldap.all_authorities_search.search_scope}" />
+					</bean>
+				</constructor-arg>
 			</bean>
 		</constructor-arg>
 		<constructor-arg index="2">
