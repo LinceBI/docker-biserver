@@ -25,6 +25,7 @@
 			<%- if ENV['IS_PROXIED'] == 'true' -%>
 			scheme="<%= ENV['PROXY_SCHEME'] %>"
 			proxyPort="<%= ENV['PROXY_PORT'] %>"
+			secure="<%= ENV['PROXY_SCHEME'] == 'https' ? 'true' : 'false' %>"
 			<%- end -%>
 			URIEncoding="UTF-8"
 			relaxedPathChars="[]|"
