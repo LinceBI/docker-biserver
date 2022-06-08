@@ -7,6 +7,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		bash \
 		bzip2 \
 		ca-certificates \
+		catatonit \
 		curl \
 		diffutils \
 		file \
@@ -39,7 +40,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		runit \
 		subversion \
 		tar \
-		tini \
 		tzdata \
 		unzip \
 		uuid-runtime \
@@ -300,5 +300,5 @@ USER 1000:0
 RUN /usr/share/biserver/bin/update-permissions.sh
 
 STOPSIGNAL SIGHUP
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/catatonit", "--"]
 CMD ["/usr/share/biserver/bin/init.sh"]
