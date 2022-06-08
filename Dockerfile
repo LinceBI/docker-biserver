@@ -4,7 +4,6 @@ FROM docker.io/ubuntu:22.04
 RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
-		apt-transport-https \
 		bash \
 		bzip2 \
 		ca-certificates \
