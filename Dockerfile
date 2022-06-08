@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:20.04
+FROM docker.io/ubuntu:22.04
 
 # Install system packages
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -27,11 +27,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		lsb-release \
 		lzma \
 		mime-support \
+		mysql-client-8.0 \
 		nano \
 		netcat-openbsd \
 		openssh-client \
 		openssl \
 		patch \
+		postgresql-client-14 \
 		pwgen \
 		rsync \
 		ruby \
@@ -49,23 +51,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install Zulu OpenJDK
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys 'B1998361219BD9C9' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
+	&& curl --proto '=https' --tlsv1.3 -sSf 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | gpg --dearmor -o /etc/apt/trusted.gpg.d/zulu-openjdk.gpg \
+	&& printf '%s\n' "deb [signed-by=/etc/apt/trusted.gpg.d/zulu-openjdk.gpg, arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
 	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install PostgreSQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '7FCC7D46ACCC4CF8' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install MySQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '467B942D3A79BD29' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
-	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
