@@ -52,7 +52,7 @@ services:
       - "mariadb"
 
   mariadb:
-    image: "docker.io/mariadb:10.5"
+    image: "docker.io/mariadb:10.6"
     restart: "on-failure:3"
     networks:
       - "biserver"
