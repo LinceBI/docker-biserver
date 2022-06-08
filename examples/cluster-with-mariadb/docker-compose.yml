@@ -81,16 +81,16 @@ services:
       MYSQL_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
       MYSQL_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
     entrypoint: "/bin/sh"
-    command: |
-      -euc "
-        until [ \"$$(curl -so /dev/null -w '%{http_code}' -Im 5 'http://biserver-1:8080/pentaho/')\" = '302' ]; do sleep 10; done
-        exec /usr/bin/tini /usr/share/biserver/bin/init.sh
-      "
+    command:
+      - "-euc"
+      - |
+        until [ "$$(curl -so /dev/null -w '%{http_code}' -Im 5 'http://biserver-1:8080/pentaho/')" = '302' ]; do sleep 10; done
+        exec /usr/bin/catatonit /usr/share/biserver/bin/init.sh
     depends_on:
       - "mariadb"
 
   mariadb:
-    image: "docker.io/mariadb:10.5"
+    image: "docker.io/mariadb:10.6"
     restart: "on-failure:3"
     networks:
       - "biserver"
