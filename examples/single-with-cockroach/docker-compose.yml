@@ -66,8 +66,9 @@ services:
     environment:
       COCKROACH_PASSWORD: "${DB_PASSWORD}"
     entrypoint: "/bin/sh"
-    command: |
-      -euc "
+    command:
+      - "-euc"
+      - |
         cd /cockroach/
         if [ ! -f ./cockroach-ca/ca.key ]; then
           # Create CA
@@ -99,16 +100,15 @@ services:
           # Set root user password
           ./cockroach sql \
             --host=cockroach-1 \
-            --execute=\"ALTER USER root WITH PASSWORD '$${COCKROACH_PASSWORD}';\" \
+            --execute="ALTER USER root WITH PASSWORD '$${COCKROACH_PASSWORD}';" \
             --certs-dir=./cockroach-ca/
           # Enable remote debugging mode
           ./cockroach sql \
             --host=cockroach-1 \
-            --execute=\"SET CLUSTER SETTING server.remote_debugging.mode = 'any';\" \
+            --execute="SET CLUSTER SETTING server.remote_debugging.mode = 'any';" \
             --certs-dir=./cockroach-ca/
         fi
         while true; do sleep 30; done
-      "
 
   cockroach-1:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -122,15 +122,15 @@ services:
       - "cockroach-1-certs:/cockroach/cockroach-certs/"
       - "cockroach-1-data:/cockroach/cockroach-data/"
     entrypoint: "/bin/sh"
-    command: |
-      -euc "
+    command:
+      - "-euc"
+      - |
         cd /cockroach/
         until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
         exec ./cockroach start \
           --advertise-addr=cockroach-1 \
           --join=cockroach-1,cockroach-2,cockroach-3 \
           --certs-dir=./cockroach-certs/
-      "
 
   cockroach-2:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -144,15 +144,15 @@ services:
       - "cockroach-2-certs:/cockroach/cockroach-certs/"
       - "cockroach-2-data:/cockroach/cockroach-data/"
     entrypoint: "/bin/sh"
-    command: |
-      -euc "
+    command:
+      - "-euc"
+      - |
         cd /cockroach/
         until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
         exec ./cockroach start \
           --advertise-addr=cockroach-2 \
           --join=cockroach-1,cockroach-2,cockroach-3 \
           --certs-dir=./cockroach-certs/
-      "
 
   cockroach-3:
     image: "docker.io/cockroachdb/cockroach:latest"
@@ -166,15 +166,15 @@ services:
       - "cockroach-3-certs:/cockroach/cockroach-certs/"
       - "cockroach-3-data:/cockroach/cockroach-data/"
     entrypoint: "/bin/sh"
-    command: |
-      -euc "
+    command:
+      - "-euc"
+      - |
         cd /cockroach/
         until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
         exec ./cockroach start \
           --advertise-addr=cockroach-3 \
           --join=cockroach-1,cockroach-2,cockroach-3 \
           --certs-dir=./cockroach-certs/
-      "
 
 networks:
 
