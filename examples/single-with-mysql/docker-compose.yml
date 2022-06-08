@@ -38,7 +38,7 @@ services:
       MYSQL_HOST: "mysql"
       MYSQL_USER: "root"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_JDBC_PROPS: "useSSL=false"
+      MYSQL_JDBC_PROPS: "useSSL=false&amp;allowPublicKeyRetrieval=true"
       MYSQL_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
       MYSQL_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
       MYSQL_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
@@ -52,7 +52,7 @@ services:
       - "mysql"
 
   mysql:
-    image: "docker.io/mysql:5.7"
+    image: "docker.io/mysql:8.0"
     restart: "on-failure:3"
     networks:
       - "biserver"
