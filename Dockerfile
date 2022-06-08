@@ -1,13 +1,13 @@
-FROM docker.io/ubuntu:20.04
+FROM docker.io/ubuntu:22.04
 
 # Install system packages
 RUN export DEBIAN_FRONTEND=noninteractive \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
-		apt-transport-https \
 		bash \
 		bzip2 \
 		ca-certificates \
+		catatonit \
 		curl \
 		diffutils \
 		file \
@@ -27,18 +27,19 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		lsb-release \
 		lzma \
 		mime-support \
+		mysql-client-8.0 \
 		nano \
 		netcat-openbsd \
 		openssh-client \
 		openssl \
 		patch \
+		postgresql-client-14 \
 		pwgen \
 		rsync \
 		ruby \
 		runit \
 		subversion \
 		tar \
-		tini \
 		tzdata \
 		unzip \
 		uuid-runtime \
@@ -49,23 +50,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Install Zulu OpenJDK
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys 'B1998361219BD9C9' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
+	&& curl --proto '=https' --tlsv1.3 -sSf 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | gpg --dearmor -o /etc/apt/trusted.gpg.d/zulu-openjdk.gpg \
+	&& printf '%s\n' "deb [signed-by=/etc/apt/trusted.gpg.d/zulu-openjdk.gpg, arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
 	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install PostgreSQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '7FCC7D46ACCC4CF8' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://apt.postgresql.org/pub/repos/apt/ ${DISTRO:?}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& apt-get update && apt-get install -y --no-install-recommends postgresql-client-13 \
-	&& rm -rf /var/lib/apt/lists/*
-
-# Install MySQL client
-RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" && DISTRO="$(lsb_release -cs)" \
-	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys '467B942D3A79BD29' \
-	&& printf '%s\n' "deb [arch=${ARCH:?}] https://repo.mysql.com/apt/ubuntu/ ${DISTRO:?} mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
-	&& apt-get update && apt-get install -y --no-install-recommends mysql-client \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
@@ -231,8 +218,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
 
 # Install MySQL JDBC
-ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar"
-ARG MYSQL_JDBC_CHECKSUM="5bba9ff50e5e637a0996a730619dee19ccae274883a4d28c890d945252bb0e12"
+ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar"
+ARG MYSQL_JDBC_CHECKSUM="d4e32d2a6026b5acc00300b73a86c28fb92681ae9629b21048ee67014c911db6"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MYSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MYSQL_JDBC_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
@@ -313,5 +300,5 @@ USER 1000:0
 RUN /usr/share/biserver/bin/update-permissions.sh
 
 STOPSIGNAL SIGHUP
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/usr/bin/catatonit", "--"]
 CMD ["/usr/share/biserver/bin/init.sh"]

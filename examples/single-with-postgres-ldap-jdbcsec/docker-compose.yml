@@ -103,12 +103,12 @@ services:
       LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD}"
       LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD}"
     entrypoint: '/bin/sh'
-    command: |
-      -euc "
+    command:
+      - "-euc"
+      - |
         mkdir -p /container/service/slapd/assets/config/bootstrap/ldif/custom/
         cp -f /container/ldif/*.ldif /container/service/slapd/assets/config/bootstrap/ldif/custom/
         exec /container/tool/run
-      "
 
   postgres:
     image: "docker.io/postgres:14"
