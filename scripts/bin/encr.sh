@@ -22,6 +22,6 @@ fi
 cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/
 exec java \
 		-classpath "${CLASSPATH:?}:${TMPCLASSPATH:?}" \
-		-Dlog4j.configuration=file:"${WEBINFDIR:?}/classes/log4j.xml" \
+		-Dlog4j2.configurationFile=file:"${WEBINFDIR:?}/classes/log4j2.xml" \
 		-Dlog4j2.formatMsgNoLookups=true \
 		org.pentaho.di.core.encryption.Encr "$@" | tr -d '\n'
