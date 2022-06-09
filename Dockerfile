@@ -52,7 +52,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)" \
 	&& curl --proto '=https' --tlsv1.3 -sSf 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | gpg --dearmor -o /etc/apt/trusted.gpg.d/zulu-openjdk.gpg \
 	&& printf '%s\n' "deb [signed-by=/etc/apt/trusted.gpg.d/zulu-openjdk.gpg, arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
-	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
+	&& apt-get update && apt-get install -y --no-install-recommends zulu11-jdk \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
@@ -79,9 +79,9 @@ RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
 # Set default Java
-ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/zulu11-ca-amd64"
 ENV JAVA_XMS="1024m" JAVA_XMX="4096m"
-RUN update-java-alternatives --set zulu8-ca-amd64
+RUN update-java-alternatives --set zulu11-ca-amd64
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
@@ -135,16 +135,16 @@ ENV WEBAPP_PENTAHO_STYLE_DIRNAME="pentaho-style"
 ENV KETTLE_HOME="${BIUSER_HOME}"
 
 # Install Pentaho BI Server
-ARG BISERVER_VERSION="9.2.0.0-290"
+ARG BISERVER_VERSION="9.3.0.0-428"
 ARG BISERVER_BASE_URL="https://repo.stratebi.com/repository/pentaho-mvn/"
 ARG BISERVER_SOLUTIONS_URL="${BISERVER_BASE_URL}/pentaho/pentaho-solutions/${BISERVER_VERSION}/pentaho-solutions-${BISERVER_VERSION}.zip"
-ARG BISERVER_SOLUTIONS_CHECKSUM="29ed84aa3e8bbe419ae9c127d9348692c21567638668f2cce2c4c8e9ce952561"
+ARG BISERVER_SOLUTIONS_CHECKSUM="7a5560907d2b22be2a0844445110e7ab00ed25cc9c818ffddbc3cb12f159d2e2"
 ARG BISERVER_DATA_URL="${BISERVER_BASE_URL}/pentaho/pentaho-data/${BISERVER_VERSION}/pentaho-data-${BISERVER_VERSION}.zip"
-ARG BISERVER_DATA_CHECKSUM="88885016881fe8ebb16f12615344f3ab982cd91f43c1b07ae953d66bb3a26044"
+ARG BISERVER_DATA_CHECKSUM="a6acd0099ca78dc00b122acf64e405d8669eac76c7937376bb05ed731f3b912e"
 ARG BISERVER_WAR_URL="${BISERVER_BASE_URL}/pentaho/pentaho-war/${BISERVER_VERSION}/pentaho-war-${BISERVER_VERSION}.war"
-ARG BISERVER_WAR_CHECKSUM="9d9d46088709cb6ac575f0ff9845cc6d7bc5080f76bc9daac3120d0bd459d919"
+ARG BISERVER_WAR_CHECKSUM="77d9e92e440cd058621466e0b96053d41c12cb9e6355741f58e076fde3c1d1a8"
 ARG BISERVER_STYLE_URL="${BISERVER_BASE_URL}/pentaho/pentaho-style/${BISERVER_VERSION}/pentaho-style-${BISERVER_VERSION}.war"
-ARG BISERVER_STYLE_CHECKSUM="4e9776f169a9aa97cee5fccd1715aa592111736bc6cbc491289e56ec2d614da4"
+ARG BISERVER_STYLE_CHECKSUM="c7fff552c061570a84089ceab1cb7157f51a3ff57c1f9a6fa6f8d66a22e871c5"
 RUN mkdir /tmp/biserver/ \
 	&& cd /tmp/biserver/ \
 	# Download pentaho-solutions
@@ -226,8 +226,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/10.2.1.jre8/mssql-jdbc-10.2.1.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="6b9a25f38f454d128417c507e04af999d1a095d456e4a1ba46fedac97e0a7113"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/10.2.1.jre11/mssql-jdbc-10.2.1.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="055085d7f604307127ae71bc1ca824b79ca81e614537450c97e0c8d16b20dd50"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
