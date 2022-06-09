@@ -13,9 +13,6 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 
 	<bean class="org.pentaho.platform.engine.core.system.objfac.spring.ApplicationContextPentahoSystemRegisterer" scope="singleton" />
 
-	<!-- Picked up by Spring to do type conversion. Useful, for example, for setting up bean collection properties from Strings. -->
-	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
-
 	<bean id="SystemConfig" class="org.pentaho.platform.config.SystemConfig">
 		<constructor-arg>
 			<pen:list class="org.pentaho.platform.api.engine.IConfiguration" />
@@ -35,15 +32,6 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 		</constructor-arg>
 	</bean>
 
-	<!-- Makes `pentaho.xml` properties accessible via ISystemConfig. -->
-	<bean class="org.pentaho.platform.config.SystemSettingsConfiguration" >
-		<constructor-arg value="system" />
-		<!-- Defined in pentahoSystemConfig.xml -->
-		<constructor-arg ref="systemSettingsService" />
-		<pen:publish as-type="INTERFACES" />
-	</bean>
-
-	<!-- Overrides any same named `pentaho.xml` properties. -->
 	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
 		<constructor-arg value="system" />
 		<constructor-arg value="system.properties" />
@@ -62,8 +50,6 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 	<import resource="repository.spring.xml" />
 
 	<import resource="applicationContext-spring-security.xml" />
-	<import resource="applicationContext-spring-security-csrf.xml" />
-	<import resource="applicationContext-spring-security-cors.xml" />
 	<import resource="applicationContext-spring-security-superuser.xml" />
 	<import resource="applicationContext-pentaho-security-superuser.xml" />
 	<import resource="applicationContext-common-authorization.xml" />

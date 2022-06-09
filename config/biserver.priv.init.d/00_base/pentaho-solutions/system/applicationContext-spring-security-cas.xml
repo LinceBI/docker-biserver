@@ -24,12 +24,11 @@
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<util:list>
-				<sec:filter-chain pattern="/api/csrf/token" filters="
-					csrfGateFilter,
-					corsFilter" />
+				<sec:filter-chain pattern="/api/system/csrf" filters="
+					csrfTokenSecurityFilter,
+					csrfTokenResponseHeaderFilter" />
 				<sec:filter-chain pattern="/webservices/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
@@ -41,8 +40,7 @@
 					exceptionTranslationFilter,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/api/repos/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
@@ -56,8 +54,7 @@
 					filterInvocationInterceptorForWS,
 					preFlightFilter" />
 				<sec:filter-chain pattern="/api/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
@@ -70,8 +67,7 @@
 					exceptionTranslationFilter,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/plugin/reporting/api/jobs/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
@@ -85,8 +81,7 @@
 					filterInvocationInterceptorForWS,
 					preFlightFilter" />
 				<sec:filter-chain pattern="/plugin/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
@@ -99,8 +94,7 @@
 					exceptionTranslationFilter,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/**" filters="
-					csrfGateFilter,
-					corsFilter,
+					csrfTokenSecurityFilter,
 					securityContextHolderAwareRequestFilter,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
