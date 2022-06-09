@@ -22,7 +22,7 @@
 			</PatternLayout>
 		</Console>
 
-		<RollingFile name="PENTAHOFILE" fileName="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.%d{yyyy-MM-dd}.log">
+		<RollingFile name="PENTAHOFILE" fileName="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log.%d{yyyy-MM-dd}">
 			<PatternLayout>
 				<Pattern>%d %-5p [%c] %m%n</Pattern>
 			</PatternLayout>
@@ -36,6 +36,7 @@
 
 	<Loggers>
 
+		<Logger name="org.apache.hadoop.io.retry" level="INFO" />
 		<Logger name="org.hibernate" level="ERROR" />
 		<Logger name="net.sf.ehcache" level="ERROR" />
 		<Logger name="org.quartz" level="ERROR" />
@@ -49,7 +50,7 @@
 		<Logger name="org.pentaho.platform.web.http.context" level="WARN" />
 		<Logger name="org.pentaho.di.osgi" level="ERROR" />
 		<Logger name="org.pentaho.di.monitor" level="ERROR" />
-		<Logger name="RepositoryImportLog" level="INFO" />
+		<Logger name="org.pentaho.platform.engine.core.system.status" level="INFO" />
 
 		<Root level="ERROR">
 			<AppenderRef ref="PENTAHOCONSOLE" />
