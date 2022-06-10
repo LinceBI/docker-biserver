@@ -224,8 +224,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
 
 # Install MySQL JDBC
-ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.29/mysql-connector-java-8.0.29.jar"
-ARG MYSQL_JDBC_CHECKSUM="d4e32d2a6026b5acc00300b73a86c28fb92681ae9629b21048ee67014c911db6"
+ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar"
+ARG MYSQL_JDBC_CHECKSUM="5bba9ff50e5e637a0996a730619dee19ccae274883a4d28c890d945252bb0e12"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MYSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MYSQL_JDBC_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
