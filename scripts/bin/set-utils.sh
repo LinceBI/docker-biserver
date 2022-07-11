@@ -9,7 +9,7 @@ umask "${UMASK:?}"
 
 # Set home directory
 export HOME="${BIUSER_HOME:?}"
-export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?} ${JAVA_TOOL_OPTIONS-}"
+export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?} ${JAVA_TOOL_OPTIONS_EXTRA-}"
 
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
