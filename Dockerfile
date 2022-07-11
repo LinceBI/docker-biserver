@@ -87,6 +87,9 @@ RUN update-java-alternatives --set zulu11-ca-amd64
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
 ENV CATALINA_OPTS_EXTRA=""
+ENV TOMCAT_SHUTDOWN_PORT="8005"
+ENV TOMCAT_AJP_PORT="8009"
+ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
 ARG TOMCAT_VERSION="9.0.63"
@@ -304,6 +307,8 @@ USER 1000:0
 
 # Set correct permissions to support arbitrary user ids
 RUN /usr/share/biserver/bin/update-permissions.sh
+
+HEALTHCHECK --start-period=120s --interval=10s --timeout=5s --retries=3 CMD ["/usr/share/biserver/bin/healthcheck.sh"]
 
 STOPSIGNAL SIGHUP
 ENTRYPOINT ["/usr/bin/catatonit", "--"]
