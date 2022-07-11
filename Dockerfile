@@ -56,9 +56,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
-ARG SUPERCRONIC_VERSION="0.1.12"
+ARG SUPERCRONIC_VERSION="0.2.1"
 ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="8d3a575654a6c93524c410ae06f681a3507ca5913627fa92c7086fd140fa12ce"
+ARG SUPERCRONIC_CHECKSUM="5eb5e2533fe75acffa63e437c0d8c4cb1f0c96891b84ae10ef4e53d602505f60"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
