@@ -11,7 +11,7 @@ if [ "${AJP_RESPONSE_DATA?}" != "$(printf '\101\102\000\001\011')" ]; then
 	exit 1
 fi
 
-HTTP_RESPONSE_CODE=$(curl -so /dev/null -w '%{http_code}' "http://localhost:${TOMCAT_HTTP_PORT:?}/${WEBAPP_PENTAHO_DIRNAME:?}")
+HTTP_RESPONSE_CODE=$(curl -so /dev/null -w '%{http_code}' -m 5 "http://localhost:${TOMCAT_HTTP_PORT:?}/${WEBAPP_PENTAHO_DIRNAME:?}")
 if [ "${HTTP_RESPONSE_CODE?}" -lt 200 ] || [ "${HTTP_RESPONSE_CODE?}" -gt 399 ]; then
 	>&2 printf '%s\n' 'HTTP connector returned an unexpected result'
 	exit 1
