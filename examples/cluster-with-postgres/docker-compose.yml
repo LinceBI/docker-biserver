@@ -78,14 +78,9 @@ services:
       POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
       POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
-    entrypoint: "/bin/sh"
-    command:
-      - "-euc"
-      - |
-        until [ "$$(curl -so /dev/null -w '%{http_code}' -Im 5 'http://biserver-1:8080/pentaho/')" = '302' ]; do sleep 10; done
-        exec /usr/bin/catatonit /usr/share/biserver/bin/init.sh
     depends_on:
-      - "postgres"
+      biserver-1:
+        condition: "service_healthy"
 
   postgres:
     image: "docker.io/postgres:14"
