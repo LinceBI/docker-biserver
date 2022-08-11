@@ -44,7 +44,7 @@ services:
       LDAP_POPULATOR_GROUP_SEARCH_FILTER: "(uniqueMember={0})"
       LDAP_ADMIN_ROLE: "cn=Administrator,ou=groups,dc=example,dc=localdomain"
       CAS_ENABLED: "true"
-      CAS_URL: "https://sso.${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
+      CAS_URL: "https://${TLS_DOMAIN}/auth/realms/biserver/protocol/cas"
       CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
       CAS_PROVIDER_USERDETAILS: "ldapUserDetailsService"
       STORAGE_TYPE: "postgres"

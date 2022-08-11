@@ -51,25 +51,14 @@ https://{$TLS_DOMAIN}:443 {
 	import tls-directives
 	import security-directives
 
-	reverse_proxy /* {
+	@biserver expression path('/*') && !path('/auth/*')
+	reverse_proxy @biserver {
 		to biserver:8080
 		import proxy-subdirectives
 	}
-}
 
-http://sso.{$TLS_DOMAIN}:80 {
-	import common-directives
-
-	redir /* https://{host}{uri} 301
-}
-
-https://sso.{$TLS_DOMAIN}:443 {
-	import common-directives
-	import tls-directives
-
-	redir / /auth
-
-	reverse_proxy /* {
+	@keycloak expression path('/auth/*')
+	reverse_proxy @keycloak {
 		to keycloak:8080
 		import proxy-subdirectives
 	}
