@@ -91,7 +91,7 @@ services:
       - "-euc"
       - |
         for f in /etc/keycloak.init.d/*.sh; do "$${f:?}"; done
-        exec /opt/keycloak/bin/kc.sh start --auto-build --import-realm
+        exec /opt/keycloak/bin/kc.sh start --import-realm
     depends_on:
       - "postgres"
       - "openldap"
