@@ -219,8 +219,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.4.1/postgresql-42.4.1.jar"
-ARG POSTGRES_JDBC_CHECKSUM="fb931c3841fede01c89f8e61970554076a98046c2b87ae3eb303d1481047b951"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.0/postgresql-42.5.0.jar"
+ARG POSTGRES_JDBC_CHECKSUM="a4d18b5ab1aeb9285a8b17b365f424f268445229cabf8e412115db6152b7dee3"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
@@ -235,8 +235,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/10.2.1.jre8/mssql-jdbc-10.2.1.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="6b9a25f38f454d128417c507e04af999d1a095d456e4a1ba46fedac97e0a7113"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/11.2.0.jre8/mssql-jdbc-11.2.0.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="63d8e38f0d849ccf084805151d456e9a5e073679bdfe429fb77fc973c34bce5a"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
