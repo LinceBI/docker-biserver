@@ -379,6 +379,17 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 
 </details>
 
+<details>
+  <summary>Otros</summary>
+
+> * **`FILE_UPLOAD_DEFAULTS_MAX_FILE_LIMIT`:** tamaño máximo de archivo en bytes permitido para subir al servidor.  
+>   **Por defecto:** `128000000`
+>
+> * **`FILE_UPLOAD_DEFAULTS_MAX_FOLDER_LIMIT`:** tamaño máximo de directorio en bytes permitido para subir al servidor.  
+>   **Por defecto:** `512000000`
+
+</details>
+
 ## Instalación de plugins y ejecución de scripts personalizados
 
 Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar Tomcat por primera vez. Los archivos o directorios situados en el directorio `./config/biserver.init.d/` son tratados de diferentes maneras.
