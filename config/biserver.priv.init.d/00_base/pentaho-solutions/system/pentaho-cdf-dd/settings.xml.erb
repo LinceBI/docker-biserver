@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+
+	<cache>false</cache>
+	<max-age>2628000</max-age>
+	<resources>
+		<downloadable-formats>css,js,svg,html,htm,png,jpg,jpeg,gif,swf,htc,ttf,otf,woff,ico,doc,docx,xls,xlsx,pdf,ppt,pptx</downloadable-formats>
+	</resources>
+	<packager>
+		<minification>MINIFY</minification>
+	</packager>
+	<custom-components>
+		<!-- Paths with cde components -->
+		<!--
+		Origin:
+			"static" - folder under this directory, declared as static.
+			"repo" - this plugin's folder in the solution repository (<solution>/cde).
+		-->
+
+		<!-- 4.x old <path>system/pentaho-cdf-dd/resources/custom/components</path> -->
+		<!-- Backward compatibility -->
+		<path origin="static">resources/custom/components</path>
+		<path origin="static">resources/custom/amd-components</path>
+
+		<!-- 4.x old <path>cde/components</path> -->
+		<path origin="repo">components</path>
+	</custom-components>
+
+	<file-picker>
+		<!-- The following are folders that should be kept hidden from any non-admin user -->
+		<hidden-folders>
+			<!--
+			Origin:
+				"static" - static/system folder under pentaho-solutions/system.
+				"repo" - content repository path.
+
+			Examples:
+				<path origin="repo">/etc</path>
+				<path origin="static">/system/pentaho-cdf-dd/lib</path>
+				<path origin="static">/resources/styles</path>
+			-->
+			<path origin="repo">/etc</path>
+		</hidden-folders>
+	</file-picker>
+
+	<new-toolbar-button>1,New CDE Dashboard,CDE Dashboard,api/repos/wcdf/new</new-toolbar-button>
+
+	<!--
+	allow-cross-domain-resources: flag indicating cross-origin resource sharing.
+	Accepted values are: true | false
+	-->
+	<allow-cross-domain-resources><%= ENV['CORS_REQUESTS_ALLOWED'] %></allow-cross-domain-resources>
+
+	<!-- A comma separated list of allowed domains for a cross-origin resource sharing -->
+	<cross-domain-resources-whitelist><%= ENV['CORS_REQUESTS_ALLOWED_DOMAINS'] %></cross-domain-resources-whitelist>
+
+	<!-- A flag to disable reflected XSS prevention for the unpredicted cases -->
+	<parameter-xss-escaping>true</parameter-xss-escaping>
+
+</settings>

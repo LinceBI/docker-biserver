@@ -40,20 +40,16 @@
 	<log-level>INFO</log-level>
 
 	<!--
-	cors-requests-allowed:
-		Flag indicating if cross-origin requests are allowed or not.
-		accepted values are: true | false
+	cors-requests-allowed: flag indicating if cross-origin requests are allowed or not.
+	Accepted values are: true | false
 	-->
-	<cors-requests-allowed>false</cors-requests-allowed>
+	<cors-requests-allowed><%= ENV['CORS_REQUESTS_ALLOWED'] %></cors-requests-allowed>
 
 	<!--
-	cors-requests-allowed-domains:
-		Comma separated list of domains allowed to do cross-origin requests to the server.
-
-	Example:
-		http://domainA.com, http://localhost:1337
+	cors-requests-allowed-domains: comma separated list of domains allowed to do cross-origin requests to the server.
+	Example: http://domainA.com, http://localhost:1337
 	-->
-	<cors-requests-allowed-domains><!-- allowed domains here --></cors-requests-allowed-domains>
+	<cors-requests-allowed-domains><%= ENV['CORS_REQUESTS_ALLOWED_DOMAINS'] %></cors-requests-allowed-domains>
 
 	<!--
 	The configuration of publishers, system listeners, and session actions has been moved to
