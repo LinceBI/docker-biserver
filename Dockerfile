@@ -235,8 +235,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/11.2.0.jre8/mssql-jdbc-11.2.0.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="63d8e38f0d849ccf084805151d456e9a5e073679bdfe429fb77fc973c34bce5a"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/11.2.1.jre8/mssql-jdbc-11.2.1.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="a81bedcf2baa4e161ed883826a65a49be5a3a0ebc2543d789c684841aa5e07b4"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
