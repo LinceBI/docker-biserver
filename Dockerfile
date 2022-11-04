@@ -32,6 +32,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		netcat-openbsd \
 		openssh-client \
 		openssl \
+		p11-kit \
 		patch \
 		postgresql-client-14 \
 		pwgen \
@@ -82,6 +83,9 @@ RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
 ENV JAVA_XMS="1024m" JAVA_XMX="4096m"
 RUN update-java-alternatives --set zulu8-ca-amd64
+
+# Allow root group to update certificates
+RUN find /etc/ssl/certs/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+'
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
@@ -262,6 +266,9 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${SPRING_SECURITY_CAS_URL:?}" \
 	&& printf '%s  %s' "${SPRING_SECURITY_CAS_CHECKSUM:?}" ./spring-security-cas-*.jar | sha256sum -c \
 	&& chown biserver:root ./spring-security-cas-*.jar && chmod 0664 ./spring-security-cas-*.jar
+
+# Add hook to update Pentaho BI Server truststore
+RUN ln -s /usr/share/biserver/bin/jks-truststore-update.sh /etc/ca-certificates/update.d/biserver-jks-truststore
 
 # Replace Apache Lucene/Solr with the system provided (which includes a fix for CVE-2017-12629)
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \

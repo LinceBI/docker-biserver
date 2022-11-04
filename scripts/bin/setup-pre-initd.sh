@@ -62,3 +62,8 @@ if [ ! -e "${KETTLE_HOME:?}"/.kettle/kettle.properties ]; then
 	touch "${KETTLE_HOME:?}"/.kettle/kettle.properties
 	chmod 664 "${KETTLE_HOME:?}"/.kettle/kettle.properties
 fi
+
+########
+
+# Update CA certificates
+update-ca-certificates
