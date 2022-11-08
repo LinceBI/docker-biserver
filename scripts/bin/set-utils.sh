@@ -10,7 +10,8 @@ umask "${UMASK:?}"
 # Set home directory
 export HOME="${BIUSER_HOME:?}"
 export JAVA_TRUSTSTORE_FILE="${HOME:?}/.java/cacerts"
-export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?} -Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?} ${JAVA_TOOL_OPTIONS_EXTRA-}"
+export JAVA_TRUSTSTORE_PASSWORD="changeit"
+export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?} -Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?} -Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD?} ${JAVA_TOOL_OPTIONS_EXTRA-}"
 
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
