@@ -40,6 +40,7 @@ all: save-image save-standalone
 build-image:
 	'$(DOCKER)' build \
 		--tag '$(IMAGE_NAME):$(IMAGE_VERSION)' \
+		--tag '$(IMAGE_NAME):$(IMAGE_VERSION_MINOR)' \
 		--file '$(DOCKERFILE)' $(IMAGE_BUILD_OPTS) ./
 
 ##################################################
