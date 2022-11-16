@@ -96,11 +96,11 @@ ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.68"
+ARG TOMCAT_VERSION="9.0.69"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="af1b2ff3310821b4de9780aa22e9dc4b9a5e9651b08076a62916b42a0cec385d"
+ARG TOMCAT_LIN_CHECKSUM="ef6564505f43f8f50afc25b7aa3b1ee4bae8c937f1d93131007f179fab92805a"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="2ea740b16e60082f497fba0293dfb45b7667107437616681874ed1305fe7f184"
+ARG TOMCAT_WIN_CHECKSUM="96350b71c36dbf0aa5d1a59fb9129b7038e3fe89ffde8a2f087791575da6db72"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
