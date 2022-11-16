@@ -20,6 +20,13 @@
 		<constructor-arg>
 			<ref bean="ldapRoleMapper" />
 		</constructor-arg>
+		<property name="userDetailsContextMapper">
+			<ref bean="ldapContextMapper" />
+		</property>
+	</bean>
+
+	<bean id="ldapContextMapper" class="org.pentaho.platform.engine.security.UseridAttributeLdapContextMapper">
+		<property name="ldapUsernameAttribute" value="${ldap.all_usernames_search.username_attribute}" />
 	</bean>
 
 	<!-- Interceptor which changes the thread context classloader to the class current classloader -->
