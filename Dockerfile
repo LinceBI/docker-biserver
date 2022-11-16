@@ -187,6 +187,8 @@ RUN mkdir /tmp/biserver/ \
 	&& rm -rf "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/oracle12c/ \
 	&& rm -rf "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/postgresql/ \
 	&& rm -rf "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/sqlserver/ \
+	# Remove libraries from data directory
+	&& rm -rf "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/lib/ \
 	# Remove Hadoop libraries from Kettle
 	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/hadoop-configurations/* \
 	&& rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/pentaho-mapreduce-libraries.zip \
