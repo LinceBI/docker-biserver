@@ -38,7 +38,7 @@ fi
 ########
 
 # Copy HSQLDB data if the directory is empty
-if [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/ ] || [ -z "$(ls -A "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/)" ]; then
+if [ -z "$(ls -A "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/)" ]; then
 	rsync -rlp "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb-default/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/
 fi
 
