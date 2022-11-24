@@ -47,13 +47,13 @@ fi
 ########
 
 # Create Kettle directory if it does not exist
-if [ ! -e "${KETTLE_HOME:?}"/.kettle/ ]; then
-	mkdir "${KETTLE_HOME:?}"/.kettle/
-	chmod 775 "${KETTLE_HOME:?}"/.kettle/
+if [ ! -e "${BIUSER_HOME:?}"/.kettle/ ]; then
+	mkdir "${BIUSER_HOME:?}"/.kettle/
+	chmod 775 "${BIUSER_HOME:?}"/.kettle/
 fi
 
 # Create Kettle properties file if it does not exist
-if [ ! -e "${KETTLE_HOME:?}"/.kettle/kettle.properties ]; then
-	touch "${KETTLE_HOME:?}"/.kettle/kettle.properties
-	chmod 664 "${KETTLE_HOME:?}"/.kettle/kettle.properties
+if [ ! -e "${BIUSER_HOME:?}"/.kettle/kettle.properties ]; then
+	touch "${BIUSER_HOME:?}"/.kettle/kettle.properties
+	chmod 664 "${BIUSER_HOME:?}"/.kettle/kettle.properties
 fi

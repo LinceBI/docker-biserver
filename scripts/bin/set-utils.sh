@@ -7,11 +7,17 @@ export LC_ALL=C
 export UMASK=0002
 umask "${UMASK:?}"
 
-# Set home directory
+# Set home directory and Java options
 export HOME="${BIUSER_HOME:?}"
 export JAVA_TRUSTSTORE_FILE="${HOME:?}/.java/cacerts"
 export JAVA_TRUSTSTORE_PASSWORD="changeit"
-export JAVA_TOOL_OPTIONS="-Duser.home=${HOME:?} -Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?} -Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD?} ${JAVA_TOOL_OPTIONS_EXTRA-}"
+# shellcheck disable=SC2155
+export JAVA_TOOL_OPTIONS="$(printf '%s ' \
+	"-Duser.home=${BIUSER_HOME:?}" \
+	"-Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?}" \
+	"-Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD:?}" \
+	"${JAVA_TOOL_OPTIONS_EXTRA-}" \
+)"
 
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
