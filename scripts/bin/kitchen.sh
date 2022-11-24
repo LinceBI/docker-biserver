@@ -9,7 +9,14 @@ export LC_ALL=C
 ########
 
 WEBINFDIR="${CATALINA_BASE:?}/webapps/${WEBAPP_PENTAHO_DIRNAME:?}/WEB-INF"
-CLASSPATH=$(find "${WEBINFDIR:?}/lib" "${CATALINA_BASE:?}/lib" -type d -printf '%p:%p/*:')
+
+CLASSPATH=$(find \
+	"${WEBINFDIR:?}/lib" \
+	"${CATALINA_BASE:?}/lib" \
+	-type f -name '*.jar' \
+	-not -name 'classic-core-platform-plugin-*.jar' \
+	-not -name 'classic-extensions-cda-*.jar' \
+	-printf '%p:')
 
 TMPCLASSPATH=$(mktemp -d)
 # shellcheck disable=SC2154
