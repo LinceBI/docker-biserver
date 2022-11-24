@@ -30,6 +30,7 @@ cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/
 exec java \
 		-classpath "${CLASSPATH:?}:${TMPCLASSPATH:?}" \
 		-Xms"${JAVA_XMS:?}" -Xmx"${JAVA_XMX:?}" \
+		-Dorg.osjava.sj.root="${BIUSER_HOME:?}/.simple-jndi" \
 		-Dlog4j2.configurationFile=file:"${WEBINFDIR:?}/classes/log4j2.xml" \
 		-Dlog4j2.formatMsgNoLookups=true \
 		org.pentaho.di.kitchen.Kitchen -initialDir "${BISERVER_HOME:?}" "$@"

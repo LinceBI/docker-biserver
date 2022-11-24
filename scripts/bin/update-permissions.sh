@@ -12,9 +12,9 @@ find "${BISERVER_HOME:?}" "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type d -not
 find "${BISERVER_HOME:?}" "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.sh$' ')' -exec chmod -c 0664 '{}' '+'
 find "${BISERVER_HOME:?}" "${CATALINA_HOME:?}" "${CATALINA_BASE:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.sh$' ')' -exec chmod -c 0775 '{}' '+'
 
-find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
-find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.sh$' ')' -exec chmod -c 0664 '{}' '+'
-find "${BIUSER_HOME:?}" "${KETTLE_HOME:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.sh$' ')' -exec chmod -c 0775 '{}' '+'
+find "${BIUSER_HOME:?}" -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
+find "${BIUSER_HOME:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.sh$' ')' -exec chmod -c 0664 '{}' '+'
+find "${BIUSER_HOME:?}" -type f '(' -not -perm 0775 -a -regex '^.*\.sh$' ')' -exec chmod -c 0775 '{}' '+'
 
 find "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}" -type d -not -perm 0775 -exec chmod -c 0775 '{}' '+'
 find "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}" -type f -not '(' -perm 0664 -o -regex '^.*\.\(sh\(\.erb\)?\|run\)$' ')' -exec chmod -c 0664 '{}' '+'
