@@ -25,4 +25,8 @@ fi
 
 ########
 
+update-ca-certificates
+
+########
+
 exec runsvdir -P /usr/share/biserver/service/enabled/
