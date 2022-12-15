@@ -20,7 +20,7 @@ services:
       TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
 
   biserver-helium:
-    image: "repo.stratebi.com/lincebi/biserver:9.3.0.1-552"
+    image: "repo.stratebi.com/lincebi/biserver:9.3.0.2-617"
     restart: "on-failure:3"
     networks:
       - "biserver"
@@ -53,7 +53,7 @@ services:
       - "postgres"
 
   biserver-argon:
-    image: "repo.stratebi.com/lincebi/biserver:9.3.0.1-552"
+    image: "repo.stratebi.com/lincebi/biserver:9.3.0.2-617"
     restart: "on-failure:3"
     networks:
       - "biserver"

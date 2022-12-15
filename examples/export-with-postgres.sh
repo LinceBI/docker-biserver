@@ -8,7 +8,7 @@ DOCKER=$(command -v docker 2>/dev/null)
 IMAGE_REGISTRY=repo.stratebi.com
 IMAGE_NAMESPACE=lincebi
 IMAGE_PROJECT=biserver
-IMAGE_TAG=9.3.0.1-552
+IMAGE_TAG=9.3.0.2-617
 IMAGE_NAME=${IMAGE_REGISTRY:?}/${IMAGE_NAMESPACE:?}/${IMAGE_PROJECT:?}:${IMAGE_TAG:?}
 
 exec "${DOCKER:?}" run --rm --log-driver none --attach STDOUT --attach STDERR \
