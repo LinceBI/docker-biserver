@@ -64,7 +64,7 @@ recursiveUnzipFiles() {
 	done
 }
 
-# Compress directories ending in .zip, .pfm or .pgus
+# Compress directories ending in .zip, .lbix, .pfm or .pgus
 recursiveZipDirs() {
 	source=${1:?}
 
@@ -75,9 +75,11 @@ recursiveZipDirs() {
 			(recursiveZipDirs "${path:?}")
 			if
 				[ "${path:?}" != "${path%.zip}" ] ||
-				# Pentaho File Metadata plugin
+				# LinceBI Solution file
+				[ "${path:?}" != "${path%.lbix}" ] ||
+				# Pentaho File Metadata plugin (deprecated)
 				[ "${path:?}" != "${path%.pfm}" ] ||
-				# Pentaho Global User Settings plugin
+				# Pentaho Global User Settings plugin (deprecated)
 				[ "${path:?}" != "${path%.pgus}" ]
 			then
 				logInfo "Compressing directory: ${path:?}"
