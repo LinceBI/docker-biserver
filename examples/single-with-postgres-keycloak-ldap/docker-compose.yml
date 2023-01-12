@@ -65,7 +65,7 @@ services:
       - "openldap"
 
   keycloak:
-    image: "quay.io/keycloak/keycloak:19.0.2"
+    image: "quay.io/keycloak/keycloak:20.0.1"
     restart: "on-failure:3"
     networks:
       - "biserver"

@@ -22,14 +22,14 @@
 			</PatternLayout>
 		</Console>
 
-		<RollingFile name="PENTAHOFILE" fileName="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log.%d{yyyy-MM-dd}">
+		<RollingFile name="PENTAHOFILE" fileName="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/osgi_<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log.%i">
 			<PatternLayout>
 				<Pattern>%d %-5p [%c] %m%n</Pattern>
 			</PatternLayout>
 			<Policies>
-				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
 			</Policies>
-			<DefaultRolloverStrategy max="30" />
+			<DefaultRolloverStrategy max="10" />
 		</RollingFile>
 
 	</Appenders>

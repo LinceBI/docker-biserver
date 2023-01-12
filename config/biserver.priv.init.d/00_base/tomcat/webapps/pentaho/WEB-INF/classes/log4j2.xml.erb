@@ -22,14 +22,14 @@
 			</PatternLayout>
 		</Console>
 
-		<RollingFile name="PENTAHOFILE" fileName="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log.%d{yyyy-MM-dd}">
+		<RollingFile name="PENTAHOFILE" fileName="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log" filePattern="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>.log.%i">
 			<PatternLayout>
 				<Pattern>%d %-5p [%c] %m%n</Pattern>
 			</PatternLayout>
 			<Policies>
-				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
 			</Policies>
-			<DefaultRolloverStrategy max="30" />
+			<DefaultRolloverStrategy max="10" />
 		</RollingFile>
 
 		<RollingFile name="MONDRIAN" fileName="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian.log" filePattern="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_mondrian.log.%i">
@@ -82,14 +82,14 @@
 			<DefaultRolloverStrategy max="10" />
 		</RollingFile>
 
-		<RollingFile name="pdi-execution-appender" fileName="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log" filePattern="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log.%d{yyyy-MM-dd}">
+		<RollingFile name="pdi-execution-appender" fileName="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log" filePattern="../logs/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>_pdi.log.%i">
 			<PatternLayout>
 				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p &lt;%t&gt; %m%n</Pattern>
 			</PatternLayout>
 			<Policies>
-				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
 			</Policies>
-			<DefaultRolloverStrategy max="30" />
+			<DefaultRolloverStrategy max="10" />
 		</RollingFile>
 
 	</Appenders>
