@@ -50,9 +50,10 @@
 				<value>.snapshot</value>
 				<value>.sta</value>
 				<value>.std</value>
-				<value>.stp</value>
 				<value>.stolap</value>
+				<value>.stp</value>
 				<value>.url</value>
+				<value>.wcdf</value>
 				<value>.xaction</value>
 				<value>.xanalyzer</value>
 				<value>.xcdf</value>
@@ -73,12 +74,15 @@
 		<value>snapshot</value>
 		<value>sta</value>
 		<value>std</value>
-		<value>stp</value>
 		<value>stolap</value>
+		<value>stp</value>
+		<value>url</value>
+		<value>wcdf</value>
 		<value>xaction</value>
 		<value>xanalyzer</value>
 		<value>xcdf</value>
 		<value>xdash</value>
+		<value>xjpivot</value>
 		<value>xmi</value>
 		<value>xreportspec</value>
 	</util:list>
@@ -167,12 +171,14 @@
 							<value>sta</value>
 							<value>std</value>
 							<value>stolap</value>
+							<value>stp</value>
 							<value>url</value>
 							<value>wcdf</value>
 							<value>xaction</value>
 							<value>xanalyzer</value>
 							<value>xcdf</value>
 							<value>xdash</value>
+							<value>xjpivot</value>
 						</list>
 					</constructor-arg>
 					<property name="repository" ref="unifiedRepository" />
