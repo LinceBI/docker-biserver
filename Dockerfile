@@ -57,9 +57,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
-ARG SUPERCRONIC_VERSION="0.2.1"
+ARG SUPERCRONIC_VERSION="0.2.2"
 ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="5eb5e2533fe75acffa63e437c0d8c4cb1f0c96891b84ae10ef4e53d602505f60"
+ARG SUPERCRONIC_CHECKSUM="8c509ffd2f4adfb722e388cc3ad65ac0baf5e69eb472e298144f50303216903d"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
@@ -96,11 +96,11 @@ ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.71"
+ARG TOMCAT_VERSION="9.0.73"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="d78a3a09a67695d4f391d2e40713eeeb437bb201ad4571d200f9d23cc7868a78"
+ARG TOMCAT_LIN_CHECKSUM="9fc807d5549726f2d4638882f72629f8d03a89f5617445ad963810fd4f406744"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="314868fd1dff1d9ae08bc08d0c5d56e51bf6b879cc5701ee4556b126182c6c86"
+ARG TOMCAT_WIN_CHECKSUM="2b5a62b4a99d4c2b753bbd6fa72fb014d389d5856d5972c28c3ecb08e50b3a77"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -225,8 +225,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.1/postgresql-42.5.1.jar"
-ARG POSTGRES_JDBC_CHECKSUM="89e8bffa8b37b9487946012c690cf04f3103953051c1c193d88ee36b68d365ae"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.4/postgresql-42.5.4.jar"
+ARG POSTGRES_JDBC_CHECKSUM="f48fcb0b6959bc8b478657f57ba43c1acca4cade6abca5f17bf9bc9c363cb66f"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
@@ -241,8 +241,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/11.2.3.jre8/mssql-jdbc-11.2.3.jre8.jar"
-ARG MSSQL_JDBC_CHECKSUM="7f5cb09cb64a01cc2b81954bb4dc884e5b8c7fe8cdb7c990da857d41665389eb"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre8/mssql-jdbc-12.2.0.jre8.jar"
+ARG MSSQL_JDBC_CHECKSUM="7f1d146d53f61261de22e1af910c43329fb59ef4299041ae6705ec711c418548"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
 	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
