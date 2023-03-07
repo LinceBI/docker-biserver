@@ -225,8 +225,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.1/postgresql-42.5.1.jar"
-ARG POSTGRES_JDBC_CHECKSUM="89e8bffa8b37b9487946012c690cf04f3103953051c1c193d88ee36b68d365ae"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.4/postgresql-42.5.4.jar"
+ARG POSTGRES_JDBC_CHECKSUM="f48fcb0b6959bc8b478657f57ba43c1acca4cade6abca5f17bf9bc9c363cb66f"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
