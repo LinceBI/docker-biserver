@@ -34,7 +34,7 @@
 	<!--
 	This is the URL to the user guide
 	-->
-	<documentation-url>https://help.pentaho.com/Documentation/9.3/Products/Pentaho_User_Console</documentation-url>
+	<documentation-url>https://help.hitachivantara.com/Documentation/Pentaho/9.4/Products/Pentaho_User_Console</documentation-url>
 
 	<log-file>server.log</log-file>
 	<log-level>INFO</log-level>
@@ -165,5 +165,21 @@
 	<default-theme>ruby</default-theme>
 	<session-expired-dialog>true</session-expired-dialog>
 	<set-empty-entity-rest-services>false</set-empty-entity-rest-services>
+
+	<!--
+	Edit permission configuration will be used restrict the content edit permission to user
+	possessing this permission. If you would not like to restrict the users editing the content,
+	simply provide an empty string or remove this configuration from this file all together
+	None = ""
+	Create = org.pentaho.repository.create
+	Publish = org.pentaho.security.publish
+	Admin = org.pentaho.security.administerSecurity
+	-->
+	<!--
+	In order to enforce the content edit permission on the server side, please uncomment
+	the line below and provide the action permission that you think should be able to edit a
+	content.
+	<edit-permission>org.pentaho.repository.create</edit-permission>
+	-->
 
 </pentaho-system>

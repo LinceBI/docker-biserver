@@ -51,6 +51,12 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 	</bean>
 
 	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
+		<constructor-arg value="mantle" />
+		<constructor-arg value="deeplink_allowed_urls.properties" />
+		<pen:publish as-type="INTERFACES" />
+	</bean>
+
+	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
 		<constructor-arg value="sqlmetadataqueryexec" />
 		<constructor-arg value="sqlmetadataqueryexec.properties" />
 		<pen:publish as-type="INTERFACES" />
