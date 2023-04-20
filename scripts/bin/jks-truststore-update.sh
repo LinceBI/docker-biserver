@@ -9,4 +9,4 @@ export LC_ALL=C
 ########
 
 mkdir -p "$(dirname "${JAVA_TRUSTSTORE_FILE:?}")"
-trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth "${JAVA_TRUSTSTORE_FILE:?}"
+exec trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth "${JAVA_TRUSTSTORE_FILE:?}"

@@ -54,6 +54,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& curl --proto '=https' --tlsv1.3 -sSf 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | gpg --dearmor -o /etc/apt/trusted.gpg.d/zulu-openjdk.gpg \
 	&& printf '%s\n' "deb [signed-by=/etc/apt/trusted.gpg.d/zulu-openjdk.gpg, arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
 	&& apt-get update && apt-get install -y --no-install-recommends zulu11-jdk \
+	&& update-java-alternatives --set "$(basename /usr/lib/jvm/zulu11-ca-*)" \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
@@ -79,18 +80,14 @@ ENV TZ=UTC
 RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
-# Set default Java
-ENV JAVA_HOME="/usr/lib/jvm/zulu11-ca-amd64"
+# Java environment
+ENV JAVA_HOME="/usr/lib/jvm/zulu11"
 ENV JAVA_XMS="1024m" JAVA_XMX="4096m"
-RUN update-java-alternatives --set zulu11-ca-amd64
-
-# Allow root group to update certificates
-RUN find /etc/ssl/certs/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+'
+ENV JAVA_TRUSTSTORE_FILE="${BIUSER_HOME}/.java/cacerts"
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
-ENV CATALINA_OPTS_EXTRA=""
 ENV TOMCAT_SHUTDOWN_PORT="8005"
 ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
@@ -271,6 +268,7 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 
 # Add hook to update Pentaho BI Server truststore
 RUN ln -s /usr/share/biserver/bin/jks-truststore-update.sh /etc/ca-certificates/update.d/biserver-jks-truststore
+RUN find /etc/ssl/certs/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+'
 
 # Replace Apache Lucene/Solr with the system provided (which includes a fix for CVE-2017-12629)
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
@@ -308,11 +306,11 @@ COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
 # Copy services
 COPY --chown=biserver:root ./scripts/service/ /usr/share/biserver/service/
 
+# Drop root privileges
+USER "${BIUSER_UID}:0"
+
 # Switch to Pentaho BI Server directory
 WORKDIR "${BISERVER_HOME}"
-
-# Drop root privileges
-USER 1000:0
 
 # Set correct permissions to support arbitrary user ids
 RUN /usr/share/biserver/bin/update-permissions.sh
