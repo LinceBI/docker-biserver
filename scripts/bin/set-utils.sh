@@ -11,8 +11,8 @@ umask "${UMASK:?}"
 export HOME="${BIUSER_HOME:?}"
 # shellcheck disable=SC2155
 export JAVA_TOOL_OPTIONS="$(printf '%s ' \
-	"-Duser.home=${BIUSER_HOME:?}" \
-	"-Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?}" \
+	"-Duser.home='${BIUSER_HOME:?}'" \
+	"-Djavax.net.ssl.trustStore='${JAVA_TRUSTSTORE_FILE:?}'" \
 	"-Xms${JAVA_XMS:?}" "-Xmx${JAVA_XMX:?}" \
 	"${JAVA_TOOL_OPTIONS_EXTRA-}" \
 )"
