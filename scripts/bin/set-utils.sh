@@ -9,13 +9,11 @@ umask "${UMASK:?}"
 
 # Set home directory and Java options
 export HOME="${BIUSER_HOME:?}"
-export JAVA_TRUSTSTORE_FILE="${HOME:?}/.java/cacerts"
-export JAVA_TRUSTSTORE_PASSWORD="changeit"
 # shellcheck disable=SC2155
 export JAVA_TOOL_OPTIONS="$(printf '%s ' \
 	"-Duser.home=${BIUSER_HOME:?}" \
 	"-Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE_FILE:?}" \
-	"-Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD:?}" \
+	"-Xms${JAVA_XMS:?}" "-Xmx${JAVA_XMX:?}" \
 	"${JAVA_TOOL_OPTIONS_EXTRA-}" \
 )"
 

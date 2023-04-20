@@ -54,12 +54,13 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& curl --proto '=https' --tlsv1.3 -sSf 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9' | gpg --dearmor -o /etc/apt/trusted.gpg.d/zulu-openjdk.gpg \
 	&& printf '%s\n' "deb [signed-by=/etc/apt/trusted.gpg.d/zulu-openjdk.gpg, arch=${ARCH:?}] https://repos.azul.com/zulu/deb/ stable main" > /etc/apt/sources.list.d/zulu-openjdk.list \
 	&& apt-get update && apt-get install -y --no-install-recommends zulu8-jdk \
+	&& update-java-alternatives --set "$(basename /usr/lib/jvm/zulu8-ca-*)" \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Supercronic
-ARG SUPERCRONIC_VERSION="0.2.2"
+ARG SUPERCRONIC_VERSION="0.2.23"
 ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="8c509ffd2f4adfb722e388cc3ad65ac0baf5e69eb472e298144f50303216903d"
+ARG SUPERCRONIC_CHECKSUM="d947413956449838a92fc6ae46c355a39756a299e9b197c0273c5c304c94bfa6"
 RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
 	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
 	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
@@ -79,28 +80,24 @@ ENV TZ=UTC
 RUN printf '%s\n' "${TZ:?}" > /etc/timezone \
 	&& ln -snf "/usr/share/zoneinfo/${TZ:?}" /etc/localtime
 
-# Set default Java
-ENV JAVA_HOME="/usr/lib/jvm/zulu8-ca-amd64"
+# Java environment
+ENV JAVA_HOME="/usr/lib/jvm/zulu8"
 ENV JAVA_XMS="1024m" JAVA_XMX="4096m"
-RUN update-java-alternatives --set zulu8-ca-amd64
-
-# Allow root group to update certificates
-RUN find /etc/ssl/certs/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+'
+ENV JAVA_TRUSTSTORE_FILE="${BIUSER_HOME}/.java/cacerts"
 
 # Tomcat environment
 ENV CATALINA_HOME="/var/lib/biserver/tomcat"
 ENV CATALINA_BASE="${CATALINA_HOME}"
-ENV CATALINA_OPTS_EXTRA=""
 ENV TOMCAT_SHUTDOWN_PORT="8005"
 ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.73"
+ARG TOMCAT_VERSION="9.0.74"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="9fc807d5549726f2d4638882f72629f8d03a89f5617445ad963810fd4f406744"
+ARG TOMCAT_LIN_CHECKSUM="f177b68bb99f6ed86e08f92696ebc61358cdfb3803c0e5f01df95e4ac6227cd2"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="2b5a62b4a99d4c2b753bbd6fa72fb014d389d5856d5972c28c3ecb08e50b3a77"
+ARG TOMCAT_WIN_CHECKSUM="ac527f90403e13bf83ddbf0885df0829d3facf9e986b5ea2a08d83a7ce160661"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -225,8 +222,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.4/postgresql-42.5.4.jar"
-ARG POSTGRES_JDBC_CHECKSUM="f48fcb0b6959bc8b478657f57ba43c1acca4cade6abca5f17bf9bc9c363cb66f"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar"
+ARG POSTGRES_JDBC_CHECKSUM="b817c67a40c94249fd59d4e686e3327ed0d3d3fae426b20da0f1e75652cfc461"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
@@ -249,8 +246,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/12.0.3-0/vertica-jdbc-12.0.3-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="de1fd8f0378a5052a2c6a273592b9b7260673614abcfb68b4fe3ba2d7aec2275"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/12.0.4-0/vertica-jdbc-12.0.4-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="5360780769c3d082755315f6e2461ff185ad60fb32446bffecf167f6717ec77a"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
 	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
@@ -271,6 +268,7 @@ RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 
 # Add hook to update Pentaho BI Server truststore
 RUN ln -s /usr/share/biserver/bin/jks-truststore-update.sh /etc/ca-certificates/update.d/biserver-jks-truststore
+RUN find /etc/ssl/certs/ -type d -not -perm 0775 -exec chmod 0775 '{}' '+'
 
 # Replace Apache Lucene/Solr with the system provided (which includes a fix for CVE-2017-12629)
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
@@ -308,11 +306,11 @@ COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
 # Copy services
 COPY --chown=biserver:root ./scripts/service/ /usr/share/biserver/service/
 
+# Drop root privileges
+USER "${BIUSER_UID}:0"
+
 # Switch to Pentaho BI Server directory
 WORKDIR "${BISERVER_HOME}"
-
-# Drop root privileges
-USER 1000:0
 
 # Set correct permissions to support arbitrary user ids
 RUN /usr/share/biserver/bin/update-permissions.sh
