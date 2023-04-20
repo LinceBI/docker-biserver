@@ -16,7 +16,7 @@ export CATALINA_OPTS="\
 	-Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Dlog4j2.formatMsgNoLookups=true \
 	-DDI_HOME='${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}/system/kettle/' \
-	${CATALINA_OPTS_EXTRA?}"
+	${CATALINA_OPTS_EXTRA-}"
 
 logInfo "Starting Pentaho BI Server..."
 cd "${CATALINA_HOME:?}"/bin
