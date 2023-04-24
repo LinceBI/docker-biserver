@@ -13,6 +13,7 @@ export HOME="${BIUSER_HOME:?}"
 export JAVA_TOOL_OPTIONS="$(printf '%s ' \
 	"-Duser.home='${BIUSER_HOME:?}'" \
 	"-Djavax.net.ssl.trustStore='${JAVA_TRUSTSTORE_FILE:?}'" \
+	"-Djavax.net.ssl.trustStorePassword=changeit" \
 	"-Xms${JAVA_XMS:?}" "-Xmx${JAVA_XMX:?}" \
 	"${JAVA_TOOL_OPTIONS_EXTRA-}" \
 )"
