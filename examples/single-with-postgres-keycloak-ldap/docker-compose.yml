@@ -65,33 +65,30 @@ services:
       - "openldap"
 
   keycloak:
-    image: "quay.io/keycloak/keycloak:20.0.1"
+    image: "localhost/keycloak:latest"
+    build:
+      context: "./images/keycloak/"
+      args:
+        KC_DB: "postgres"
+        KC_HTTP_ENABLED: "true"
+        KC_HTTP_HOST: "0.0.0.0"
+        KC_HTTP_PORT: "8080"
+        KC_HTTP_RELATIVE_PATH: "/auth"
+        KC_HOSTNAME_STRICT: "false"
+        KC_HOSTNAME_STRICT_HTTPS: "false"
+        KC_PROXY: "edge"
     restart: "on-failure:3"
     networks:
       - "biserver"
     volumes:
       - "./realm.json:/opt/keycloak/data/import/realm.json:ro"
-      - "./keycloak.init.d/:/etc/keycloak.init.d/:ro"
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
-      KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://postgres/${DB_KEYCLOAK_DATABASE}"
       KC_DB_USERNAME: "${DB_KEYCLOAK_USER}"
       KC_DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD}"
-      KC_HTTP_ENABLED: "true"
-      KC_HTTP_HOST: "0.0.0.0"
-      KC_HTTP_PORT: "8080"
-      KC_HTTP_RELATIVE_PATH: "/auth"
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_PROXY: "edge"
-    entrypoint: "/bin/sh"
-    command:
-      - "-euc"
-      - |
-        for f in /etc/keycloak.init.d/*.sh; do "$${f:?}"; done
-        exec /opt/keycloak/bin/kc.sh start --import-realm
+    command: "start --optimized --import-realm"
     depends_on:
       - "postgres"
       - "openldap"
@@ -124,7 +121,7 @@ services:
         exec /container/tool/run
 
   postgres:
-    image: "docker.io/postgres:14"
+    image: "docker.io/postgres:15"
     restart: "on-failure:3"
     networks:
       - "biserver"

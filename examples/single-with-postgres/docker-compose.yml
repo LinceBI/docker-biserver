@@ -51,7 +51,7 @@ services:
       - "postgres"
 
   postgres:
-    image: "docker.io/postgres:14"
+    image: "docker.io/postgres:15"
     restart: "on-failure:3"
     networks:
       - "biserver"
