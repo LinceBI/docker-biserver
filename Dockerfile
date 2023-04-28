@@ -57,14 +57,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& update-java-alternatives --set "$(basename /usr/lib/jvm/zulu11-ca-*)" \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install Supercronic
-ARG SUPERCRONIC_VERSION="0.2.23"
-ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="d947413956449838a92fc6ae46c355a39756a299e9b197c0273c5c304c94bfa6"
-RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
-	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
-	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
-
 # Create unprivileged user
 ENV BIUSER_UID="1000"
 ENV BIUSER_HOME="/home/biserver"
@@ -209,6 +201,7 @@ RUN mkdir /tmp/biserver/ \
 ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.1.214/h2-2.1.214.jar"
 ARG H2_JDBC_CHECKSUM="d623cdc0f61d218cf549a8d09f1c391ff91096116b22e2475475fce4fbe72bd0"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./h2-*.jar \
 	&& curl -LO "${H2_JDBC_URL:?}" \
 	&& printf '%s  %s' "${H2_JDBC_CHECKSUM:?}" ./h2-*.jar | sha256sum -c \
 	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
@@ -217,6 +210,7 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.1/hsqldb-2.7.1.jar"
 ARG HSQLDB_JDBC_CHECKSUM="bca5532a4c58babf9fcebf20d03f086f5ba24b076c3aaf8838a16512235e53ca"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./hsqldb-*.jar \
 	&& curl -LO "${HSQLDB_JDBC_URL:?}" \
 	&& printf '%s  %s' "${HSQLDB_JDBC_CHECKSUM:?}" ./hsqldb-*.jar | sha256sum -c \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
@@ -225,6 +219,7 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar"
 ARG POSTGRES_JDBC_CHECKSUM="b817c67a40c94249fd59d4e686e3327ed0d3d3fae426b20da0f1e75652cfc461"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./postgresql-*.jar \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
 	&& printf '%s  %s' "${POSTGRES_JDBC_CHECKSUM:?}" ./postgresql-*.jar | sha256sum -c \
 	&& chown biserver:root ./postgresql-*.jar && chmod 0664 ./postgresql-*.jar
@@ -233,25 +228,37 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 ARG MYSQL_JDBC_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar"
 ARG MYSQL_JDBC_CHECKSUM="5bba9ff50e5e637a0996a730619dee19ccae274883a4d28c890d945252bb0e12"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./mysql-connector-*.jar \
 	&& curl -LO "${MYSQL_JDBC_URL:?}" \
-	&& printf '%s  %s' "${MYSQL_JDBC_CHECKSUM:?}" ./mysql-*.jar | sha256sum -c \
-	&& chown biserver:root ./mysql-*.jar && chmod 0664 ./mysql-*.jar
+	&& printf '%s  %s' "${MYSQL_JDBC_CHECKSUM:?}" ./mysql-connector-*.jar | sha256sum -c \
+	&& chown biserver:root ./mysql-connector-*.jar && chmod 0664 ./mysql-connector-*.jar
 
 # Install MSSQL JDBC
 ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar"
 ARG MSSQL_JDBC_CHECKSUM="b9595aad1210fe9427e6304456cc5d557b2a87df145c5682f705bc2df7ad4567"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./mssql-jdbc-*.jar \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
-	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-*.jar | sha256sum -c \
-	&& chown biserver:root ./mssql-*.jar && chmod 0664 ./mssql-*.jar
+	&& printf '%s  %s' "${MSSQL_JDBC_CHECKSUM:?}" ./mssql-jdbc-*.jar | sha256sum -c \
+	&& chown biserver:root ./mssql-jdbc-*.jar && chmod 0664 ./mssql-jdbc-*.jar
 
 # Install Vertica JDBC
 ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/12.0.4-0/vertica-jdbc-12.0.4-0.jar"
 ARG VERTICA_JDBC_CHECKSUM="5360780769c3d082755315f6e2461ff185ad60fb32446bffecf167f6717ec77a"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./vertica-jdbc-*.jar \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
-	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
-	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
+	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-jdbc-*.jar | sha256sum -c \
+	&& chown biserver:root ./vertica-jdbc-*.jar && chmod 0664 ./vertica-jdbc-*.jar
+
+# Install ClickHouse JDBC
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.4.5/clickhouse-jdbc-0.4.5-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="02bf3ad4e37c84b0d1ca6cc851befa25603d42b6c30be77b049c4ac6cc2e7b6f"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& rm -f ./clickhouse-jdbc-*.jar \
+	&& curl -LO "${CLICKHOUSE_JDBC_URL:?}" \
+	&& printf '%s  %s' "${CLICKHOUSE_JDBC_CHECKSUM:?}" ./clickhouse-jdbc-*.jar | sha256sum -c \
+	&& chown biserver:root ./clickhouse-jdbc-*.jar && chmod 0664 ./clickhouse-jdbc-*.jar
 
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
@@ -288,17 +295,12 @@ RUN find "${BISERVER_HOME:?}" -iname '*.jar' \
 RUN find /tmp/ -mindepth 1 -delete
 
 # Other environment variables
-ENV SERVICE_BISERVER_ENABLED="true"
-ENV SERVICE_SUPERCRONIC_ENABLED="true"
-ENV SVDIR="/usr/share/biserver/service/enabled"
+ENV SVDIR="/usr/share/biserver/service/"
 ENV SVWAIT="30"
 
 # Copy Pentaho BI Server config
 COPY --chown=biserver:root ./config/biserver.priv.init.d/ "${BISERVER_PRIV_INITD}"/
 COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
-
-# Copy crontab
-COPY --chown=biserver:root ./config/crontab /etc/supercronic/crontab
 
 # Copy scripts
 COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/
