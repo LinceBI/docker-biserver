@@ -57,14 +57,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && ARCH="$(dpkg --print-architecture)"
 	&& update-java-alternatives --set "$(basename /usr/lib/jvm/zulu11-ca-*)" \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install Supercronic
-ARG SUPERCRONIC_VERSION="0.2.23"
-ARG SUPERCRONIC_URL="https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64"
-ARG SUPERCRONIC_CHECKSUM="d947413956449838a92fc6ae46c355a39756a299e9b197c0273c5c304c94bfa6"
-RUN curl -Lo /usr/bin/supercronic "${SUPERCRONIC_URL:?}" \
-	&& printf '%s  %s' "${SUPERCRONIC_CHECKSUM:?}" /usr/bin/supercronic | sha256sum -c \
-	&& chown root:root /usr/bin/supercronic && chmod 0755 /usr/bin/supercronic
-
 # Create unprivileged user
 ENV BIUSER_UID="1000"
 ENV BIUSER_HOME="/home/biserver"
@@ -288,17 +280,12 @@ RUN find "${BISERVER_HOME:?}" -iname '*.jar' \
 RUN find /tmp/ -mindepth 1 -delete
 
 # Other environment variables
-ENV SERVICE_BISERVER_ENABLED="true"
-ENV SERVICE_SUPERCRONIC_ENABLED="true"
-ENV SVDIR="/usr/share/biserver/service/enabled"
+ENV SVDIR="/usr/share/biserver/service/"
 ENV SVWAIT="30"
 
 # Copy Pentaho BI Server config
 COPY --chown=biserver:root ./config/biserver.priv.init.d/ "${BISERVER_PRIV_INITD}"/
 COPY --chown=biserver:root ./config/biserver.init.d/ "${BISERVER_INITD}"/
-
-# Copy crontab
-COPY --chown=biserver:root ./config/crontab /etc/supercronic/crontab
 
 # Copy scripts
 COPY --chown=biserver:root ./scripts/bin/ /usr/share/biserver/bin/

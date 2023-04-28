@@ -22,17 +22,6 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 ## Variables de entorno
 
 <details>
-  <summary>Servicios</summary>
-
-> * **`SERVICE_BISERVER_ENABLED`:** habilita el servicio de Pentaho BI Server.  
->   **Por defecto:** `true`
->
-> * **`SERVICE_SUPERCRONIC_ENABLED`:** habilita el servicio de Supercronic.  
->   **Por defecto:** `true`
-
-</details>
-
-<details>
   <summary>Java</summary>
 
 > * **`JAVA_XMS`:** tamaño inicial del heap de Java.  
