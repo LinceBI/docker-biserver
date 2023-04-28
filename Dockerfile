@@ -245,6 +245,14 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& printf '%s  %s' "${VERTICA_JDBC_CHECKSUM:?}" ./vertica-*.jar | sha256sum -c \
 	&& chown biserver:root ./vertica-*.jar && chmod 0664 ./vertica-*.jar
 
+# Install ClickHouse JDBC
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.4.5/clickhouse-jdbc-0.4.5-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="02bf3ad4e37c84b0d1ca6cc851befa25603d42b6c30be77b049c4ac6cc2e7b6f"
+RUN cd "${CATALINA_BASE:?}"/lib/ \
+	&& curl -LO "${CLICKHOUSE_JDBC_URL:?}" \
+	&& printf '%s  %s' "${CLICKHOUSE_JDBC_CHECKSUM:?}" ./clickhouse-jdbc-*.jar | sha256sum -c \
+	&& chown biserver:root ./clickhouse-jdbc-*.jar && chmod 0664 ./clickhouse-jdbc-*.jar
+
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
 ARG CAS_CLIENT_CORE_CHECKSUM="daab2af8636eac3939a8931469de7c1dea6ecb25516cea9a704a23c7ace48939"
