@@ -8,19 +8,11 @@ export LC_ALL=C
 
 ########
 
-if [ "${SERVICE_BISERVER_ENABLED:?}" = 'true' ]; then
-	runitEnSv biserver
-
-	BISERVER_SETUP_LCK_FILE="${BISERVER_HOME:?}"/setup.lock
-	BISERVER_SETUP_LOG_FILE="${CATALINA_BASE:?}"/logs/setup.log
-	if [ ! -e "${BISERVER_SETUP_LCK_FILE:?}" ]; then
-		runAndLog /usr/share/biserver/bin/setup.sh "${BISERVER_SETUP_LOG_FILE}"
-		touch "${BISERVER_SETUP_LCK_FILE:?}"
-	fi
-fi
-
-if [ "${SERVICE_SUPERCRONIC_ENABLED:?}" = 'true' ]; then
-	runitEnSv supercronic
+BISERVER_SETUP_LCK_FILE="${BISERVER_HOME:?}"/setup.lock
+BISERVER_SETUP_LOG_FILE="${CATALINA_BASE:?}"/logs/setup.log
+if [ ! -e "${BISERVER_SETUP_LCK_FILE:?}" ]; then
+	runAndLog /usr/share/biserver/bin/setup.sh "${BISERVER_SETUP_LOG_FILE}"
+	touch "${BISERVER_SETUP_LCK_FILE:?}"
 fi
 
 ########
@@ -29,4 +21,4 @@ update-ca-certificates
 
 ########
 
-exec runsvdir -P /usr/share/biserver/service/enabled/
+exec runsvdir -P "${SVDIR:?}"
