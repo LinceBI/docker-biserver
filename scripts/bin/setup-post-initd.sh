@@ -37,8 +37,8 @@ fi
 
 ########
 
-# Copy HSQLDB data if the directory is empty
-if [ -z "$(ls -A "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/)" ]; then
+# Copy HSQLDB data if the directory content is incomplete
+if [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/hibernate.properties ]; then
 	rsync -rlp "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb-default/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/
 fi
 
