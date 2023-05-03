@@ -114,4 +114,22 @@ setPentahoEnv() {
 
 	printf '%s\n' "DEBUG: _PENTAHO_JAVA_HOME=${_PENTAHO_JAVA_HOME?}"
 	printf '%s\n' "DEBUG: _PENTAHO_JAVA=${_PENTAHO_JAVA:?}"
+
+	_TMP_CLASSPATH=$(mktemp -d)
+	# Java bytecode that prints the Java version, generated from the following code:
+	# interface V{static void main(String[]a){System.out.print(System.getProperty("java.specification.version"));}}
+	base64 -d <<-'EOF' > "${_TMP_CLASSPATH:?}"/V.class
+		yv66vgAAADEAGggAGQcAGAcAFwEABG1haW4BABYoW0xqYXZhL2xhbmcvU3RyaW5nOylWAQAEQ29kZQkA
+		DwAUCgAPABAKAAoACwcADgwADAANAQAFcHJpbnQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBABNqYXZh
+		L2lvL1ByaW50U3RyZWFtBwATDAARABIBAAtnZXRQcm9wZXJ0eQEAJihMamF2YS9sYW5nL1N0cmluZzsp
+		TGphdmEvbGFuZy9TdHJpbmc7AQAQamF2YS9sYW5nL1N5c3RlbQwAFQAWAQADb3V0AQAVTGphdmEvaW8v
+		UHJpbnRTdHJlYW07AQAQamF2YS9sYW5nL09iamVjdAEAAVYBABpqYXZhLnNwZWNpZmljYXRpb24udmVy
+		c2lvbgABAAIAAwAAAAAAAQAJAAQABQABAAYAAAAYAAIAAQAAAAyyAAcSAbgACLYACbEAAAAAAAA=
+	EOF
+	_PENTAHO_JAVA_VERSION=$("${_PENTAHO_JAVA:?}" -cp "${_TMP_CLASSPATH:?}" V)
+	rm -rf -- "${_TMP_CLASSPATH:?}"
+	if [ "${_PENTAHO_JAVA_VERSION:?}" != '11' ]; then
+		printf 'ERROR: required Java 11, found version %s\n' "${_PENTAHO_JAVA_VERSION:?}" >&2
+		exit 1
+	fi
 }
