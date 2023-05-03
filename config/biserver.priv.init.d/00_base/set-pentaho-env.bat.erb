@@ -144,3 +144,23 @@ goto end
 
 echo DEBUG: _PENTAHO_JAVA_HOME=%_PENTAHO_JAVA_HOME%
 echo DEBUG: _PENTAHO_JAVA=%_PENTAHO_JAVA%
+
+set _TMP_CLASSPATH=%TEMP%\tmpcp%RANDOM%
+mkdir "%_TMP_CLASSPATH%"
+rem Java bytecode that prints the Java version, generated from the following code:
+rem interface V{static void main(String[]a){System.out.print(System.getProperty("java.specification.version"));}}
+> "%_TMP_CLASSPATH%"\V.b64 (
+	@echo.yv66vgAAADEAGggAGQcAGAcAFwEABG1haW4BABYoW0xqYXZhL2xhbmcvU3RyaW5nOylWAQAEQ29kZQkA
+	@echo.DwAUCgAPABAKAAoACwcADgwADAANAQAFcHJpbnQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBABNqYXZh
+	@echo.L2lvL1ByaW50U3RyZWFtBwATDAARABIBAAtnZXRQcm9wZXJ0eQEAJihMamF2YS9sYW5nL1N0cmluZzsp
+	@echo.TGphdmEvbGFuZy9TdHJpbmc7AQAQamF2YS9sYW5nL1N5c3RlbQwAFQAWAQADb3V0AQAVTGphdmEvaW8v
+	@echo.UHJpbnRTdHJlYW07AQAQamF2YS9sYW5nL09iamVjdAEAAVYBABpqYXZhLnNwZWNpZmljYXRpb24udmVy
+	@echo.c2lvbgABAAIAAwAAAAAAAQAJAAQABQABAAYAAAAYAAIAAQAAAAyyAAcSAbgACLYACbEAAAAAAAA=
+)
+certutil -decodehex "%_TMP_CLASSPATH%"\V.b64 "%_TMP_CLASSPATH%"\V.class 1 >nul
+for /f %%i in ('call "%_PENTAHO_JAVA%" -cp "%_TMP_CLASSPATH%" V') do set _PENTAHO_JAVA_VERSION=%%i
+rmdir /s /q "%_TMP_CLASSPATH%" >nul
+if not "%_PENTAHO_JAVA_VERSION%" == "1.8" (
+	echo ERROR: required Java 1.8, found version %_PENTAHO_JAVA_VERSION% 1>&2
+	exit /b 1
+)
