@@ -23,7 +23,7 @@ setlocal
 
 cd /D "%~dp0"
 
-call "%~dp0set-pentaho-env.bat" "%~dp0jre"
+call "%~dp0set-pentaho-env.bat" "%~dp0jre" || exit /b 1
 
 rem ------------------------------------------------------------
 rem Set a variable for DI_HOME (to be used as a system property)
