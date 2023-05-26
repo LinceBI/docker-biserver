@@ -43,6 +43,7 @@ export CATALINA_HOME=${DIR:?}/tomcat
 export CATALINA_OPTS="\
 	-Xms<%= ENV['JAVA_XMS'] %> -Xmx<%= ENV['JAVA_XMX'] %> \
 	-Dfile.encoding=utf8 \
+	-Djava.locale.providers=COMPAT,SPI \
 	-Dsun.rmi.dgc.client.gcInterval=3600000 \
 	-Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Dlog4j2.formatMsgNoLookups=true \
