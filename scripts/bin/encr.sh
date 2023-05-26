@@ -8,26 +8,17 @@ export LC_ALL=C
 
 ########
 
-WEBINFDIR="${CATALINA_BASE:?}/webapps/${WEBAPP_PENTAHO_DIRNAME:?}/WEB-INF"
+DI_HOME="${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle
+WEBINF_DIR="${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF
 
-CLASSPATH=$(find \
-	"${WEBINFDIR:?}/lib" \
-	-type f -name '*.jar' \
-	-not -name 'classic-core-platform-plugin-*.jar' \
-	-not -name 'classic-extensions-cda-*.jar' \
-	-printf '%p:')
-
-TMPCLASSPATH=$(mktemp -d)
-# shellcheck disable=SC2154
-trap 'ret="$?"; rm -rf "${TMPCLASSPATH:?}"; trap - EXIT; exit "${ret:?}"' EXIT TERM INT HUP
-
-if [ -e "${WEBINFDIR:?}"/classes/kettle-password-encoder-plugins.xml ]; then
-	cp "${WEBINFDIR:?}"/classes/kettle-password-encoder-plugins.xml "${TMPCLASSPATH:?}"
-fi
-
-cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/
+cd "${CATALINA_BASE:?}"/bin/
 exec java \
-		-classpath "${CLASSPATH:?}:${TMPCLASSPATH:?}" \
-		-Dlog4j2.configurationFile=file:"${WEBINFDIR:?}/classes/log4j2.xml" \
+		-classpath "${WEBINF_DIR:?}/lib/*:${WEBINF_DIR:?}/classes" \
+		-Xms16m -Xmx32m \
+		-Dfile.encoding=utf8 \
+		-Djava.locale.providers=COMPAT,SPI \
+		-Dpentaho.disable.karaf=true \
+		-Dlog4j2.configurationFile=file:"${WEBINF_DIR:?}/classes/log4j2.xml" \
 		-Dlog4j2.formatMsgNoLookups=true \
+		-DDI_HOME="${DI_HOME:?}" \
 		org.pentaho.di.core.encryption.Encr "$@" | tr -d '\n'
