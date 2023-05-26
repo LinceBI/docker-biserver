@@ -12,6 +12,7 @@ export LD_LIBRARY_PATH="${CATALINA_HOME:?}"/lib:/lib/x86_64-linux-gnu:"${LD_LIBR
 export CATALINA_OPTS="\
 	-Xms${JAVA_XMS:?} -Xmx${JAVA_XMX:?} \
 	-Dfile.encoding=utf8 \
+	-Djava.locale.providers=COMPAT,SPI \
 	-Dsun.rmi.dgc.client.gcInterval=3600000 \
 	-Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Dlog4j2.formatMsgNoLookups=true \

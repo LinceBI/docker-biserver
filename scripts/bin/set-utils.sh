@@ -10,13 +10,24 @@ umask "${UMASK:?}"
 # Set home directory and Java options
 export HOME="${BIUSER_HOME:?}"
 # shellcheck disable=SC2155
-export JAVA_TOOL_OPTIONS="$(printf '%s ' \
+export JDK_JAVA_OPTIONS="$(printf '%s ' \
 	"-Duser.home='${BIUSER_HOME:?}'" \
 	"-Djavax.net.ssl.trustStore='${JAVA_TRUSTSTORE_FILE:?}'" \
 	"-Djavax.net.ssl.trustStorePassword=changeit" \
-	"-Xms${JAVA_XMS:?}" "-Xmx${JAVA_XMX:?}" \
-	"${JAVA_TOOL_OPTIONS_EXTRA-}" \
+	"--add-opens java.base/sun.net.www.protocol.jar=ALL-UNNAMED" \
+	"--add-opens java.base/java.lang=ALL-UNNAMED" \
+	"--add-opens java.base/java.net=ALL-UNNAMED" \
+	"--add-opens java.base/java.security=ALL-UNNAMED" \
+	"--add-opens java.base/sun.net.www.protocol.file=ALL-UNNAMED" \
+	"--add-opens java.base/sun.net.www.protocol.ftp=ALL-UNNAMED" \
+	"--add-opens java.base/sun.net.www.protocol.http=ALL-UNNAMED" \
+	"--add-opens java.base/sun.net.www.protocol.https=ALL-UNNAMED" \
+	"${JDK_JAVA_OPTIONS_EXTRA-}" \
 )"
+# JAVA_TOOL_OPTIONS_EXTRA is left for backward compatibility
+if [ -n "${JAVA_TOOL_OPTIONS_EXTRA-}" ]; then
+	export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS_EXTRA-}"
+fi
 
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"

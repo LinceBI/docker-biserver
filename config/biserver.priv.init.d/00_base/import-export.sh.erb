@@ -37,7 +37,15 @@ setPentahoEnv "${DIR:?}"/jre
 # ------------------------------------------------------------
 DI_HOME="${DIR:?}/<%= ENV['SOLUTIONS_DIRNAME'] %>/system/kettle"
 
+WEBINF_DIR="${DIR:?}/tomcat/webapps/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>/WEB-INF"
+
+cd "${DIR:?}"/tomcat/bin
 "${_PENTAHO_JAVA:?}" \
-	-classpath "${DIR:?}/tomcat/webapps/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>/WEB-INF/lib/*" \
-	-Dfile.encoding=utf8 -Xmx2048m -DDI_HOME="${DI_HOME:?}" \
+	-classpath "${WEBINF_DIR:?}/lib/*:${WEBINF_DIR:?}/classes" \
+	-Xms512m -Xmx1024m \
+	-Dfile.encoding=utf8 \
+	-Dpentaho.disable.karaf=true \
+	-Dlog4j2.configurationFile=file:"${WEBINF_DIR:?}/classes/log4j2.xml" \
+	-Dlog4j2.formatMsgNoLookups=true \
+	-DDI_HOME="${DI_HOME:?}" \
 	org.pentaho.platform.plugin.services.importexport.CommandLineProcessor "$@"
