@@ -84,6 +84,7 @@ services:
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
     depends_on:
       - "postgres"
+      - "openldap"
 
   openldap:
     image: "docker.io/osixia/openldap:stable"
