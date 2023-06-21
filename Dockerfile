@@ -207,8 +207,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
 
 # Install HSQLDB JDBC
-ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.1/hsqldb-2.7.1.jar"
-ARG HSQLDB_JDBC_CHECKSUM="bca5532a4c58babf9fcebf20d03f086f5ba24b076c3aaf8838a16512235e53ca"
+ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.2/hsqldb-2.7.2.jar"
+ARG HSQLDB_JDBC_CHECKSUM="aa455133e664f6a7e6f30cd0cd4f8ad83dfbd94eb717c438548e446784614a92"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./hsqldb-*.jar \
 	&& curl -LO "${HSQLDB_JDBC_URL:?}" \
