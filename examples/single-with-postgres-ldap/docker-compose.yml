@@ -24,6 +24,8 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
