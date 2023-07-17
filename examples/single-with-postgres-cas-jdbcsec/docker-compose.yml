@@ -23,8 +23,9 @@ services:
     image: "repo.stratebi.com/lincebi/biserver:9.3.0.4-717-1"
     restart: "on-failure:3"
     networks:
-      biserver:
-        aliases: ["${TLS_DOMAIN}"]
+      - "biserver"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"

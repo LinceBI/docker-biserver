@@ -85,11 +85,11 @@ ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.75"
+ARG TOMCAT_VERSION="9.0.78"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="5567ca83bf3dcfe9ecd60de10ec09915843e3ec76a50405e0470a28641997a59"
+ARG TOMCAT_LIN_CHECKSUM="b130944dd2ca90582f27f9828e2a9cd32e8059bdf39bed53673f5edacac7e8aa"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="b4dbde4dcb110051e8769fceb9087c4f7d5637ff0d1fc891086822e084072c2b"
+ARG TOMCAT_WIN_CHECKSUM="2b2e4c9d22cfa1e0cff8aa075eb45c717aa8500824b292315be46ea2ba722706"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -198,8 +198,8 @@ RUN mkdir /tmp/biserver/ \
 	&& rm -rf /tmp/biserver/
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.1.214/h2-2.1.214.jar"
-ARG H2_JDBC_CHECKSUM="d623cdc0f61d218cf549a8d09f1c391ff91096116b22e2475475fce4fbe72bd0"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.220/h2-2.2.220.jar"
+ARG H2_JDBC_CHECKSUM="978ab863018d3f965e38880571c36293ea8b10a8086194159c4d5d20b50f0a57"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./h2-*.jar \
 	&& curl -LO "${H2_JDBC_URL:?}" \
@@ -207,8 +207,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./h2-*.jar && chmod 0664 ./h2-*.jar
 
 # Install HSQLDB JDBC
-ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.1/hsqldb-2.7.1.jar"
-ARG HSQLDB_JDBC_CHECKSUM="bca5532a4c58babf9fcebf20d03f086f5ba24b076c3aaf8838a16512235e53ca"
+ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.2/hsqldb-2.7.2.jar"
+ARG HSQLDB_JDBC_CHECKSUM="aa455133e664f6a7e6f30cd0cd4f8ad83dfbd94eb717c438548e446784614a92"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./hsqldb-*.jar \
 	&& curl -LO "${HSQLDB_JDBC_URL:?}" \
@@ -263,8 +263,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
 ARG CAS_CLIENT_CORE_CHECKSUM="daab2af8636eac3939a8931469de7c1dea6ecb25516cea9a704a23c7ace48939"
-ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/5.8.3/spring-security-cas-5.8.3.jar"
-ARG SPRING_SECURITY_CAS_CHECKSUM="ec4221bcddf1dc46a09470adacbc4925f188da063c90cbf5d34fe8e39dc56412"
+ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/5.8.4/spring-security-cas-5.8.4.jar"
+ARG SPRING_SECURITY_CAS_CHECKSUM="638d7db2e787e62952a64ae809d4588c41663a7108b091dea23d798e059d2529"
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${CAS_CLIENT_CORE_URL:?}" \
 	&& printf '%s  %s' "${CAS_CLIENT_CORE_CHECKSUM:?}" ./cas-client-core-*.jar | sha256sum -c \

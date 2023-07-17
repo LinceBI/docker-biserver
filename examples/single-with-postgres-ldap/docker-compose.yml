@@ -24,6 +24,8 @@ services:
     restart: "on-failure:3"
     networks:
       - "biserver"
+    volumes:
+      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
@@ -57,6 +59,7 @@ services:
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
     depends_on:
       - "postgres"
+      - "openldap"
 
   openldap:
     image: "docker.io/osixia/openldap:stable"
