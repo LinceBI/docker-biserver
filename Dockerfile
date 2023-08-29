@@ -85,11 +85,11 @@ ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.78"
+ARG TOMCAT_VERSION="9.0.80"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="b130944dd2ca90582f27f9828e2a9cd32e8059bdf39bed53673f5edacac7e8aa"
+ARG TOMCAT_LIN_CHECKSUM="76ff6898851787d90897ccb821302efff297ecbd0b3744d5e07cc81fa71ee5cb"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="2b2e4c9d22cfa1e0cff8aa075eb45c717aa8500824b292315be46ea2ba722706"
+ARG TOMCAT_WIN_CHECKSUM="e88c11144271109fff4172665055b5ef412248103a1b4229a92c8f5ed63a402c"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -234,8 +234,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-connector-*.jar && chmod 0664 ./mysql-connector-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="b9595aad1210fe9427e6304456cc5d557b2a87df145c5682f705bc2df7ad4567"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.0.jre11/mssql-jdbc-12.4.0.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="ce52088443628b9356482df8e7967e46c409f606c90b4f77d5212aa7978284b1"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./mssql-jdbc-*.jar \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
@@ -243,8 +243,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mssql-jdbc-*.jar && chmod 0664 ./mssql-jdbc-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/12.0.4-0/vertica-jdbc-12.0.4-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="5360780769c3d082755315f6e2461ff185ad60fb32446bffecf167f6717ec77a"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/23.3.0-0/vertica-jdbc-23.3.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="582d6ac6f069b5e7cee5a4009da135150d26541d082ee44dc3bb5eeb2ca37c57"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./vertica-jdbc-*.jar \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
