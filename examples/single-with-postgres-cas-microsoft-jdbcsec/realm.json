@@ -7,7 +7,7 @@
       "clientId": "cas",
       "enabled": true,
       "protocol": "cas",
-      "rootUrl": "https://example.localdomain",
+      "rootUrl": "https://example.localhost",
       "redirectUris": ["*"]
     }
   ],
@@ -40,7 +40,7 @@
       "enabled": true,
       "firstName": "Admin",
       "lastName": "User",
-      "email": "admin@example.localdomain",
+      "email": "admin@example.localhost",
       "emailVerified": true,
       "groups" : ["/Administrator"],
       "credentials": [

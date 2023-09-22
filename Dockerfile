@@ -198,8 +198,8 @@ RUN mkdir /tmp/biserver/ \
 	&& rm -rf /tmp/biserver/
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.220/h2-2.2.220.jar"
-ARG H2_JDBC_CHECKSUM="978ab863018d3f965e38880571c36293ea8b10a8086194159c4d5d20b50f0a57"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar"
+ARG H2_JDBC_CHECKSUM="b9d8f19358ada82a4f6eb5b174c6cfe320a375b5a9cb5a4fe456d623e6e55497"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./h2-*.jar \
 	&& curl -LO "${H2_JDBC_URL:?}" \
@@ -234,8 +234,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-connector-*.jar && chmod 0664 ./mysql-connector-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.0.jre11/mssql-jdbc-12.4.0.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="ce52088443628b9356482df8e7967e46c409f606c90b4f77d5212aa7978284b1"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.1.jre11/mssql-jdbc-12.4.1.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="51637170cadcef24afb03888280ea70012b905dd43452adc94ee7aaee6493256"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./mssql-jdbc-*.jar \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
@@ -263,8 +263,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
 ARG CAS_CLIENT_CORE_CHECKSUM="daab2af8636eac3939a8931469de7c1dea6ecb25516cea9a704a23c7ace48939"
-ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/5.8.4/spring-security-cas-5.8.4.jar"
-ARG SPRING_SECURITY_CAS_CHECKSUM="638d7db2e787e62952a64ae809d4588c41663a7108b091dea23d798e059d2529"
+ARG SPRING_SECURITY_CAS_URL="https://repo1.maven.org/maven2/org/springframework/security/spring-security-cas/5.8.7/spring-security-cas-5.8.7.jar"
+ARG SPRING_SECURITY_CAS_CHECKSUM="b2f136e365431828bfb5e83d898f3677200e3006b129e1e565f03725eaeb3e45"
 RUN cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/ \
 	&& curl -LO "${CAS_CLIENT_CORE_URL:?}" \
 	&& printf '%s  %s' "${CAS_CLIENT_CORE_CHECKSUM:?}" ./cas-client-core-*.jar | sha256sum -c \

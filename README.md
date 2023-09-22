@@ -89,13 +89,13 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>    **Por defecto:** `ldap://localhost:389`
 >>
 >>  * **`LDAP_CONTEXT_SOURCE_USER_DN`:** DN de un usuario con permiso de lectura sobre el directorio.  
->>    **Por defecto:** `cn=admin,dc=example,dc=localdomain`
+>>    **Por defecto:** `cn=admin,dc=example,dc=localhost`
 >>
 >>  * **`LDAP_CONTEXT_SOURCE_PASSWORD`:** contraseña del usuario.  
 >>    **Por defecto:** `password`
 >>
 >>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los roles.  
->>    **Por defecto:** `ou=groups,dc=example,dc=localdomain`
+>>    **Por defecto:** `ou=groups,dc=example,dc=localhost`
 >>
 >>  * **`LDAP_ALL_AUTHORITIES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los roles.  
 >>    **Por defecto:** `(objectClass=groupOfUniqueNames)`
@@ -107,7 +107,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>    **Por defecto:** `cn`
 >>
 >>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_BASE`:** localización base para la búsqueda de todos los usuarios.  
->>    **Por defecto:** `ou=users,dc=example,dc=localdomain`
+>>    **Por defecto:** `ou=users,dc=example,dc=localhost`
 >>
 >>  * **`LDAP_ALL_USERNAMES_SEARCH_SEARCH_FILTER`:** filtro para la búsqueda de todos los usuarios.  
 >>    **Por defecto:** `(objectClass=inetOrgPerson)`
@@ -232,7 +232,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >   **Por defecto:** `smtp`
 >
 > * **`MAIL_SMTP_HOST`:** dirección del servidor de correo.  
->   **Por defecto:** `smtp.example.localdomain`
+>   **Por defecto:** `smtp.example.localhost`
 >
 > * **`MAIL_SMTP_PORT`:** puerto del servidor de correo.  
 >   **Por defecto:** `587`
@@ -241,7 +241,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >   **Por defecto:** `true`
 >
 > * **`MAIL_SMTP_USER`:** usuario del servidor de correo.  
->   **Por defecto:** `user@example.localdomain`
+>   **Por defecto:** `user@example.localhost`
 >
 > * **`MAIL_SMTP_PASSWORD`:** contraseña del servidor de correo.  
 >   **Por defecto:** `password`

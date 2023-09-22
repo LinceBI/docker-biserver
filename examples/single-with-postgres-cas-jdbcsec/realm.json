@@ -7,7 +7,7 @@
       "clientId": "cas",
       "enabled": true,
       "protocol": "cas",
-      "rootUrl": "https://example.localdomain",
+      "rootUrl": "https://example.localhost",
       "redirectUris": ["*"]
     }
   ],
@@ -27,7 +27,7 @@
       "enabled": true,
       "firstName": "Admin",
       "lastName": "User",
-      "email": "admin@example.localdomain",
+      "email": "admin@example.localhost",
       "emailVerified": true,
       "groups" : ["/Administrator"],
       "credentials": [
@@ -43,7 +43,7 @@
       "enabled": true,
       "firstName": "Alice",
       "lastName": "Doherty",
-      "email": "alice@example.localdomain",
+      "email": "alice@example.localhost",
       "emailVerified": true,
       "groups" : ["/Administrator", "/Employee"],
       "credentials": [
@@ -59,7 +59,7 @@
       "enabled": true,
       "firstName": "Bob",
       "lastName": "Miller",
-      "email": "bob@example.localdomain",
+      "email": "bob@example.localhost",
       "emailVerified": true,
       "groups" : ["/Employee"],
       "credentials": [
@@ -75,7 +75,7 @@
       "enabled": true,
       "firstName": "Carol",
       "lastName": "Phillips",
-      "email": "carol@example.localdomain",
+      "email": "carol@example.localhost",
       "emailVerified": true,
       "groups" : ["/Employee"],
       "credentials": [
@@ -91,7 +91,7 @@
       "enabled": false,
       "firstName": "Craig",
       "lastName": "Gregory",
-      "email": "craig@example.localdomain",
+      "email": "craig@example.localhost",
       "emailVerified": true,
       "groups" : ["/Employee"],
       "credentials": [
