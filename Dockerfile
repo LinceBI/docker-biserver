@@ -234,8 +234,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-connector-*.jar && chmod 0664 ./mysql-connector-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.0.jre11/mssql-jdbc-12.4.0.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="ce52088443628b9356482df8e7967e46c409f606c90b4f77d5212aa7978284b1"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.1.jre11/mssql-jdbc-12.4.1.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="51637170cadcef24afb03888280ea70012b905dd43452adc94ee7aaee6493256"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./mssql-jdbc-*.jar \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
