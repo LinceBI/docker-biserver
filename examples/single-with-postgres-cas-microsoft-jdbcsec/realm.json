@@ -2,9 +2,12 @@
   "id": "00000000-0000-0000-0000-000000000000",
   "realm": "biserver",
   "enabled": true,
+  "attributes": {
+    "frontendUrl": "https://example.localhost/auth/"
+  },
   "clients": [
     {
-      "clientId": "cas",
+      "clientId": "biserver",
       "enabled": true,
       "protocol": "cas",
       "rootUrl": "https://example.localhost",
