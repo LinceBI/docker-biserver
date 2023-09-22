@@ -38,7 +38,7 @@
 					anonymousProcessingFilter,
 					sessionMgmtFilter,
 					mdcFilter,
-					exceptionTranslationFilter,
+					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/api/repos/**" filters="
 					csrfGateFilter,
@@ -67,7 +67,7 @@
 					anonymousProcessingFilter,
 					sessionMgmtFilter,
 					mdcFilter,
-					exceptionTranslationFilter,
+					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/plugin/reporting/api/jobs/**" filters="
 					csrfGateFilter,
@@ -75,13 +75,12 @@
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
-					casProcessingFilter,
 					basicProcessingFilter,
 					requestParameterProcessingFilter,
 					anonymousProcessingFilter,
 					sessionMgmtFilter,
 					mdcFilter,
-					exceptionTranslationFilter,
+					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS,
 					preFlightFilter" />
 				<sec:filter-chain pattern="/plugin/**" filters="
@@ -96,7 +95,7 @@
 					anonymousProcessingFilter,
 					sessionMgmtFilter,
 					mdcFilter,
-					exceptionTranslationFilter,
+					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/**" filters="
 					csrfGateFilter,
@@ -119,6 +118,7 @@
 		</constructor-arg>
 	</bean>
 
+	<!-- Overridden from applicationContext-spring-security.xml -->
 	<bean id="httpSessionPentahoSessionContextIntegrationFilter" class="org.pentaho.platform.web.http.filters.HttpSessionPentahoSessionIntegrationFilter">
 		<property name="ssoEnabled" value="true" />
 	</bean>
@@ -129,6 +129,46 @@
 		<property name="service" value="${cas.service.url}" />
 		<property name="sendRenew" value="false" />
 	</bean>
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<constructor-arg ref="casProcessingFilterEntryPoint" />
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
+		</property>
+	</bean>
+
+	<!-- ======================== AUTHENTICATION ======================= -->
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+		<constructor-arg>
+			<util:list>
+				<ref bean="casAuthenticationProvider" />
+				<ref bean="anonymousAuthenticationProvider" />
+			</util:list>
+		</constructor-arg>
+		<property name="authenticationEventPublisher">
+			<ref bean="defaultAuthenticationEventPublisher" />
+		</property>
+	</bean>
+
+	<!-- Overridden from applicationContext-spring-security.xml to specify logoutSuccessUrl as CAS logout page -->
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg value="${cas.logout.url}" />
+		<!-- URL redirected to after logout -->
+		<constructor-arg>
+			<list>
+				<bean class="org.pentaho.platform.web.http.security.PentahoLogoutHandler" />
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/Logout" />
+	</bean>
+
+	<!-- =============================-->
+	<!-- SPRING-SECURITY-CAS FILTERS -->
+	<!-- =============================-->
 
 	<!-- Replaces authenticationProcessingFilter in filterChainProxy above -->
 	<bean id="casProcessingFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
@@ -150,32 +190,10 @@
 		<property name="filterProcessesUrl" value="/j_spring_cas_security_check" />
 	</bean>
 
-	<!-- Overridden from applicationContext-spring-security.xml -->
-	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
-		<constructor-arg ref="casProcessingFilterEntryPoint" />
-		<property name="accessDeniedHandler">
-			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
-		</property>
-	</bean>
-
 	<bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
 		<property name="loginUrl" value="${cas.login.url}" />
 		<property name="serviceProperties">
 			<ref bean="serviceProperties" />
-		</property>
-	</bean>
-
-	<bean id="defaultAuthenticationEventPublisher" class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"></bean>
-
-	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
-		<constructor-arg>
-			<util:list>
-				<ref bean="casAuthenticationProvider" />
-				<ref bean="anonymousAuthenticationProvider" />
-			</util:list>
-		</constructor-arg>
-		<property name="authenticationEventPublisher">
-			<ref bean="defaultAuthenticationEventPublisher" />
 		</property>
 	</bean>
 
@@ -199,19 +217,6 @@
 
 	<bean id="ticketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
 		<constructor-arg index="0" value="${cas.ticketvalidator.url}" />
-	</bean>
-
-	<!-- Overridden from applicationContext-spring-security.xml to specify logoutSuccessUrl as CAS logout page -->
-	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<constructor-arg value="${cas.logout.url}" />
-		<!-- URL redirected to after logout -->
-		<constructor-arg>
-			<list>
-				<bean class="org.pentaho.platform.web.http.security.PentahoLogoutHandler" />
-				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
-			</list>
-		</constructor-arg>
-		<property name="filterProcessesUrl" value="/Logout" />
 	</bean>
 
 </beans>
