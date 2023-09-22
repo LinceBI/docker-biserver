@@ -198,8 +198,8 @@ RUN mkdir /tmp/biserver/ \
 	&& rm -rf /tmp/biserver/
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.220/h2-2.2.220.jar"
-ARG H2_JDBC_CHECKSUM="978ab863018d3f965e38880571c36293ea8b10a8086194159c4d5d20b50f0a57"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar"
+ARG H2_JDBC_CHECKSUM="b9d8f19358ada82a4f6eb5b174c6cfe320a375b5a9cb5a4fe456d623e6e55497"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./h2-*.jar \
 	&& curl -LO "${H2_JDBC_URL:?}" \
