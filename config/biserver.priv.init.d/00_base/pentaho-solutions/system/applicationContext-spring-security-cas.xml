@@ -75,6 +75,7 @@
 					securityContextHolderAwareRequestFilterForWS,
 					httpSessionPentahoSessionContextIntegrationFilter,
 					httpSessionContextIntegrationFilter,
+					casProcessingFilter,
 					basicProcessingFilter,
 					requestParameterProcessingFilter,
 					anonymousProcessingFilter,
