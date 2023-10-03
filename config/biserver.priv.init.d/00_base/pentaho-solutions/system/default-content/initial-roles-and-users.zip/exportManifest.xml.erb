@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ExportManifest xmlns:ns2="http://www.pentaho.com/schema/">
+	<%- require 'json' -%>
+	<ExportManifestInformation exportDate="01-01-1970 00:00:00 GMT" exportBy="admin" rootFolder="/" manifestVersion="2" />
+	<%- roles = JSON.parse(ENV['INITIAL_ROLES'] || '{}') -%>
+	<%- roles.each do |role, permissions| -%>
+	<ExportManifestRole>
+		<rolename><%= role %></rolename>
+		<%- permissions.each do |permission| -%>
+		<permissions><%= permission %></permissions>
+		<%- end -%>
+	</ExportManifestRole>
+	<%- end -%>
+	<%- users = JSON.parse(ENV['INITIAL_USERS'] || '{}') -%>
+	<%- users.each do |user, roles| -%>
+	<ExportManifestUser>
+		<username><%= user %></username>
+		<%- roles.each do |role| -%>
+		<roles><%= role %></roles>
+		<%- end -%>
+		<password>{SHA-256}none-1000-0000000000000000000000000000000000000000000000000000000000000000</password>
+	</ExportManifestUser>
+	<%- end -%>
+</ns2:ExportManifest>

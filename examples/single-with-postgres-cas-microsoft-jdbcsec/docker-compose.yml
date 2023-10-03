@@ -89,7 +89,7 @@ services:
       - "postgres"
 
   keycloak:
-    image: "localhost/keycloak:latest"
+    image: "localhost/keycloak:cas"
     build:
       context: "./images/keycloak/"
       args:
