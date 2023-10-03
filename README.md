@@ -82,6 +82,12 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`SECURITY_REQUEST_PARAMETER_AUTHENTICATION_ENABLED`:** habilita la autenticación por parámetros en la URL (`userid` y `password`).  
 >   **Por defecto:** `false`
 >
+> * **`INITIAL_ROLES`:** objeto JSON con la especificación de roles iniciales a crear y sus permisos (e.g.: `{"role1": ["perm1", "perm2"]}`).  
+>   **Por defecto:** `{}`
+>
+> * **`INITIAL_USERS`:** objeto JSON con la especificación de usuarios iniciales a crear y sus roles (e.g.: `{"user1": ["role1", "role2"]}`).  
+>   **Por defecto:** `{}`
+>
 > <details>
 >   <summary>LDAP</summary>
 >
