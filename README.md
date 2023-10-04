@@ -14,7 +14,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 ## Argumentos del Dockerfile
 
   * **`BISERVER_VERSION`:** versión de Pentaho BI Server.  
-    **Por defecto:** `9.4.0.1-465-1`
+    **Por defecto:** `9.5.2.0-272-1`
 
   * **`BISERVER_MAVEN_REPO`:** repositorio de Maven del que se descargan las dependencias necesarias para la instalación de Pentaho BI Server.  
     **Por defecto:** `https://repo.stratebi.com/repository/pentaho-mvn/`
@@ -234,7 +234,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 <details>
   <summary>Correo</summary>
 
-> * **`MAIL_TRANSPORT_PROTOCOL`:** protocolo del servidor de correo.  
+> * **`MAIL_TRANSPORT_PROTOCOL`:** protocolo del servidor de correo, admite los valores `smtp`, `smpts` y `graph_api`.  
 >   **Por defecto:** `smtp`
 >
 > * **`MAIL_SMTP_HOST`:** dirección del servidor de correo.  
@@ -246,11 +246,38 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`MAIL_SMTP_AUTH`:** indica si el servidor de correo requiere autenticación.  
 >   **Por defecto:** `true`
 >
+> * **`MAIL_SMTP_AUTH_MECHANISMS`:** mecanismo de autenticación del servidor de correo, admite los valores `basic`, `xoauth2` y `no_auth`.  
+>   **Por defecto:** `basic`
+>
 > * **`MAIL_SMTP_USER`:** usuario del servidor de correo.  
 >   **Por defecto:** `user@example.localhost`
 >
 > * **`MAIL_SMTP_PASSWORD`:** contraseña del servidor de correo.  
 >   **Por defecto:** `password`
+>
+> * **`MAIL_SMTP_XOAUTH2_CLIENT_ID`:** `client id` para OAuth 2.0.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_CLIENT_SECRET`:** `client secret` para OAuth 2.0.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_SCOPE`:** `scope` para OAuth 2.0.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_TOKEN_URL`:** `token url` para OAuth 2.0.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_GRANT_TYPE`:** `grant type` para OAuth 2.0, admite los valores `client_credentials`, `authorization_code` y `refresh_token`.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_AUTHORIZATION_CODE`:** `authorization code` para OAuth 2.0 cuando el `grant type` es `authorization_code`.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_REDIRECT_URI`:** `redirect uri` para OAuth 2.0 cuando el `grant type` es `authorization_code`.  
+>   **Por defecto:** *vacío*
+>
+> * **`MAIL_SMTP_XOAUTH2_REFRESH_TOKEN`:** `refresh token` para OAuth 2.0 cuando el `grant type` es `refresh_token`.  
+>   **Por defecto:** *vacío*
 >
 > * **`MAIL_SMTP_STARTTLS`:** habilita STARTTLS.  
 >   **Por defecto:** `true`
@@ -428,7 +455,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/lincebi/biserver:9.4.0.1-465-1
+  repo.stratebi.com/lincebi/biserver:9.5.2.0-272-1
 ```
 
 Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.
