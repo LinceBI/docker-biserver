@@ -234,7 +234,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 <details>
   <summary>Correo</summary>
 
-> * **`MAIL_TRANSPORT_PROTOCOL`:** protocolo del servidor de correo.  
+> * **`MAIL_TRANSPORT_PROTOCOL`:** protocolo del servidor de correo, admite los valores `smtp` y `smpts`.  
 >   **Por defecto:** `smtp`
 >
 > * **`MAIL_SMTP_HOST`:** dirección del servidor de correo.  

@@ -89,7 +89,7 @@ services:
         exec /container/tool/run
 
   postgres:
-    image: "docker.io/postgres:15"
+    image: "docker.io/postgres:16"
     restart: "on-failure:3"
     networks:
       - "biserver"
