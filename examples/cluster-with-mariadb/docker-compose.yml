@@ -85,7 +85,7 @@ services:
         condition: "service_healthy"
 
   mariadb:
-    image: "docker.io/mariadb:10.6"
+    image: "docker.io/mariadb:11.1"
     restart: "on-failure:3"
     networks:
       - "biserver"
