@@ -269,6 +269,10 @@ initdFromDir() {
 			elif matches "${path:?}" "${PATTERN_EXT_JAR:?}"; then
 				logInfo "Copying jar \"${path:?}\"..."
 				cp -f "${path:?}" "${CATALINA_BASE:?}"/lib/
+			# Copy kar files
+			elif matches "${path:?}" "${PATTERN_EXT_KAR:?}"; then
+				logInfo "Copying kar \"${path:?}\"..."
+				cp -f "${path:?}" "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/karaf/deploy/
 			# Ignore the rest of files
 			else
 				logWarn "Ignoring file \"${path:?}\""
