@@ -391,7 +391,8 @@ Es posible instalar plugins o ejecutar scripts personalizados antes de iniciar T
 
  * **Archivos `*.sh` y `*.run`:** son ejecutados desde el directorio de trabajo `${BISERVER_HOME}`. Tendrán disponibles todas las variables de entorno anteriormente documentadas.
  * **Archivos `*.jar`:** son copiados a `${CATALINA_BASE}/lib/`.
- * **Archivos `*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`, `*.kar`:**
+ * **Archivos `*.kar`:** son copiados a `${BISERVER_HOME}/${SOLUTIONS_DIRNAME}/system/karaf/deploy/`.
+ * **Archivos `*.tar`, `*.tar.gz`, `*.tgz`, `*.tar.bz2`, `*.tbz2`, `*.tar.xz`, `*.txz`, `*.zip`:**
    * **`*.__root__.*`**: son extraídos en `${BISERVER_HOME}`.
    * **`*.__webapp_pentaho__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_DIRNAME}`.
    * **`*.__webapp_pentaho_style__.*`**: son extraídos en `${CATALINA_BASE}/webapps/${WEBAPP_PENTAHO_STYLE_DIRNAME}`.

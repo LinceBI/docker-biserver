@@ -32,8 +32,9 @@ fi
 # Some regex patterns
 export PATTERN_EXT_RUN="\.\(sh\|run\)$"
 export PATTERN_EXT_TAR="\.\(tar\|tar\.gz\|tgz\|tar\.bz2\|tbz2\|tar\.xz\|txz\)$"
-export PATTERN_EXT_ZIP="\.\(zip\|kar\)$"
+export PATTERN_EXT_ZIP="\.\(zip\)$"
 export PATTERN_EXT_JAR="\.\(jar\)$"
+export PATTERN_EXT_KAR="\.\(kar\)$"
 export PATTERN_EXT_ERB="\.\(erb\)$"
 
 # Get a variable value from multiple sources

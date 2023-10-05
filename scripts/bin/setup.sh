@@ -105,6 +105,8 @@ export LC_ALL=C
 	CAS_LOGOUT_URL=$(getVar CAS_LOGOUT_URL "${CAS_URL:?}/logout?service=$(encodeURI "${FQSU_PROTOCOL:?}://${FQSU_DOMAIN:?}:${FQSU_PORT:?}")")
 	CAS_PROVIDER_USERDETAILS=$(getVar CAS_PROVIDER_USERDETAILS "userDetailsService")
 
+	SAML_ENABLED=$(getVar SAML_ENABLED "false")
+
 	MAIL_TRANSPORT_PROTOCOL=$(getVar MAIL_TRANSPORT_PROTOCOL "smtp")
 	MAIL_SMTP_HOST=$(getVar MAIL_SMTP_HOST "smtp.example.localhost")
 	MAIL_SMTP_PORT=$(getVar MAIL_SMTP_PORT "587")
