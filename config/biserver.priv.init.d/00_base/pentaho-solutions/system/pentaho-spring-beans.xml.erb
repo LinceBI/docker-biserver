@@ -86,6 +86,10 @@ This should be the only file specified in web.xml's contextConfigLocation. It sh
 	<import resource="applicationContext-spring-security-cas.xml" />
 	<%- end -%>
 
+	<%- if ENV['SAML_ENABLED'] == 'true' -%>
+	<import resource="applicationContext-spring-security-saml.xml" />
+	<%- end -%>
+
 	<import resource="pentahoObjects.spring.xml" />
 	<!-- <import resource="GettingStartedDB-spring.xml" /> -->
 	<import resource="importExport.xml" />
