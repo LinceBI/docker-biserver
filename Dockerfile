@@ -94,10 +94,10 @@ RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
 	&& curl -Lo ./tomcat.tgz "${TOMCAT_LIN_URL:?}" \
-	&& printf '%s  %s' "${TOMCAT_LIN_CHECKSUM:?}" ./tomcat.tgz | sha256sum -c \
+	&& printf '%s  %s' "${TOMCAT_LIN_CHECKSUM:?}" ./tomcat.tgz | sha512sum -c \
 	&& bsdtar -xkf ./tomcat.tgz --strip-components=1 \
 	&& curl -Lo ./tomcat.zip "${TOMCAT_WIN_URL:?}" \
-	&& printf '%s  %s' "${TOMCAT_WIN_CHECKSUM:?}" ./tomcat.zip | sha256sum -c \
+	&& printf '%s  %s' "${TOMCAT_WIN_CHECKSUM:?}" ./tomcat.zip | sha512sum -c \
 	&& bsdtar -xkf ./tomcat.zip --strip-components=1 \
 	# Install Tomcat
 	&& mkdir -p "${CATALINA_HOME:?}" \
@@ -144,22 +144,22 @@ RUN mkdir /tmp/biserver/ \
 	&& cd /tmp/biserver/ \
 	# Download pentaho-solutions
 	&& curl -Lo ./pentaho-solutions.zip "${BISERVER_SOLUTIONS_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_SOLUTIONS_CHECKSUM:?}" ./pentaho-solutions.zip | sha256sum -c \
+	&& printf '%s  %s' "${BISERVER_SOLUTIONS_CHECKSUM:?}" ./pentaho-solutions.zip | sha512sum -c \
 	&& mkdir ./pentaho-solutions/ \
 	&& bsdtar -C ./pentaho-solutions/ -xf ./pentaho-solutions.zip --strip-components=1 \
 	# Download pentaho-data
 	&& curl -Lo ./pentaho-data.zip "${BISERVER_DATA_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_DATA_CHECKSUM:?}" ./pentaho-data.zip | sha256sum -c \
+	&& printf '%s  %s' "${BISERVER_DATA_CHECKSUM:?}" ./pentaho-data.zip | sha512sum -c \
 	&& mkdir ./pentaho-data/ \
 	&& bsdtar -C ./pentaho-data/ -xf ./pentaho-data.zip --strip-components=1 \
 	# Download pentaho-war
 	&& curl -Lo ./pentaho-war.war "${BISERVER_WAR_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_WAR_CHECKSUM:?}" ./pentaho-war.war | sha256sum -c \
+	&& printf '%s  %s' "${BISERVER_WAR_CHECKSUM:?}" ./pentaho-war.war | sha512sum -c \
 	&& mkdir ./pentaho-war/ \
 	&& bsdtar -C ./pentaho-war/ -xf ./pentaho-war.war \
 	# Download pentaho-style
 	&& curl -Lo ./pentaho-style.war "${BISERVER_STYLE_URL:?}" \
-	&& printf '%s  %s' "${BISERVER_STYLE_CHECKSUM:?}" ./pentaho-style.war | sha256sum -c \
+	&& printf '%s  %s' "${BISERVER_STYLE_CHECKSUM:?}" ./pentaho-style.war | sha512sum -c \
 	&& mkdir ./pentaho-style/ \
 	&& bsdtar -C ./pentaho-style/ -xf ./pentaho-style.war \
 	# Install Pentaho BI Server
