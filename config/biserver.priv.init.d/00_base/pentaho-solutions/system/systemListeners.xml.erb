@@ -42,8 +42,8 @@ in the QuartzSystemListener and VersionCheckSystemListener.
 				</bean>
 				<bean id="defaultContentSystemListener" class="org.pentaho.platform.plugin.action.defaultcontent.DefaultContentSystemListener" />
 				<bean id="repositoryCleanerSystemListener" class="org.pentaho.platform.plugin.services.repository.RepositoryCleanerSystemListener">
-					<property name="gcEnabled" value="true" />
-					<property name="execute" value="weekly" />
+					<property name="gcEnabled" value="<%= ENV['REPOSITORY_CLEANER_SYSTEM_LISTENER_ENABLED'] %>" />
+					<property name="execute" value="<%= ENV['REPOSITORY_CLEANER_SYSTEM_LISTENER_EXECUTE'] %>" />
 				</bean>
 			</list>
 		</constructor-arg>

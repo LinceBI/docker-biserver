@@ -278,6 +278,12 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`LOAD_SAMPLES`:** cargar datos de ejemplo.  
 >   **Por defecto:** `true`
 >
+> * **`REPOSITORY_CLEANER_SYSTEM_LISTENER_ENABLED`:** habilita servicio de limpieza de datos no utilizados en el repositorio de Jackrabbit.  
+>   **Por defecto:** `true`
+>
+> * **`REPOSITORY_CLEANER_SYSTEM_LISTENER_EXECUTE`:** cuando ejecutar el servicio de limpieza, admite los valores `now`, `weekly` y `monthly`.  
+>   **Por defecto:** `weekly`
+>
 > <details>
 >   <summary>PostgreSQL</summary>
 >
