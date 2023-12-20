@@ -47,6 +47,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		xxd \
 		xz-utils \
 		zip \
+		python3.10 \
+		python3-pip \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Zulu OpenJDK
