@@ -36,6 +36,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		patch \
 		postgresql-client-14 \
 		pwgen \
+		python3 \
+		python-is-python3 \
+		python3-pip \
 		rsync \
 		ruby \
 		runit \
@@ -47,8 +50,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		xxd \
 		xz-utils \
 		zip \
-		python3.10 \
-		python3-pip \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Zulu OpenJDK
