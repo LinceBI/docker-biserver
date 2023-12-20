@@ -36,6 +36,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		patch \
 		postgresql-client-14 \
 		pwgen \
+		python-is-python3 \
+		python3 \
+		python3-pip \
 		rsync \
 		ruby \
 		runit \
