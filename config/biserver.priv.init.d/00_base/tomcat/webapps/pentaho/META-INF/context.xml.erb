@@ -360,5 +360,23 @@
 		testOnReturn="false"
 	/>
 	<%- end -%>
+	<Resource
+		name="jdbc/STMonitoring"
+		auth="Container"
+		type="javax.sql.DataSource"
+		factory="org.pentaho.di.core.database.util.DecryptingDataSourceFactory"
+		driverClassName="<%= ENV['PENTAHO_AUDIT_DATABASE_DRIVER'] %>"
+		username="<%= ENV['PENTAHO_AUDIT_DATABASE_USER'] %>"
+		password="<%= ENV['PENTAHO_AUDIT_DATABASE_PASSWORD'] %>"
+		url="<%= ENV['PENTAHO_AUDIT_DATABASE_URL'] %>"
+		initialSize="0"
+		maxTotal="20"
+		minIdle="0"
+		maxIdle="5"
+		maxWaitMillis="10000"
+		validationQuery="SELECT COUNT(*) FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES"
+		testOnBorrow="true"
+		testOnReturn="false"
+	/>
 
 </Context>

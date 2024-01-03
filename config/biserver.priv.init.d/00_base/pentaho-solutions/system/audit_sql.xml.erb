@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<audit-sql>
+
+	<auditConnection>
+        <%- if ENV['PENTAHO_AUDIT_STORAGE_TYPE'] == 'postgres' -%>
+		<insertSQL>insert into "<%= ENV['PENTAHO_AUDIT_DATABASE_SCHEMA'] %>"."audit" ("job_id", "inst_id", "obj_id", "obj_type", "actor", "message_type", "message_name", "message_text_value", "message_num_value", "duration", "datetime_create") values (?,?,?,?,?,?,?,?,?,?,?)</insertSQL>
+		<%- elsif ENV['PENTAHO_AUDIT_STORAGE_TYPE'] == 'hsqldb' -%>
+        <insertSQL>insert into "<%= ENV['PENTAHO_AUDIT_DATABASE_SCHEMA'] %>"."audit" ("job_id", "inst_id", "obj_id", "obj_type", "actor", "message_type", "message_name", "message_text_value", "message_num_value", "duration", "create_timestamp") values (?,?,?,?,?,?,?,?,?,?,?)</insertSQL>
+        <%- end -%>
+		<JNDI>STMonitoring</JNDI>
+	</auditConnection>
+
+</audit-sql>

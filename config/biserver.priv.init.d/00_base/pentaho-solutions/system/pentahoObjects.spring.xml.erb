@@ -24,7 +24,11 @@ PentahoSystem which is initialized after Spring
 	default-lazy-init="true">
 
 	<bean id="ISolutionEngine" class="org.pentaho.platform.engine.services.solution.SolutionEngine" scope="prototype" />
+	<%- if ENV['PENTAHO_AUDIT_ENTRY'] == 'file' -%>
 	<bean id="IAuditEntry" class="org.pentaho.platform.engine.services.audit.AuditFileEntry" scope="singleton" />
+	<%- elsif ENV['PENTAHO_AUDIT_ENTRY'] == 'database' -%>
+	<bean id="IAuditEntry" class="org.pentaho.platform.engine.services.audit.AuditSQLEntry" scope="singleton"/>
+	<%- end -%>
 	<bean id="IUITemplater" class="org.pentaho.platform.web.http.WebTemplateHelper" scope="singleton" />
 	<!-- Concrete implementation of IMetadataDomainRepository -->
 	<bean id="IMetadataDomainRepositoryImpl" class="org.pentaho.platform.plugin.services.metadata.SecurityAwarePentahoMetadataDomainRepository" scope="singleton">
