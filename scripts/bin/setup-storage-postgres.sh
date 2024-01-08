@@ -23,9 +23,3 @@ psqlCreateDatabaseIfNotExists \
 psqlCreateDatabaseIfNotExists \
 	"${POSTGRES_QUARTZ_DATABASE:?}" "${POSTGRES_QUARTZ_USER:?}" "${POSTGRES_QUARTZ_PASSWORD:?}" \
 	"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/postgresql/create_quartz_postgresql.sql
-
-if [ "${PENTAHO_AUDIT_STORAGE_TYPE:?}" = 'postgres' ]; then
-	psqlCreateDatabaseIfNotExists \
-		"${PENTAHO_AUDIT_DATABASE_NAME:?}" "${PENTAHO_AUDIT_DATABASE_USER:?}" "${PENTAHO_AUDIT_DATABASE_PASSWORD:?}" \
-		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/postgresql/create_stmonitoring_postgresql.sql
-fi
