@@ -37,7 +37,7 @@
 	<documentation-url>https://help.hitachivantara.com/Documentation/Pentaho/9.5/Products/Pentaho_User_Console</documentation-url>
 
 	<log-file>server.log</log-file>
-	<log-level>INFO</log-level>
+	<log-level><%= ENV['LOG_LEVEL_PENTAHO'] %></log-level>
 
 	<!--
 	The configuration of publishers, system listeners, and session actions has been moved to

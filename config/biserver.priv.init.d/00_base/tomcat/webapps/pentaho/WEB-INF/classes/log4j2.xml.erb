@@ -16,7 +16,10 @@
 	<Appenders>
 
 		<Console name="PENTAHOCONSOLE">
-			<ThresholdFilter level="INFO" />
+			<ThresholdFilter level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+			<%- if ENV['LOG_LEVEL_PENTAHO'] == 'DEBUG' -%>
+			<RegexFilter regex=".*PentahoSystem.ERROR_0026.*" onMatch="DENY" onMismatch="ACCEPT" />
+			<%- end -%>
 			<PatternLayout>
 				<Pattern>%d{ABSOLUTE} %-5p [%c{1}] %m%n</Pattern>
 			</PatternLayout>
@@ -111,7 +114,6 @@
 		<Logger name="net.sf.ehcache" level="ERROR" />
 		<Logger name="org.quartz" level="ERROR" />
 		<Logger name="org.springframework" level="ERROR" />
-		<Logger name="org.springframework.security" level="ERROR" />
 		<Logger name="org.pentaho" level="ERROR" />
 		<Logger name="com.pentaho" level="ERROR" />
 		<Logger name="org.jfree.JCommon" level="ERROR" />
@@ -120,82 +122,88 @@
 		<Logger name="org.pentaho.platform.web.http.context" level="WARN" />
 		<Logger name="org.pentaho.di.osgi" level="ERROR" />
 		<Logger name="org.pentaho.di.monitor" level="ERROR" />
-		<Logger name="org.pentaho.platform.engine.core.system.status" level="INFO" />
 		<Logger name="org.pentaho.hadoop.shim.DriverManager" level="INFO" />
 
-		<Logger name="mondrian" level="DEBUG" additivity="false">
-			<appender-ref ref="MONDRIAN" />
+		<Logger name="org.pentaho.platform.util.logging.Logger" level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+		<Logger name="org.pentaho.platform.engine.core.system.status" level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+
+		<Logger name="org.springframework.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
+		<Logger name="org.pentaho.platform.engine.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
+		<Logger name="org.pentaho.platform.plugin.services.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
+
+		<Logger name="mondrian" level="<%= ENV['LOG_LEVEL_MONDRIAN'] %>" additivity="false">
+			<AppenderRef ref="MONDRIAN" />
 		</Logger>
 
-		<Logger name="mondrian.mdx" level="DEBUG" additivity="false">
-			<appender-ref ref="MDXLOG" />
+		<Logger name="mondrian.mdx" level="<%= ENV['LOG_LEVEL_MDXLOG'] %>" additivity="false">
+			<AppenderRef ref="MDXLOG" />
 		</Logger>
 
-		<Logger name="mondrian.sql" level="DEBUG" additivity="false">
-			<appender-ref ref="SQLLOG" />
+		<Logger name="mondrian.sql" level="<%= ENV['LOG_LEVEL_SQLLOG'] %>" additivity="false">
+			<AppenderRef ref="SQLLOG" />
 		</Logger>
 
-		<Logger name="org.pentaho.metadata.query.impl.sql.SqlGenerator" level="TRACE">
-			<appender-ref ref="METADATASQLLOG" />
+		<Logger name="org.pentaho.metadata.query.impl.sql.SqlGenerator" level="<%= ENV['LOG_LEVEL_METADATASQLLOG'] %>" additivity="false">
+			<AppenderRef ref="METADATASQLLOG" />
 		</Logger>
 
-		<Logger name="mondrian.analyzer" level="DEBUG">
-			<appender-ref ref="ANALYZER" />
+		<Logger name="mondrian.analyzer" level="<%= ENV['LOG_LEVEL_ANALYZER'] %>" additivity="false">
+			<AppenderRef ref="ANALYZER" />
 		</Logger>
 
-		<Logger name="com.pentaho.analyzer" level="DEBUG">
-			<appender-ref ref="ANALYZER" />
+		<Logger name="com.pentaho.analyzer" level="<%= ENV['LOG_LEVEL_ANALYZER'] %>" additivity="false">
+			<AppenderRef ref="ANALYZER" />
 		</Logger>
 
-		<Logger name="org.pentaho.platform.plugin.services.connections.mondrian.MDXOlap4jConnection" level="DEBUG">
-			<appender-ref ref="ANALYZER" />
+		<Logger name="org.pentaho.platform.plugin.services.connections.mondrian.MDXOlap4jConnection" level="<%= ENV['LOG_LEVEL_ANALYZER'] %>" additivity="false">
+			<AppenderRef ref="ANALYZER" />
+		</Logger>
+
+		<Logger name="org.pentaho.di.trans.Trans" level="<%= ENV['LOG_LEVEL_DI'] %>" additivity="false">
+			<AppenderRef ref="pdi-execution-appender" />
+		</Logger>
+
+		<Logger name="org.pentaho.di.job.Job" level="<%= ENV['LOG_LEVEL_DI'] %>" additivity="false">
+			<AppenderRef ref="pdi-execution-appender" />
 		</Logger>
 
 		<!--
 		<Logger name="mondrian.rolap.RolapUtil" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.metadata.query.impl.sql.SqlGenerator" level="TRACE" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.reporting.engine.classic.core.modules.misc.datafactory.sql" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.reporting.platform" level="INFO" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.reporting.engine.classic.core.parameters" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.reporting.platform.plugin.ExecuteReportContentHandler" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="org.pentaho.platform.plugin.action.sql.SQLLookupRule" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 
 		<Logger name="pt.webdetails.cda.dataaccess.SimpleDataAccess" level="DEBUG" additivity="false">
-			<appender-ref ref="SESSION_DATA_ACCESS_LOG" />
+			<AppenderRef ref="SESSION_DATA_ACCESS_LOG" />
 		</Logger>
 		-->
 
-		<Logger name="org.pentaho.di.trans.Trans" level="INFO" additivity="false">
-			<appender-ref ref="pdi-execution-appender" />
-		</Logger>
-
-		<Logger name="org.pentaho.di.job.Job" level="INFO" additivity="false">
-			<appender-ref ref="pdi-execution-appender" />
-		</Logger>
-
 		<Root level="ERROR">
-			<appender-ref ref="PENTAHOCONSOLE" />
-			<appender-ref ref="PENTAHOFILE" />
+			<AppenderRef ref="PENTAHOCONSOLE" />
+			<AppenderRef ref="PENTAHOFILE" />
 		</Root>
 
 	</Loggers>
