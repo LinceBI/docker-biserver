@@ -88,11 +88,11 @@ ENV TOMCAT_AJP_PORT="8009"
 ENV TOMCAT_HTTP_PORT="8080"
 
 # Install Tomcat
-ARG TOMCAT_VERSION="9.0.80"
+ARG TOMCAT_VERSION="9.0.87"
 ARG TOMCAT_LIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
-ARG TOMCAT_LIN_CHECKSUM="76ff6898851787d90897ccb821302efff297ecbd0b3744d5e07cc81fa71ee5cb"
+ARG TOMCAT_LIN_CHECKSUM="da482fb9220086dbf371e180aa09c6402af8f048586734cdedd4a08c48d4ce02"
 ARG TOMCAT_WIN_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}-windows-x64.zip"
-ARG TOMCAT_WIN_CHECKSUM="e88c11144271109fff4172665055b5ef412248103a1b4229a92c8f5ed63a402c"
+ARG TOMCAT_WIN_CHECKSUM="851224c8d61ba0d0adfb9142df76c5f0c2b988b3543f3db60e925642475d042e"
 RUN mkdir /tmp/tomcat/ \
 	&& cd /tmp/tomcat/ \
 	# Download Tomcat
@@ -219,8 +219,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./hsqldb-*.jar && chmod 0664 ./hsqldb-*.jar
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar"
-ARG POSTGRES_JDBC_CHECKSUM="b817c67a40c94249fd59d4e686e3327ed0d3d3fae426b20da0f1e75652cfc461"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
+ARG POSTGRES_JDBC_CHECKSUM="a2644cbfba1baa145ff7e8c8ef582a6eed7a7ec4ca792f7f054122bdec756268"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./postgresql-*.jar \
 	&& curl -LO "${POSTGRES_JDBC_URL:?}" \
@@ -237,8 +237,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mysql-connector-*.jar && chmod 0664 ./mysql-connector-*.jar
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.1.jre11/mssql-jdbc-12.4.1.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="51637170cadcef24afb03888280ea70012b905dd43452adc94ee7aaee6493256"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.6.1.jre11/mssql-jdbc-12.6.1.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="3b1a70145dbaff98daa70022791e15becfb2b9534cc9e8cfaa1bdba6a3edeb8e"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./mssql-jdbc-*.jar \
 	&& curl -LO "${MSSQL_JDBC_URL:?}" \
@@ -246,8 +246,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./mssql-jdbc-*.jar && chmod 0664 ./mssql-jdbc-*.jar
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/23.3.0-0/vertica-jdbc-23.3.0-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="582d6ac6f069b5e7cee5a4009da135150d26541d082ee44dc3bb5eeb2ca37c57"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.1.0-2/vertica-jdbc-24.1.0-2.jar"
+ARG VERTICA_JDBC_CHECKSUM="0002312e36997821f221bcb29183bcbfe838be9447ed7842da45978ed77c7b7f"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./vertica-jdbc-*.jar \
 	&& curl -LO "${VERTICA_JDBC_URL:?}" \
@@ -255,8 +255,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./vertica-jdbc-*.jar && chmod 0664 ./vertica-jdbc-*.jar
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.4.6/clickhouse-jdbc-0.4.6-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="a51139988984fa69781720e59db7d231226a616da72216723e7cc26b4ae1ca3d"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.0/clickhouse-jdbc-0.6.0-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="546a266c2abfd70ee23dcd1b748085310e3fd1cdb5bbe242d614f724391f6a35"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./clickhouse-jdbc-*.jar \
 	&& curl -LO "${CLICKHOUSE_JDBC_URL:?}" \
