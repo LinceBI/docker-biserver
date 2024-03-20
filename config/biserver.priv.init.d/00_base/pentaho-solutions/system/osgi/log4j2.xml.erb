@@ -11,12 +11,15 @@
 | website: https://logging.apache.org/log4j/2.x/manual/configuration.html
 -->
 
-<Configuration name="PentahoOSGi" status="WARN" dest="out">
+<Configuration name="PentahoOSGi" status="INFO" dest="out">
 
 	<Appenders>
 
 		<Console name="PENTAHOCONSOLE">
-			<ThresholdFilter level="ERROR" />
+			<ThresholdFilter level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+			<%- if ENV['LOG_LEVEL_PENTAHO'] == 'DEBUG' -%>
+			<RegexFilter regex=".*PentahoSystem.ERROR_0026.*" onMatch="DENY" onMismatch="ACCEPT" />
+			<%- end -%>
 			<PatternLayout>
 				<Pattern>%d{ABSOLUTE} %-5p [%c{1}] %m%n</Pattern>
 			</PatternLayout>
@@ -41,7 +44,6 @@
 		<Logger name="net.sf.ehcache" level="ERROR" />
 		<Logger name="org.quartz" level="ERROR" />
 		<Logger name="org.springframework" level="ERROR" />
-		<Logger name="org.springframework.security" level="ERROR" />
 		<Logger name="org.pentaho" level="ERROR" />
 		<Logger name="com.pentaho" level="ERROR" />
 		<Logger name="org.jfree.JCommon" level="ERROR" />
@@ -50,8 +52,14 @@
 		<Logger name="org.pentaho.platform.web.http.context" level="WARN" />
 		<Logger name="org.pentaho.di.osgi" level="ERROR" />
 		<Logger name="org.pentaho.di.monitor" level="ERROR" />
-		<Logger name="org.pentaho.platform.engine.core.system.status" level="INFO" />
 		<Logger name="org.pentaho.hadoop.shim.DriverManager" level="INFO" />
+
+		<Logger name="org.pentaho.platform.util.logging.Logger" level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+		<Logger name="org.pentaho.platform.engine.core.system.status" level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+
+		<Logger name="org.springframework.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
+		<Logger name="org.pentaho.platform.engine.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
+		<Logger name="org.pentaho.platform.plugin.services.security" level="<%= ENV['LOG_LEVEL_SECURITY'] %>" />
 
 		<Root level="ERROR">
 			<AppenderRef ref="PENTAHOCONSOLE" />
