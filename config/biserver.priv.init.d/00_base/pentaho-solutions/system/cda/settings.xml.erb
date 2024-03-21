@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+
+	<cde-datasources />
+
+	<!--
+	Flag indicating cross-origin resource sharing
+	Accepted values are: true | false
+	-->
+	<allow-cross-domain-resources><%= ENV['CORS_REQUESTS_ALLOWED'] %></allow-cross-domain-resources>
+
+	<!-- A comma separated list of allowed domains for a cross-origin resource sharing -->
+	<cross-domain-resources-whitelist><%= ENV['CORS_REQUESTS_ALLOWED_DOMAINS'] %></cross-domain-resources-whitelist>
+
+</settings>
