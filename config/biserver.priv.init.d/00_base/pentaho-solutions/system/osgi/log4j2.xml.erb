@@ -16,10 +16,12 @@
 	<Appenders>
 
 		<Console name="PENTAHOCONSOLE">
-			<ThresholdFilter level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
-			<%- if ENV['LOG_LEVEL_PENTAHO'] == 'DEBUG' -%>
-			<RegexFilter regex=".*PentahoSystem.ERROR_0026.*" onMatch="DENY" onMismatch="ACCEPT" />
-			<%- end -%>
+			<Filters>
+				<ThresholdFilter level="<%= ENV['LOG_LEVEL_PENTAHO'] %>" />
+				<%- if ENV['LOG_LEVEL_PENTAHO'] == 'DEBUG' -%>
+				<RegexFilter regex=".*PentahoSystem.ERROR_0026.*" onMatch="DENY" onMismatch="ACCEPT" />
+				<%- end -%>
+			</Filters>
 			<PatternLayout>
 				<Pattern>%d{ABSOLUTE} %-5p [%c{1}] %m%n</Pattern>
 			</PatternLayout>
