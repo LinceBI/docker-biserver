@@ -12,7 +12,7 @@ export LC_ALL=C
 {
 	set -a
 
-	INSTANCE_ID=$(getVar INSTANCE_ID "$(uuidgen | tr -d '-')")
+	INSTANCE_ID=$(getVar INSTANCE_ID "node")
 
 	IS_EXPORTING=$(getVar IS_EXPORTING "false")
 
