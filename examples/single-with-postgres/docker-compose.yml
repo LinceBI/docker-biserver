@@ -1,75 +1,126 @@
-version: "3.9"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "biserver"
+
+# https://hub.docker.com/_/caddy
+x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://repo.stratebi.com
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.5.2.0-272-2"
+# https://hub.docker.com/_/postgres
+x-postgres-image: &postgres-image "docker.io/postgres:16"
 
 services:
 
   caddy:
-    image: "docker.io/caddy:2"
+    image: *caddy-image
     restart: "on-failure:3"
+    container_name: "biserver-caddy"
+    hostname: "caddy"
     networks:
       - "biserver"
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "./config/caddy/:/etc/caddy/:ro"
       - "caddy-data:/data/"
+      - "biserver-logs:/var/www/html/logs/:ro"
     environment:
-      TLS_DOMAIN: "${TLS_DOMAIN}"
-      TLS_ISSUER: "${TLS_ISSUER}"
-      TLS_ISSUER_CA: "${TLS_ISSUER_CA}"
-      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL}"
+      TLS_DOMAIN: "${TLS_DOMAIN?}"
+      TLS_ISSUER: "${TLS_ISSUER?}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA?}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL?}"
+      TLS_KEY: "${TLS_KEY-}"
+      TLS_CERT: "${TLS_CERT-}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        for var in $$(awk 'BEGIN{for(v in ENVIRON)if(v~/_PASSWORD$$/)print(v)}'); do
+          hash=$$(caddy hash-password --plaintext "$$(eval printf -- '%s' '$$'"$${var:?}")")
+          export "$${var:?}_BCRYPT=$${hash:?}"
+        done
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
 
   biserver:
-    image: "repo.stratebi.com/lincebi/biserver:9.5.2.0-272-2"
+    image: *biserver-image
     restart: "on-failure:3"
+    container_name: "biserver-app"
+    hostname: "biserver"
     networks:
       - "biserver"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - "./biserver.init.d/:/etc/biserver.init.d/:ro"
+      - "./config/biserver/biserver.init.d/:/etc/biserver.init.d/:ro"
+      - "biserver-logs:/var/lib/biserver/tomcat/logs/"
     environment:
       IS_PROXIED: "true"
       PROXY_SCHEME: "https"
       PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
-      FQSU_DOMAIN: "${TLS_DOMAIN}"
+      FQSU_DOMAIN: "${TLS_DOMAIN?}"
       FQSU_PORT: "443"
-      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD}"
-      STORAGE_TYPE: "postgres"
+      LOAD_SAMPLES: "${LOAD_SAMPLES-true}"
+      WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME-biserver}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD?}"
+      STORAGE_TYPE: "${STORAGE_TYPE-postgres}"
       POSTGRES_HOST: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
-      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER}"
-      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD}"
-      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE}"
-      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER}"
-      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD}"
-      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE}"
-      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER}"
-      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD}"
-      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE}"
+      POSTGRES_USER: "${DB_USER-postgres}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD?}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER-jackrabbit}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD?}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE-jackrabbit}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER-hibernate}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD?}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE-hibernate}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER-quartz}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD?}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE-quartz}"
     depends_on:
-      - "postgres"
+      postgres:
+        condition: "service_started"
 
   postgres:
-    image: "docker.io/postgres:16"
+    image: *postgres-image
     restart: "on-failure:3"
+    container_name: "biserver-postgres"
+    hostname: "postgres"
+    deploy:
+      mode: "replicated"
+      replicas: "${POSTGRES_REPLICAS-1}"
     networks:
       - "biserver"
     ports:
-      - "127.0.0.1:5432:5432/tcp"
+      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5432}:5432/tcp"
     volumes:
+      - "./config/postgres/initdb.d/:/docker-entrypoint-initdb.d/:ro"
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USER-postgres}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD?}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-qU", "${DB_USER-postgres}"]
+      interval: "10s"
+      timeout: "10s"
+      retries: 3
 
 networks:
 
   biserver:
+    name: "biserver"
     driver: "bridge"
     internal: false
 
 volumes:
 
   caddy-data:
+    name: "biserver-caddy-data"
+
+  biserver-logs:
+    name: "biserver-app-logs"
+
   postgres-data:
+    name: "biserver-postgres-data"

@@ -11,7 +11,7 @@
 }
 
 (tls-directives) {
-	tls {
+	tls {$TLS_CERT:} {$TLS_KEY:} {
 		issuer {$TLS_ISSUER} {
 			dir {$TLS_ISSUER_CA}
 			email {$TLS_ISSUER_EMAIL}
@@ -22,9 +22,11 @@
 (security-directives) {
 	header /* {
 		Referrer-Policy "same-origin"
+		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "SAMEORIGIN"
 		X-XSS-Protection "1; mode=block"
+		Set-Cookie "^(.*)$" "$1; SameSite=Strict; Secure; HttpOnly"
 		-Server
 		-X-Powered-By
 	}
@@ -51,8 +53,16 @@ https://{$TLS_DOMAIN}:443 {
 	import tls-directives
 	import security-directives
 
+	route /logs/* {
+		basicauth /* {
+			admin {$DEFAULT_ADMIN_PASSWORD_BCRYPT}
+		}
+		root /* /var/www/html/
+		file_server /* browse
+	}
+
 	reverse_proxy /* {
-		to biserver:8080
+		to biserver-app:8080
 		import proxy-subdirectives
 	}
 }
