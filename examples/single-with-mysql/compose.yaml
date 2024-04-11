@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "biserver"
+
+# https://hub.docker.com/_/caddy
+x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://repo.stratebi.com
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.5.2.0-272-2"
+# https://hub.docker.com/_/mysql
+x-mysql-image: &mysql-image "docker.io/mysql:5.7"
+
+services:
+
+  caddy:
+    image: *caddy-image
+    restart: "on-failure:3"
+    container_name: "biserver-caddy"
+    hostname: "caddy"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - { type: "bind", source: "./config/caddy/", target: "/etc/caddy/", read_only: true }
+      - { type: "volume", source: "caddy-data", target: "/data/" }
+      - { type: "volume", source: "biserver-logs", target: "/var/www/html/logs/", read_only: true }
+    environment:
+      DOMAIN: "${DOMAIN:?}"
+      TLS_ISSUER: "${TLS_ISSUER:?}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
+      TLS_KEY: "${TLS_KEY:-}"
+      TLS_CERT: "${TLS_CERT:-}"
+      BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        export BASIC_AUTH_PASSWORD_HASH=$(printenv BASIC_AUTH_PASSWORD | caddy hash-password)
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+
+  biserver:
+    image: *biserver-image
+    restart: "on-failure:3"
+    container_name: "biserver"
+    hostname: "biserver"
+    networks:
+      - "biserver"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
+      - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${DOMAIN:?}"
+      FQSU_PORT: "443"
+      LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
+      WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      STORAGE_TYPE: "mysql"
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "${DB_PASSWORD:?}"
+      MYSQL_JACKRABBIT_USER: "${DB_JACKRABBIT_USER:-jackrabbit}"
+      MYSQL_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD:?}"
+      MYSQL_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE:-jackrabbit}"
+      MYSQL_HIBERNATE_USER: "${DB_HIBERNATE_USER:-hibernate}"
+      MYSQL_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD:?}"
+      MYSQL_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE:-hibernate}"
+      MYSQL_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
+      MYSQL_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
+      MYSQL_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
+    depends_on:
+      mysql:
+        condition: "service_healthy"
+
+  mysql:
+    image: *mysql-image
+    restart: "on-failure:3"
+    container_name: "biserver-mysql"
+    hostname: "mysql"
+    networks:
+      - "biserver"
+    ports:
+      - "${MYSQL_HOST:-127.0.0.1}:${MYSQL_PORT:-3306}:3306/tcp"
+    volumes:
+      - { type: "bind", source: "./config/mysql/initdb.d/", target: "/docker-entrypoint-initdb.d/", read_only: true }
+      - { type: "volume", source: "mysql-data", target: "/var/lib/mysql/" }
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:?}"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      start_period: "60s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
+
+volumes:
+
+  caddy-data:
+    name: "biserver-caddy-data"
+
+  biserver-logs:
+    name: "biserver-logs"
+
+  mysql-data:
+    name: "biserver-mysql-data"

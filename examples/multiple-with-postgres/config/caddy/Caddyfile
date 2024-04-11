@@ -1,0 +1,68 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+
+(common-directives) {
+	encode zstd gzip
+	log {
+		output stdout
+	}
+}
+
+(tls-directives) {
+	tls {$TLS_CERT:} {$TLS_KEY:} {
+		issuer {$TLS_ISSUER} {
+			dir {$TLS_ISSUER_CA}
+			email {$TLS_ISSUER_EMAIL}
+		}
+	}
+}
+
+(security-directives) {
+	header /* {
+		Referrer-Policy "same-origin"
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+		-X-Powered-By
+	}
+}
+
+(proxy-subdirectives) {
+	header_up Host {http.request.host}
+	header_up X-Real-IP {http.request.remote.host}
+	header_up X-Forwarded-For {http.request.remote.host}
+	header_up X-Forwarded-Host {http.request.host}
+	header_up X-Forwarded-Port {http.request.port}
+	header_up X-Forwarded-Proto {http.request.scheme}
+}
+
+http://{$DOMAIN}:80 {
+	import common-directives
+	import security-directives
+
+	redir /* https://{host}{uri} 301
+}
+
+https://{$DOMAIN}:443 {
+	import common-directives
+	import tls-directives
+	import security-directives
+
+	route /logs/* {
+		basicauth /* {
+			admin {$BASIC_AUTH_PASSWORD_HASH}
+		}
+		root /* /var/www/html/
+		file_server /* browse
+	}
+
+	@biserver path_regexp biserver ^\/([a-z0-9]+)(-style)?
+	reverse_proxy @biserver {
+		to biserver-{http.regexp.biserver.1}:8080
+		import proxy-subdirectives
+	}
+
+	redir / /helium 307
+}
