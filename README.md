@@ -465,4 +465,4 @@ docker run --detach \
   repo.stratebi.com/lincebi/biserver:9.5.2.0-272-2
 ```
 
-Para despliegues más complejos, en el directorio `./examples/` se encuentran varios scripts en shell con otros casos comunes.
+En el directorio `./examples/` se pueden encontrar varios ejemplos más complejos con Docker Compose.
