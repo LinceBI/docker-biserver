@@ -1,0 +1,53 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "realm": "biserver",
+  "displayName": "BI Server",
+  "enabled": true,
+  "attributes": {
+    "frontendUrl": "https://example.localhost/auth/"
+  },
+  "clients": [
+    {
+      "clientId": "biserver",
+      "enabled": true,
+      "protocol": "cas",
+      "rootUrl": "https://example.localhost",
+      "redirectUris": ["*"]
+    }
+  ],
+  "identityProviders": [
+    {
+      "providerId": "microsoft",
+      "alias": "microsoft",
+      "enabled": true,
+      "config": {
+        "syncMode": "IMPORT",
+        "clientId": "XXXXXXXX",
+        "clientSecret": "XXXXXXXX",
+        "useJwksUrl": "true"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "Administrator",
+      "path": "/Administrator"
+    },
+    {
+      "name": "Employee",
+      "path": "/Employee"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Administrator"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    }
+  ]
+}

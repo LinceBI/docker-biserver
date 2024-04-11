@@ -1,0 +1,80 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "realm": "biserver",
+  "displayName": "BI Server",
+  "enabled": true,
+  "attributes": {
+    "frontendUrl": "https://example.localhost/auth/"
+  },
+  "clients": [
+    {
+      "clientId": "biserver",
+      "enabled": true,
+      "protocol": "cas",
+      "rootUrl": "https://example.localhost",
+      "redirectUris": ["*"]
+    }
+  ],
+  "groups": [
+    {
+      "name": "Administrator",
+      "path": "/Administrator"
+    },
+    {
+      "name": "Employee",
+      "path": "/Employee"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Administrator"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "alice",
+      "enabled": true,
+      "firstName": "Alice",
+      "lastName": "Doherty",
+      "email": "alice@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Administrator", "/Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "firstName": "Bob",
+      "lastName": "Miller",
+      "email": "bob@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "carol",
+      "enabled": true,
+      "firstName": "Carol",
+      "lastName": "Phillips",
+      "email": "carol@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "craig",
+      "enabled": false,
+      "firstName": "Craig",
+      "lastName": "Gregory",
+      "email": "craig@example.localhost",
+      "emailVerified": true,
+      "groups" : ["/Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    }
+  ]
+}

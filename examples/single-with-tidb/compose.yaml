@@ -1,0 +1,378 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "biserver"
+
+# https://hub.docker.com/_/caddy
+x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://repo.stratebi.com
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.4.0.1-465-2"
+# https://hub.docker.com/r/pingcap/tidb
+x-tidb-image: &tidb-image "docker.io/pingcap/tidb:v8.0.0"
+# https://hub.docker.com/r/pingcap/tikv
+x-tikv-image: &tikv-image "docker.io/pingcap/tikv:v8.0.0"
+# https://hub.docker.com/r/pingcap/pd
+x-pd-image: &pd-image "docker.io/pingcap/pd:v8.0.0"
+
+services:
+
+  caddy:
+    image: *caddy-image
+    restart: "on-failure:3"
+    container_name: "biserver-caddy"
+    hostname: "caddy"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - { type: "bind", source: "./config/caddy/", target: "/etc/caddy/", read_only: true }
+      - { type: "volume", source: "caddy-data", target: "/data/" }
+      - { type: "volume", source: "biserver-logs", target: "/var/www/html/logs/", read_only: true }
+    environment:
+      DOMAIN: "${DOMAIN:?}"
+      TLS_ISSUER: "${TLS_ISSUER:?}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
+      TLS_KEY: "${TLS_KEY:-}"
+      TLS_CERT: "${TLS_CERT:-}"
+      BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        export BASIC_AUTH_PASSWORD_HASH=$(printenv BASIC_AUTH_PASSWORD | caddy hash-password)
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+
+  biserver:
+    image: *biserver-image
+    restart: "on-failure:3"
+    container_name: "biserver"
+    hostname: "biserver"
+    networks:
+      - "biserver"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
+      - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${DOMAIN:?}"
+      FQSU_PORT: "443"
+      LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
+      WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      STORAGE_TYPE: "tidb"
+      TIDB_HOST: "tidb-1"
+      TIDB_USER: "root"
+      TIDB_PASSWORD: "${DB_PASSWORD:?}"
+      TIDB_JDBC_URL: "jdbc:mysql:loadbalance://tidb-1:4000,tidb-2:4000,tidb-3:4000"
+      TIDB_JDBC_PROPS: "useSSL=false"
+      TIDB_JACKRABBIT_USER: "${DB_JACKRABBIT_USER:-jackrabbit}"
+      TIDB_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD:?}"
+      TIDB_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE:-jackrabbit}"
+      TIDB_HIBERNATE_USER: "${DB_HIBERNATE_USER:-hibernate}"
+      TIDB_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD:?}"
+      TIDB_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE:-hibernate}"
+      TIDB_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
+      TIDB_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
+      TIDB_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
+    depends_on:
+      tidb-1:
+        condition: "service_started"
+      tidb-2:
+        condition: "service_started"
+      tidb-3:
+        condition: "service_started"
+
+  tidb-1:
+    image: *tidb-image
+    restart: "on-failure:3"
+    container_name: "biserver-tidb-1"
+    hostname: "tidb-1"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIDB1_HOST:-127.0.0.1}:${TIDB1_PORT:-4000}:4000/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tidb.toml", target: "/tidb.toml" }
+    command:
+      - "--host=0.0.0.0"
+      - "--advertise-address=tidb-1"
+      - "--path=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--store=tikv"
+      - "--config=/tidb.toml"
+      - "--log-file=/logs/tidb-1.log"
+    depends_on:
+      tikv-1:
+        condition: "service_started"
+      tikv-2:
+        condition: "service_started"
+      tikv-3:
+        condition: "service_started"
+
+  tidb-2:
+    image: *tidb-image
+    restart: "on-failure:3"
+    container_name: "biserver-tidb-2"
+    hostname: "tidb-2"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIDB2_HOST:-127.0.0.2}:${TIDB2_PORT:-4000}:4000/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tidb.toml", target: "/tidb.toml" }
+    command:
+      - "--host=0.0.0.0"
+      - "--advertise-address=tidb-2"
+      - "--path=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--store=tikv"
+      - "--config=/tidb.toml"
+      - "--log-file=/logs/tidb-2.log"
+    depends_on:
+      tikv-1:
+        condition: "service_started"
+      tikv-2:
+        condition: "service_started"
+      tikv-3:
+        condition: "service_started"
+
+  tidb-3:
+    image: *tidb-image
+    restart: "on-failure:3"
+    container_name: "biserver-tidb-3"
+    hostname: "tidb-3"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIDB2_HOST:-127.0.0.3}:${TIDB2_PORT:-4000}:4000/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tidb.toml", target: "/tidb.toml" }
+    command:
+      - "--host=0.0.0.0"
+      - "--advertise-address=tidb-3"
+      - "--path=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--store=tikv"
+      - "--config=/tidb.toml"
+      - "--log-file=/logs/tidb-3.log"
+    depends_on:
+      tikv-1:
+        condition: "service_started"
+      tikv-2:
+        condition: "service_started"
+      tikv-3:
+        condition: "service_started"
+
+  tikv-1:
+    image: *tikv-image
+    restart: "on-failure:3"
+    container_name: "biserver-tikv-1"
+    hostname: "tikv-1"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIKV1_HOST:-127.0.0.1}:${TIKV1_PORT:-20160}:20160/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tikv.toml", target: "/tikv.toml" }
+    command:
+      - "--addr=0.0.0.0:20160"
+      - "--advertise-addr=tikv-1:20160"
+      - "--pd=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--config=/tikv.toml"
+      - "--data-dir=/data/tikv-1/"
+      - "--log-file=/logs/tikv-1.log"
+    depends_on:
+      pd-1:
+        condition: "service_started"
+      pd-2:
+        condition: "service_started"
+      pd-3:
+        condition: "service_started"
+
+  tikv-2:
+    image: *tikv-image
+    restart: "on-failure:3"
+    container_name: "biserver-tikv-2"
+    hostname: "tikv-2"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIKV2_HOST:-127.0.0.2}:${TIKV2_PORT:-20160}:20160/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tikv.toml", target: "/tikv.toml" }
+    command:
+      - "--addr=0.0.0.0:20160"
+      - "--advertise-addr=tikv-2:20160"
+      - "--pd=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--config=/tikv.toml"
+      - "--data-dir=/data/tikv-2/"
+      - "--log-file=/logs/tikv-2.log"
+    depends_on:
+      pd-1:
+        condition: "service_started"
+      pd-2:
+        condition: "service_started"
+      pd-3:
+        condition: "service_started"
+
+  tikv-3:
+    image: *tikv-image
+    restart: "on-failure:3"
+    container_name: "biserver-tikv-3"
+    hostname: "tikv-3"
+    networks:
+      - "biserver"
+    ports:
+      - "${TIKV3_HOST:-127.0.0.3}:${TIKV3_PORT:-20160}:20160/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "tikv.toml", target: "/tikv.toml" }
+    command:
+      - "--addr=0.0.0.0:20160"
+      - "--advertise-addr=tikv-3:20160"
+      - "--pd=pd-1:2379,pd-2:2379,pd-3:2379"
+      - "--config=/tikv.toml"
+      - "--data-dir=/data/tikv-3/"
+      - "--log-file=/logs/tikv-3.log"
+    depends_on:
+      pd-1:
+        condition: "service_started"
+      pd-2:
+        condition: "service_started"
+      pd-3:
+        condition: "service_started"
+
+  pd-1:
+    image: *pd-image
+    restart: "on-failure:3"
+    container_name: "biserver-pd-1"
+    hostname: "pd-1"
+    networks:
+      - "biserver"
+    ports:
+      - "${PD1_HOST:-127.0.0.1}:${PD1_PORT:-2379}:2379/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "pd.toml", target: "/pd.toml" }
+    command:
+      - "--name=pd-1"
+      - "--client-urls=http://0.0.0.0:2379"
+      - "--peer-urls=http://0.0.0.0:2380"
+      - "--advertise-client-urls=http://pd-1:2379"
+      - "--advertise-peer-urls=http://pd-1:2380"
+      - "--initial-cluster=pd-1=http://pd-1:2380,pd-2=http://pd-2:2380,pd-3=http://pd-3:2380"
+      - "--config=/pd.toml"
+      - "--data-dir=/data/pd-1/"
+      - "--log-file=/logs/pd-1.log"
+
+  pd-2:
+    image: *pd-image
+    restart: "on-failure:3"
+    container_name: "biserver-pd-2"
+    hostname: "pd-2"
+    networks:
+      - "biserver"
+    ports:
+      - "${PD2_HOST:-127.0.0.2}:${PD2_PORT:-2379}:2379/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "pd.toml", target: "/pd.toml" }
+    command:
+      - "--name=pd-2"
+      - "--client-urls=http://0.0.0.0:2379"
+      - "--peer-urls=http://0.0.0.0:2380"
+      - "--advertise-client-urls=http://pd-2:2379"
+      - "--advertise-peer-urls=http://pd-2:2380"
+      - "--initial-cluster=pd-1=http://pd-1:2380,pd-2=http://pd-2:2380,pd-3=http://pd-3:2380"
+      - "--config=/pd.toml"
+      - "--data-dir=/data/pd-2/"
+      - "--log-file=/logs/pd-2.log"
+
+  pd-3:
+    image: *pd-image
+    restart: "on-failure:3"
+    container_name: "biserver-pd-3"
+    hostname: "pd-3"
+    networks:
+      - "biserver"
+    ports:
+      - "${PD3_HOST:-127.0.0.3}:${PD3_PORT:-2379}:2379/tcp"
+    volumes:
+      - { type: "volume", source: "tidb-data", target: "/data/" }
+      - { type: "volume", source: "tidb-logs", target: "/logs/" }
+    configs:
+      - { source: "pd.toml", target: "/pd.toml" }
+    command:
+      - "--name=pd-3"
+      - "--client-urls=http://0.0.0.0:2379"
+      - "--peer-urls=http://0.0.0.0:2380"
+      - "--advertise-client-urls=http://pd-3:2379"
+      - "--advertise-peer-urls=http://pd-3:2380"
+      - "--initial-cluster=pd-1=http://pd-1:2380,pd-2=http://pd-2:2380,pd-3=http://pd-3:2380"
+      - "--config=/pd.toml"
+      - "--data-dir=/data/pd-3/"
+      - "--log-file=/logs/pd-3.log"
+
+volumes:
+
+  caddy-data:
+    name: "biserver-caddy-data"
+
+  biserver-logs:
+    name: "biserver-logs"
+
+  tidb-data:
+    name: "biserver-tidb-data"
+
+  tidb-logs:
+    name: "biserver-tidb-logs"
+
+configs:
+
+  tidb.toml:
+    content: |
+      [performance]
+      max-procs = 1
+
+  tikv.toml:
+    content: |
+      [storage.block-cache]
+      capacity = "64MB"
+
+      [rocksdb]
+      max-open-files = 1024
+
+      [raftdb]
+      max-open-files = 1024
+
+  pd.toml:
+    content: |
+      [replication]
+      max-replicas = 3
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false

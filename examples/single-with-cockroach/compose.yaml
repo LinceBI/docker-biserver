@@ -1,0 +1,272 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "biserver"
+
+# https://hub.docker.com/_/caddy
+x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://repo.stratebi.com
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.4.0.1-465-2"
+# https://hub.docker.com/r/cockroachdb/cockroach
+x-cockroach-image: &cockroach-image "docker.io/cockroachdb/cockroach:v23.2.3"
+
+services:
+
+  caddy:
+    image: *caddy-image
+    restart: "on-failure:3"
+    container_name: "biserver-caddy"
+    hostname: "caddy"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - { type: "bind", source: "./config/caddy/", target: "/etc/caddy/", read_only: true }
+      - { type: "volume", source: "caddy-data", target: "/data/" }
+      - { type: "volume", source: "biserver-logs", target: "/var/www/html/logs/", read_only: true }
+    environment:
+      DOMAIN: "${DOMAIN:?}"
+      TLS_ISSUER: "${TLS_ISSUER:?}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
+      TLS_KEY: "${TLS_KEY:-}"
+      TLS_CERT: "${TLS_CERT:-}"
+      BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        export BASIC_AUTH_PASSWORD_HASH=$(printenv BASIC_AUTH_PASSWORD | caddy hash-password)
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+
+  biserver:
+    image: *biserver-image
+    restart: "on-failure:3"
+    container_name: "biserver"
+    hostname: "biserver"
+    networks:
+      - "biserver"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
+      - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${DOMAIN:?}"
+      FQSU_PORT: "443"
+      LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
+      WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      STORAGE_TYPE: "cockroach"
+      COCKROACH_HOST: "cockroach-1"
+      COCKROACH_USER: "root"
+      COCKROACH_PASSWORD: "${DB_PASSWORD:?}"
+      COCKROACH_JDBC_URL: "jdbc:postgresql://cockroach-1:26257,cockroach-2:26257,cockroach-3:26257"
+      COCKROACH_JACKRABBIT_USER: "${DB_JACKRABBIT_USER:-jackrabbit}"
+      COCKROACH_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD:?}"
+      COCKROACH_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE:-jackrabbit}"
+      COCKROACH_HIBERNATE_USER: "${DB_HIBERNATE_USER:-hibernate}"
+      COCKROACH_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD:?}"
+      COCKROACH_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE:-hibernate}"
+      COCKROACH_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
+      COCKROACH_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
+      COCKROACH_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
+    depends_on:
+      cockroach-init:
+        condition: "service_completed_successfully"
+
+  cockroach-init:
+    image: *cockroach-image
+    restart: "no"
+    container_name: "biserver-cockroach-init"
+    hostname: "cockroach-init"
+    networks:
+      - "biserver"
+    volumes:
+      - { type: "volume", source: "cockroach-ca-data", target: "/cockroach/cockroach-ca/" }
+      - { type: "volume", source: "cockroach-1-certs", target: "/cockroach/cockroach-1-certs/" }
+      - { type: "volume", source: "cockroach-2-certs", target: "/cockroach/cockroach-2-certs/" }
+      - { type: "volume", source: "cockroach-3-certs", target: "/cockroach/cockroach-3-certs/" }
+    environment:
+      COCKROACH_PASSWORD: "${DB_PASSWORD:?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        cd /cockroach/
+        if [ ! -f ./cockroach-ca/ca.key ]; then
+          # Create CA
+          ./cockroach cert create-ca \
+            --ca-key=./cockroach-ca/ca.key \
+            --certs-dir=./cockroach-ca/ \
+            --overwrite
+          ./cockroach cert create-client root \
+            --ca-key=./cockroach-ca/ca.key \
+            --certs-dir=./cockroach-ca/ \
+            --overwrite
+          # Create cockroach certs
+          for i in 1 2 3; do
+            cp -f ./cockroach-ca/ca.crt ./cockroach-$$i-certs/
+            ./cockroach cert create-node cockroach-$$i localhost 127.0.0.1 \
+              --ca-key=./cockroach-ca/ca.key \
+              --certs-dir=./cockroach-$$i-certs/ \
+              --overwrite
+            ./cockroach cert create-client root \
+              --ca-key=./cockroach-ca/ca.key \
+              --certs-dir=./cockroach-$$i-certs/ \
+              --overwrite
+          done
+          sleep 10
+          # Initialize cluster
+          ./cockroach init \
+            --host=cockroach-1 \
+            --certs-dir=./cockroach-ca/
+          # Set root user password
+          ./cockroach sql \
+            --host=cockroach-1 \
+            --execute="ALTER USER root WITH PASSWORD '$${COCKROACH_PASSWORD}';" \
+            --certs-dir=./cockroach-ca/
+          # Enable remote debugging mode
+          ./cockroach sql \
+            --host=cockroach-1 \
+            --execute="SET CLUSTER SETTING server.remote_debugging.mode = 'any';" \
+            --certs-dir=./cockroach-ca/
+        fi
+
+  cockroach-1:
+    image: *cockroach-image
+    restart: "on-failure:3"
+    container_name: "biserver-cockroach-1"
+    hostname: "cockroach-1"
+    networks:
+      - "biserver"
+    ports:
+      - "${COCKROACH1_HOST:-127.0.0.1}:${COCKROACH1_WEB_PORT:-26080}:8080/tcp"
+      - "${COCKROACH1_HOST:-127.0.0.1}:${COCKROACH1_SQL_PORT:-26257}:26257/tcp"
+    volumes:
+      - { type: "volume", source: "cockroach-1-certs", target: "/cockroach/cockroach-certs/" }
+      - { type: "volume", source: "cockroach-1-data", target: "/cockroach/cockroach-data/" }
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=cockroach-1 \
+          --join=cockroach-1,cockroach-2,cockroach-3 \
+          --certs-dir=./cockroach-certs/
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health?ready=1"]
+      start_period: "60s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+    depends_on:
+      cockroach-init:
+        condition: "service_started"
+
+  cockroach-2:
+    image: *cockroach-image
+    restart: "on-failure:3"
+    container_name: "biserver-cockroach-2"
+    hostname: "cockroach-2"
+    networks:
+      - "biserver"
+    ports:
+      - "${COCKROACH2_HOST:-127.0.0.2}:${COCKROACH2_WEB_PORT:-26080}:8080/tcp"
+      - "${COCKROACH2_HOST:-127.0.0.2}:${COCKROACH2_SQL_PORT:-26257}:26257/tcp"
+    volumes:
+      - { type: "volume", source: "cockroach-2-certs", target: "/cockroach/cockroach-certs/" }
+      - { type: "volume", source: "cockroach-2-data", target: "/cockroach/cockroach-data/" }
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=cockroach-2 \
+          --join=cockroach-1,cockroach-2,cockroach-3 \
+          --certs-dir=./cockroach-certs/
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health?ready=1"]
+      start_period: "60s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+    depends_on:
+      cockroach-init:
+        condition: "service_started"
+
+  cockroach-3:
+    image: *cockroach-image
+    restart: "on-failure:3"
+    container_name: "biserver-cockroach-3"
+    hostname: "cockroach-3"
+    networks:
+      - "biserver"
+    ports:
+      - "${COCKROACH3_HOST:-127.0.0.3}:${COCKROACH3_WEB_PORT:-26080}:8080/tcp"
+      - "${COCKROACH3_HOST:-127.0.0.3}:${COCKROACH3_SQL_PORT:-26257}:26257/tcp"
+    volumes:
+      - { type: "volume", source: "cockroach-3-certs", target: "/cockroach/cockroach-certs/" }
+      - { type: "volume", source: "cockroach-3-data", target: "/cockroach/cockroach-data/" }
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        cd /cockroach/
+        until [ -f ./cockroach-certs/node.key ]; do sleep 1; done
+        exec ./cockroach start \
+          --advertise-addr=cockroach-3 \
+          --join=cockroach-1,cockroach-2,cockroach-3 \
+          --certs-dir=./cockroach-certs/
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health?ready=1"]
+      start_period: "60s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+    depends_on:
+      cockroach-init:
+        condition: "service_started"
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
+
+volumes:
+
+  caddy-data:
+    name: "biserver-caddy-data"
+
+  biserver-logs:
+    name: "biserver-logs"
+
+  cockroach-ca-data:
+    name: "biserver-cockroach-ca-data"
+
+  cockroach-1-data:
+    name: "biserver-cockroach-1-data"
+
+  cockroach-1-certs:
+    name: "biserver-cockroach-1-certs"
+
+  cockroach-2-data:
+    name: "biserver-cockroach-2-data"
+
+  cockroach-2-certs:
+    name: "biserver-cockroach-2-certs"
+
+  cockroach-3-data:
+    name: "biserver-cockroach-3-data"
+
+  cockroach-3-certs:
+    name: "biserver-cockroach-3-certs"
