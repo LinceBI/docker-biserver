@@ -1,0 +1,72 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+
+(common-directives) {
+	encode zstd gzip
+	log {
+		output stdout
+	}
+}
+
+(tls-directives) {
+	tls {$TLS_CERT:} {$TLS_KEY:} {
+		issuer {$TLS_ISSUER} {
+			dir {$TLS_ISSUER_CA}
+			email {$TLS_ISSUER_EMAIL}
+		}
+	}
+}
+
+(security-directives) {
+	header /* {
+		Referrer-Policy "same-origin"
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+		-X-Powered-By
+	}
+}
+
+(proxy-subdirectives) {
+	header_up Host {http.request.host}
+	header_up X-Real-IP {http.request.remote.host}
+	header_up X-Forwarded-For {http.request.remote.host}
+	header_up X-Forwarded-Host {http.request.host}
+	header_up X-Forwarded-Port {http.request.port}
+	header_up X-Forwarded-Proto {http.request.scheme}
+
+	health_path /{$WEBAPP_PENTAHO_DIRNAME}/j_spring_security_check
+	health_interval 30s
+	health_timeout 15s
+	health_status 2xx
+
+	lb_policy cookie
+}
+
+http://{$DOMAIN}:80 {
+	import common-directives
+	import security-directives
+
+	redir /* https://{host}{uri} 301
+}
+
+https://{$DOMAIN}:443 {
+	import common-directives
+	import tls-directives
+	import security-directives
+
+	route /logs/* {
+		basicauth /* {
+			admin {$BASIC_AUTH_PASSWORD_HASH}
+		}
+		root /* /var/www/html/
+		file_server /* browse
+	}
+
+	reverse_proxy /* {
+		to biserver-1:8080 biserver-2:8080
+		import proxy-subdirectives
+	}
+}

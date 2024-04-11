@@ -1,0 +1,229 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "biserver"
+
+# https://hub.docker.com/_/caddy
+x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://repo.stratebi.com
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-2"
+# https://quay.io/repository/keycloak/keycloak
+x-keycloak-image: &keycloak-image "quay.io/keycloak/keycloak:24.0.2"
+# https://hub.docker.com/_/postgres
+x-postgres-image: &postgres-image "docker.io/postgres:16-bookworm"
+
+services:
+
+  caddy:
+    image: *caddy-image
+    restart: "on-failure:3"
+    container_name: "biserver-caddy"
+    hostname: "caddy"
+    networks:
+      - "biserver"
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes:
+      - { type: "bind", source: "./config/caddy/", target: "/etc/caddy/", read_only: true }
+      - { type: "volume", source: "caddy-data", target: "/data/" }
+      - { type: "volume", source: "biserver-logs", target: "/var/www/html/logs/", read_only: true }
+    environment:
+      DOMAIN: "${DOMAIN:?}"
+      TLS_ISSUER: "${TLS_ISSUER:?}"
+      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
+      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
+      TLS_KEY: "${TLS_KEY:-}"
+      TLS_CERT: "${TLS_CERT:-}"
+      BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+    entrypoint: "/bin/sh"
+    command:
+      - "-euc"
+      - |
+        export BASIC_AUTH_PASSWORD_HASH=$(printenv BASIC_AUTH_PASSWORD | caddy hash-password)
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+
+  biserver:
+    image: *biserver-image
+    restart: "on-failure:3"
+    container_name: "biserver"
+    hostname: "biserver"
+    networks:
+      - "biserver"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
+      - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
+    environment:
+      IS_PROXIED: "true"
+      PROXY_SCHEME: "https"
+      PROXY_PORT: "443"
+      FQSU_PROTOCOL: "https"
+      FQSU_DOMAIN: "${DOMAIN:?}"
+      FQSU_PORT: "443"
+      LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
+      WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
+      DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      SECURITY_PROVIDER: "jdbc"
+      JDBCSEC_ADMIN_ROLE: "Administrator"
+      JDBCSEC_DATASOURCE_DRIVER_CLASSNAME: "org.postgresql.Driver"
+      JDBCSEC_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${DB_KEYCLOAK_DATABASE:-keycloak}"
+      JDBCSEC_DATASOURCE_USER: "${DB_KEYCLOAK_USER:-keycloak}"
+      JDBCSEC_DATASOURCE_PASSWORD: "${DB_KEYCLOAK_PASSWORD:?}"
+      JDBCSEC_AUTHORITIES_BY_USERNAME_QUERY: >-
+        SELECT ue.username, kg.name AS authority
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND ue.username = ?
+        ORDER BY authority
+      JDBCSEC_USERS_BY_USERNAME_QUERY: >-
+        SELECT username, 'password' AS password, enabled
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000' AND username = ?
+        ORDER BY username
+      JDBCSEC_ALL_AUTHORITIES_QUERY: >-
+        SELECT name AS authority
+        FROM keycloak_group
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY authority
+      JDBCSEC_ALL_USERNAMES_QUERY: >-
+        SELECT username
+        FROM user_entity
+        WHERE realm_id = '00000000-0000-0000-0000-000000000000'
+        ORDER BY username
+      JDBCSEC_ALL_USERNAMES_IN_ROLE_QUERY: >-
+        SELECT ue.username
+        FROM user_entity AS ue
+        INNER JOIN user_group_membership AS ugm ON ugm.user_id = ue.id
+        INNER JOIN keycloak_group AS kg ON kg.id = ugm.group_id
+        WHERE ue.realm_id = '00000000-0000-0000-0000-000000000000' AND kg.name = ?
+        ORDER BY ue.username
+      CAS_ENABLED: "true"
+      CAS_URL: "https://${DOMAIN:?}/auth/realms/biserver/protocol/cas"
+      CAS_TICKETVALIDATOR_URL: "http://keycloak:8080/auth/realms/biserver/protocol/cas"
+      CAS_PROVIDER_USERDETAILS: "jdbcUserDetailsService"
+      STORAGE_TYPE: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?}"
+      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER:-jackrabbit}"
+      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD:?}"
+      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE:-jackrabbit}"
+      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER:-hibernate}"
+      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD:?}"
+      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE:-hibernate}"
+      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
+      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
+      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
+    depends_on:
+      keycloak:
+        condition: "service_healthy"
+      postgres:
+        condition: "service_healthy"
+
+  keycloak:
+    image: "localhost/keycloak:cas"
+    build:
+      context: "./"
+      args:
+        BASE_IMAGE: *keycloak-image
+        KEYCLOAK_VERSION: "24.0.2"
+      dockerfile_inline: |
+        ARG BASE_IMAGE
+        FROM $${BASE_IMAGE} AS builder
+        ARG KEYCLOAK_VERSION
+
+        ENV KC_DB=postgres
+        ENV KC_HTTP_RELATIVE_PATH=/auth
+        ENV KC_HEALTH_ENABLED=true
+
+        ADD --chown=keycloak:root https://github.com/jacekkow/keycloak-protocol-cas/releases/download/$${KEYCLOAK_VERSION}/keycloak-protocol-cas-$${KEYCLOAK_VERSION}.jar /opt/keycloak/providers/
+
+        WORKDIR /opt/keycloak/
+        RUN /opt/keycloak/bin/kc.sh build
+
+        FROM $${BASE_IMAGE} AS main
+        COPY --from=builder --chown=keycloak:root /opt/keycloak/ /opt/keycloak/
+
+        ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+    container_name: "biserver-keycloak"
+    hostname: "keycloak"
+    restart: "on-failure:3"
+    networks:
+      - "biserver"
+    volumes:
+      - { type: "bind", source: "./config/keycloak/realm.json", target: "/opt/keycloak/data/import/realm.json", read_only: true }
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD:?}"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_HOST: "0.0.0.0"
+      KC_HTTP_PORT: "8080"
+      KC_HTTP_RELATIVE_PATH: "/auth"
+      KC_HOSTNAME_URL: "https://${DOMAIN:?}/auth"
+      KC_HOSTNAME_ADMIN_URL: "https://${DOMAIN:?}/auth"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HEALTH_ENABLED: "true"
+      KC_PROXY_HEADERS: "xforwarded"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://postgres/${DB_KEYCLOAK_DATABASE:-keycloak}"
+      KC_DB_USERNAME: "${DB_KEYCLOAK_USER:-keycloak}"
+      KC_DB_PASSWORD: "${DB_KEYCLOAK_PASSWORD:?}"
+    command: ["start", "--optimized", "--import-realm"]
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - |
+          exec 3<>/dev/tcp/localhost/8080
+          printf '%s\r\n' 'GET /auth/health/ready HTTP/1.1' 'Host: localhost:8080' 'Connection: close' '' >&3
+          grep -Fq 'HTTP/1.1 200 OK' <&3
+      start_period: "120s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+    depends_on:
+      postgres:
+        condition: "service_healthy"
+
+  postgres:
+    image: *postgres-image
+    restart: "on-failure:3"
+    container_name: "biserver-postgres"
+    hostname: "postgres"
+    networks:
+      - "biserver"
+    ports:
+      - "${POSTGRES_HOST:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432/tcp"
+    volumes:
+      - { type: "bind", source: "./config/postgres/initdb.d/", target: "/docker-entrypoint-initdb.d/", read_only: true }
+      - { type: "volume", source: "postgres-data", target: "/var/lib/postgresql/data/" }
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?}"
+      POSTGRES_KEYCLOAK_USER: "${DB_KEYCLOAK_USER:-keycloak}"
+      POSTGRES_KEYCLOAK_PASSWORD: "${DB_KEYCLOAK_PASSWORD:?}"
+      POSTGRES_KEYCLOAK_DATABASE: "${DB_KEYCLOAK_DATABASE:-keycloak}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-qU", "postgres"]
+      start_period: "60s"
+      interval: "30s"
+      timeout: "10s"
+      retries: 2
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
+
+volumes:
+
+  caddy-data:
+    name: "biserver-caddy-data"
+
+  biserver-logs:
+    name: "biserver-logs"
+
+  postgres-data:
+    name: "biserver-postgres-data"
