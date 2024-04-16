@@ -388,6 +388,12 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >
 > * **`FILE_UPLOAD_DEFAULTS_MAX_FOLDER_LIMIT`:** tamaño máximo de directorio en bytes permitido para subir al servidor.  
 >   **Por defecto:** `512000000`
+>
+> * **`HIDE_USER_HOME_FOLDER_ON_CREATE`:** oculta el directorio de usuario en su creación.  
+>   **Por defecto:** `false`
+>
+> * **`DEFAULT_FOLDER_WHEN_HOME_FOLDER_IS_HIDDEN`:** directorio por defecto en caso de que el directorio de usuario esté oculto.  
+>   **Por defecto:** `/public`
 
 </details>
 

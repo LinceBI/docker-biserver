@@ -13,10 +13,10 @@ enable-async-default-content-loading=true
 # enableDomainIdCache = false
 
 # Whether or not to hide the user home folder on user creation
-hideUserHomeFolderOnCreate=false
+hideUserHomeFolderOnCreate=<%= ENV['HIDE_USER_HOME_FOLDER_ON_CREATE'] %>
 
 # Default folder to open or save file(s) in case user's home folder is hidden
-defaultFolderWhenHomeFolderIsHidden=/public
+defaultFolderWhenHomeFolderIsHidden=<%= ENV['DEFAULT_FOLDER_WHEN_HOME_FOLDER_IS_HIDDEN'] %>
 
 # Default number of threads for caching domains
 number-threads=3
