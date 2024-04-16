@@ -236,12 +236,6 @@ services:
       cockroach-init:
         condition: "service_started"
 
-networks:
-
-  biserver:
-    name: "biserver"
-    internal: false
-
 volumes:
 
   caddy-data:
@@ -270,3 +264,9 @@ volumes:
 
   cockroach-3-certs:
     name: "biserver-cockroach-3-certs"
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
