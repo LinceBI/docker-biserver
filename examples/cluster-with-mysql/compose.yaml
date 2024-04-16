@@ -144,12 +144,6 @@ services:
       timeout: "10s"
       retries: 2
 
-networks:
-
-  biserver:
-    name: "biserver"
-    internal: false
-
 volumes:
 
   caddy-data:
@@ -163,3 +157,9 @@ volumes:
 
   mysql-data:
     name: "biserver-mysql-data"
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
