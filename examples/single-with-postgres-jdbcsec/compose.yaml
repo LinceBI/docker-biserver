@@ -132,12 +132,6 @@ services:
       timeout: "10s"
       retries: 2
 
-networks:
-
-  biserver:
-    name: "biserver"
-    internal: false
-
 volumes:
 
   caddy-data:
@@ -148,3 +142,9 @@ volumes:
 
   postgres-data:
     name: "biserver-postgres-data"
+
+networks:
+
+  biserver:
+    name: "biserver"
+    internal: false
