@@ -255,8 +255,8 @@ RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& chown biserver:root ./vertica-jdbc-*.jar && chmod 0664 ./vertica-jdbc-*.jar
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.0/clickhouse-jdbc-0.6.0-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="546a266c2abfd70ee23dcd1b748085310e3fd1cdb5bbe242d614f724391f6a35"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.0-patch3/clickhouse-jdbc-0.6.0-patch3-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="0dfb2547e3d0fe4fa339fe6a6368c559b147fa455bfe89a51e8fb18a25cfeba7"
 RUN cd "${CATALINA_BASE:?}"/lib/ \
 	&& rm -f ./clickhouse-jdbc-*.jar \
 	&& curl -LO "${CLICKHOUSE_JDBC_URL:?}" \
