@@ -23,3 +23,9 @@ mysqlCreateDatabaseIfNotExists \
 mysqlCreateDatabaseIfNotExists \
 	"${MYSQL_QUARTZ_DATABASE:?}" "${MYSQL_QUARTZ_USER:?}" "${MYSQL_QUARTZ_PASSWORD:?}" \
 	"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/mysql/create_quartz_mysql.sql
+
+if [ "${AUDIT_ENTRY:?}" = 'sql' ]; then
+	mysqlCreateDatabaseIfNotExists \
+		"${MYSQL_AUDIT_DATABASE:?}" "${MYSQL_AUDIT_USER:?}" "${MYSQL_AUDIT_PASSWORD:?}" \
+		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/mysql/create_audit_mysql.sql
+fi

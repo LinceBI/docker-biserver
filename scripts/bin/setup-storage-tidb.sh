@@ -23,3 +23,9 @@ mysqlCreateDatabaseIfNotExists \
 mysqlCreateDatabaseIfNotExists \
 	"${TIDB_QUARTZ_DATABASE:?}" "${TIDB_QUARTZ_USER:?}" "${TIDB_QUARTZ_PASSWORD:?}" \
 	"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/tidb/create_quartz_tidb.sql
+
+if [ "${AUDIT_ENTRY:?}" = 'sql' ]; then
+	mysqlCreateDatabaseIfNotExists \
+		"${TIDB_AUDIT_DATABASE:?}" "${TIDB_AUDIT_USER:?}" "${TIDB_AUDIT_PASSWORD:?}" \
+		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/tidb/create_audit_tidb.sql
+fi

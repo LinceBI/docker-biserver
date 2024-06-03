@@ -23,3 +23,9 @@ psqlCreateDatabaseIfNotExists \
 psqlCreateDatabaseIfNotExists \
 	"${COCKROACH_QUARTZ_DATABASE:?}" "${COCKROACH_QUARTZ_USER:?}" "${COCKROACH_QUARTZ_PASSWORD:?}" \
 	"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/cockroach/create_quartz_cockroach.sql
+
+if [ "${AUDIT_ENTRY:?}" = 'sql' ]; then
+	psqlCreateDatabaseIfNotExists \
+		"${COCKROACH_AUDIT_DATABASE:?}" "${COCKROACH_AUDIT_USER:?}" "${COCKROACH_AUDIT_PASSWORD:?}" \
+		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/cockroach/create_audit_cockroach.sql
+fi

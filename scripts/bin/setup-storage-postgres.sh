@@ -23,3 +23,9 @@ psqlCreateDatabaseIfNotExists \
 psqlCreateDatabaseIfNotExists \
 	"${POSTGRES_QUARTZ_DATABASE:?}" "${POSTGRES_QUARTZ_USER:?}" "${POSTGRES_QUARTZ_PASSWORD:?}" \
 	"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/postgresql/create_quartz_postgresql.sql
+
+if [ "${AUDIT_ENTRY:?}" = 'sql' ]; then
+	psqlCreateDatabaseIfNotExists \
+		"${POSTGRES_AUDIT_DATABASE:?}" "${POSTGRES_AUDIT_USER:?}" "${POSTGRES_AUDIT_PASSWORD:?}" \
+		"${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/postgresql/create_audit_postgresql.sql
+fi

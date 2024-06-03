@@ -42,6 +42,12 @@ if [ ! -e "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/hibernate.properties ]
 	rsync -rlp "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb-default/ "${BISERVER_HOME:?}"/"${DATA_DIRNAME:?}"/hsqldb/
 fi
 
+# If not "sql" remove log cleanup task
+if [ "${AUDIT_ENTRY:?}" != 'sql' ]; then
+	rm -f \
+		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/default-content/audit.zip
+fi
+
 # If not true samples will not be loaded
 if [ "${LOAD_SAMPLES:?}" != 'true' ]; then
 	# Remove HSQLDB databases
