@@ -16,6 +16,7 @@ export CATALINA_OPTS="\
 	-Dsun.rmi.dgc.client.gcInterval=3600000 \
 	-Dsun.rmi.dgc.server.gcInterval=3600000 \
 	-Dlog4j2.formatMsgNoLookups=true \
+	-DSTRING_ONLY_USED_DB_TO_XML=N \
 	-DDI_HOME='${BISERVER_HOME:?}/${SOLUTIONS_DIRNAME:?}/system/kettle/' \
 	${CATALINA_OPTS_EXTRA-}"
 

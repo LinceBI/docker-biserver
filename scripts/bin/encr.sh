@@ -20,5 +20,6 @@ exec java \
 		-Dpentaho.disable.karaf=true \
 		-Dlog4j2.configurationFile=file:"${WEBINF_DIR:?}/classes/log4j2.xml" \
 		-Dlog4j2.formatMsgNoLookups=true \
+		-DSTRING_ONLY_USED_DB_TO_XML=N \
 		-DDI_HOME="${DI_HOME:?}" \
 		org.pentaho.di.core.encryption.Encr "$@" | tr -d '\n'
