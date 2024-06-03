@@ -5,8 +5,6 @@ name: "biserver"
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
 x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-2"
-# https://hub.docker.com/_/postgres
-x-postgres-image: &postgres-image "docker.io/postgres:16-bookworm"
 
 services:
 
@@ -50,6 +48,8 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
+      - { type: "volume", source: "biserver-jackrabbit", target: "/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/" }
+      - { type: "volume", source: "biserver-hsqldb", target: "/var/lib/biserver/data/hsqldb/" }
       - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
       IS_PROXIED: "true"
@@ -61,60 +61,23 @@ services:
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      STORAGE_TYPE: "local"
       AUDIT_ENTRY: "sql"
       AUDIT_CLEAN_MAX_RETENTION_DAYS: "${AUDIT_CLEAN_MAX_RETENTION_DAYS:-90}"
-      STORAGE_TYPE: "postgres"
-      POSTGRES_HOST: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "${DB_PASSWORD:?}"
-      POSTGRES_JACKRABBIT_USER: "${DB_JACKRABBIT_USER:-jackrabbit}"
-      POSTGRES_JACKRABBIT_PASSWORD: "${DB_JACKRABBIT_PASSWORD:?}"
-      POSTGRES_JACKRABBIT_DATABASE: "${DB_JACKRABBIT_DATABASE:-jackrabbit}"
-      POSTGRES_HIBERNATE_USER: "${DB_HIBERNATE_USER:-hibernate}"
-      POSTGRES_HIBERNATE_PASSWORD: "${DB_HIBERNATE_PASSWORD:?}"
-      POSTGRES_HIBERNATE_DATABASE: "${DB_HIBERNATE_DATABASE:-hibernate}"
-      POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
-      POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
-      POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
-      POSTGRES_AUDIT_USER: "${DB_AUDIT_USER:-audit}"
-      POSTGRES_AUDIT_PASSWORD: "${DB_AUDIT_PASSWORD:?}"
-      POSTGRES_AUDIT_DATABASE: "${DB_AUDIT_DATABASE:-audit}"
-    depends_on:
-      postgres:
-        condition: "service_healthy"
-
-  postgres:
-    image: *postgres-image
-    restart: "on-failure:3"
-    container_name: "biserver-postgres"
-    hostname: "postgres"
-    networks:
-      - "biserver"
-    ports:
-      - "${POSTGRES_HOST:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432/tcp"
-    volumes:
-      - { type: "bind", source: "./config/postgres/initdb.d/", target: "/docker-entrypoint-initdb.d/", read_only: true }
-      - { type: "volume", source: "postgres-data", target: "/var/lib/postgresql/data/" }
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "${DB_PASSWORD:?}"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-qU", "postgres"]
-      start_period: "60s"
-      interval: "30s"
-      timeout: "10s"
-      retries: 2
 
 volumes:
 
   caddy-data:
     name: "biserver-caddy-data"
 
+  biserver-jackrabbit:
+    name: "biserver-jackrabbit"
+
+  biserver-hsqldb:
+    name: "biserver-hsqldb"
+
   biserver-logs:
     name: "biserver-logs"
-
-  postgres-data:
-    name: "biserver-postgres-data"
 
 networks:
 

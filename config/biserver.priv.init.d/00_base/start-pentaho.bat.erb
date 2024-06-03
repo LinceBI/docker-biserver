@@ -42,6 +42,7 @@ set CATALINA_OPTS=^
 	-Dsun.rmi.dgc.client.gcInterval=3600000 ^
 	-Dsun.rmi.dgc.server.gcInterval=3600000 ^
 	-Dlog4j2.formatMsgNoLookups=true ^
+	-DSTRING_ONLY_USED_DB_TO_XML=N ^
 	-DDI_HOME="%DI_HOME%" ^
 	<%= ENV['CATALINA_OPTS_EXTRA'] %>
 call .\startup.bat

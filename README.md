@@ -70,6 +70,15 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`DEFAULT_NON_ADMIN_PASSWORD`:** contraseña por defecto de los usuarios no administradores, si el valor de la variable está vacío se generará una contraseña aleatoria que será impresa por consola.  
 >   **Por defecto:** `contraseña de admin`
 >
+> * **`AUDIT_ENTRY`:** almacenamiento de los logs de auditoría, admite los valores `sql`, `file` y `null`.  
+>   **Por defecto:** `null`
+>
+> * **`AUDIT_CLEAN_SCHEDULE`:** programación de tarea para la limpieza de logs de auditoría.  
+>   **Por defecto:** `0 15 0 ? * * *`
+>
+> * **`AUDIT_CLEAN_MAX_RETENTION_DAYS`:** días de retención de logs de auditoría.  
+>   **Por defecto:** `90`
+>
 > * **`SESSION_TIMEOUT`:** duración de sesión en minutos.  
 >   **Por defecto:** `120`
 >
