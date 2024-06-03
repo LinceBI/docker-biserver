@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ExportManifest xmlns:ns2="http://www.pentaho.com/schema/">
+	<ExportManifestInformation exportDate="01-01-1970 00:00:00 GMT" exportBy="admin" rootFolder="/" manifestVersion="2" />
+	<ExportManifestEntity path="audit">
+		<ExportManifestProperty>
+			<EntityMetaData name="audit" path="audit" isFolder="true" isHidden="true" isSchedulable="true" title="Audit" />
+		</ExportManifestProperty>
+		<ExportManifestProperty>
+			<EntityAcl>
+				<aces>
+					<permissions>ALL</permissions>
+					<recipient>Administrator</recipient>
+					<recipientType>ROLE</recipientType>
+				</aces>
+				<entriesInheriting>false</entriesInheriting>
+				<owner>pentahoRepoAdmin</owner>
+				<ownerType>USER</ownerType>
+			</EntityAcl>
+		</ExportManifestProperty>
+	</ExportManifestEntity>
+	<ExportManifestEntity path="audit/clean_audit_table.ktr">
+		<ExportManifestProperty>
+			<EntityMetaData name="clean_audit_table.ktr" path="audit/clean_audit_table.ktr" isFolder="false" isHidden="true" isSchedulable="true" title="CleanAuditTable" />
+		</ExportManifestProperty>
+		<ExportManifestProperty>
+			<EntityAcl>
+				<entriesInheriting>true</entriesInheriting>
+				<owner>pentahoRepoAdmin</owner>
+				<ownerType>USER</ownerType>
+			</EntityAcl>
+		</ExportManifestProperty>
+	</ExportManifestEntity>
+	<%- if ENV['AUDIT_ENTRY'] == 'sql' -%>
+	<ExportManifestSchedule>
+		<inputFile>/audit/clean_audit_table.ktr</inputFile>
+		<outputFile>/audit/clean_audit_table.*</outputFile>
+		<jobName>CleanAuditTable</jobName>
+		<jobState>NORMAL</jobState>
+		<jobParameters>
+			<name>MAX_RETENTION_DAYS</name>
+			<stringValue><%= ENV['AUDIT_CLEAN_MAX_RETENTION_DAYS'] %></stringValue>
+			<type>string</type>
+		</jobParameters>
+		<cronJobTrigger>
+			<cronString><%= ENV['AUDIT_CLEAN_SCHEDULE'] %></cronString>
+		</cronJobTrigger>
+	</ExportManifestSchedule>
+	<%- end -%>
+</ns2:ExportManifest>

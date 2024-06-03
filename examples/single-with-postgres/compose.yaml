@@ -61,6 +61,8 @@ services:
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
+      AUDIT_ENTRY: "sql"
+      AUDIT_CLEAN_MAX_RETENTION_DAYS: "${AUDIT_CLEAN_MAX_RETENTION_DAYS:-90}"
       STORAGE_TYPE: "postgres"
       POSTGRES_HOST: "postgres"
       POSTGRES_USER: "postgres"
@@ -74,6 +76,9 @@ services:
       POSTGRES_QUARTZ_USER: "${DB_QUARTZ_USER:-quartz}"
       POSTGRES_QUARTZ_PASSWORD: "${DB_QUARTZ_PASSWORD:?}"
       POSTGRES_QUARTZ_DATABASE: "${DB_QUARTZ_DATABASE:-quartz}"
+      POSTGRES_AUDIT_USER: "${DB_AUDIT_USER:-audit}"
+      POSTGRES_AUDIT_PASSWORD: "${DB_AUDIT_PASSWORD:?}"
+      POSTGRES_AUDIT_DATABASE: "${DB_AUDIT_DATABASE:-audit}"
     depends_on:
       postgres:
         condition: "service_healthy"
