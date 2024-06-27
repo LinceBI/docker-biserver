@@ -58,7 +58,7 @@ recursiveUnzipFiles() {
 		elif [ "${path:?}" != "${path%.zip}" ]; then
 			logInfo "Extracting ZIP file: ${path:?}"
 			in=${path:?}; out=${path%/*}
-			unzip -qod "${out:?}" "${in:?}"
+			bsdtar -C "${out:?}" -xf "${in:?}"
 			rm -f "${in:?}"
 		fi
 	done
@@ -84,8 +84,8 @@ recursiveZipDirs() {
 			then
 				logInfo "Compressing directory: ${path:?}"
 				in=${path:?}; out=${in:?}; tmpOut=$(mktemp -u)
-				cd -- "${in:?}"     || exit; zip -qmyr "${tmpOut:?}" ./
-				cd -- "${OLDPWD:?}" || exit; rmdir -- "${in:?}"
+				cd -- "${in:?}"     || exit; bsdtar -cf "${tmpOut:?}" --format zip ./
+				cd -- "${OLDPWD:?}" || exit; rm -rf -- "${in:?}"
 				[ -f "${tmpOut:?}" ] && mv -- "${tmpOut:?}" "${out:?}"
 			fi
 		fi
@@ -118,10 +118,8 @@ extractArchive() {
 	target=${3:?}
 	tmpdir=$(mktemp -d)
 
-	if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
-		tar -C "${tmpdir:?}" -xf "${source:?}"
-	elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
-		unzip -qod "${tmpdir:?}" "${source:?}"
+	if matches "${source:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)"; then
+		bsdtar -C "${tmpdir:?}" -xf "${source:?}"
 	fi
 
 	cd "${tmpdir:?}"
@@ -160,20 +158,14 @@ copyDirectory() {
 isPentahoPlugin() {
 	source=${1:?}
 
-	if [ -d "${source:?}" ]; then
-		if [ -f "${source:?}"/plugin.xml ]; then
-			return 0
-		fi
-	elif [ -f "${source:?}" ]; then
-		if matches "${source:?}" "${PATTERN_EXT_TAR:?}"; then
-			if tar -tf "${source:?}" | grep -Eq '^(\.?/)?([^/]+/)?plugin\.xml$'; then
-				return 0
-			fi
-		elif matches "${source:?}" "${PATTERN_EXT_ZIP:?}"; then
-			if unzip -Z1 "${source:?}" | grep -Eq '^(\.?/)?([^/]+/)?plugin\.xml$'; then
-				return 0
-			fi
-		fi
+	if \
+		{ [ -d "${source:?}" ] \
+			&& [ -f "${source:?}"/plugin.xml ]; } || \
+		{ [ -f "${source:?}" ] \
+			&& matches "${source:?}" "\(${PATTERN_EXT_TAR:?}\|${PATTERN_EXT_ZIP:?}\)" \
+			&& bsdtar -tf "${source:?}" | grep -Eq '^(\.?/)?([^/]+/)?plugin\.xml$'; } \
+	then
+		return 0
 	fi
 
 	return 1

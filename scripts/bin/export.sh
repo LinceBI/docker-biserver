@@ -14,4 +14,4 @@ export IS_EXPORTING='true'
 
 # Print zip to stdout
 cd "${BISERVER_HOME:?}"
-exec zip -rq1 -x '*.erb' -x '.gitkeep' - ./
+exec bsdtar -cf- --format zip --exclude='*.erb' --exclude='.gitkeep' ./
