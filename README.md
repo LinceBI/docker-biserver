@@ -14,7 +14,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 ## Argumentos del Dockerfile
 
   * **`BISERVER_VERSION`:** versión de Pentaho BI Server.  
-    **Por defecto:** `9.3.0.6-764-2`
+    **Por defecto:** `9.3.0.6-764-3`
 
   * **`BISERVER_MAVEN_REPO`:** repositorio de Maven del que se descargan las dependencias necesarias para la instalación de Pentaho BI Server.  
     **Por defecto:** `https://repo.stratebi.com/repository/pentaho-mvn/`
@@ -450,7 +450,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/lincebi/biserver:9.3.0.6-764-2
+  repo.stratebi.com/lincebi/biserver:9.3.0.6-764-3
 ```
 
 En el directorio `./examples/` se pueden encontrar varios ejemplos más complejos con Docker Compose.
