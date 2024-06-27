@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/caddy
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.4.0.1-465-2"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.4.0.1-465-3"
 # https://hub.docker.com/r/bitnami/openldap
 x-openldap-image: &openldap-image "docker.io/bitnami/openldap:2.6.7"
 # https://hub.docker.com/_/postgres
