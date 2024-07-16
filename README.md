@@ -41,15 +41,6 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`TOMCAT_AJP_PORT`:** puerto en el que escuchará el conector AJP de Tomcat.  
 >   **Por defecto:** `8009`
 >
-> * **`IS_PROXIED`:** establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.  
->   **Por defecto:** `false`
->
-> * **`PROXY_SCHEME`:** protocolo del proxy inverso.  
->   **Por defecto:** `https`
->
-> * **`PROXY_PORT`:** puerto del proxy inverso.  
->   **Por defecto:** `443`
->
 > * **`FQSU_PROTOCOL`:** protocolo del Fully Qualified Server URL.  
 >   **Por defecto:** `http`
 >
@@ -58,6 +49,18 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >
 > * **`FQSU_PORT`:** puerto del Fully Qualified Server URL.  
 >   **Por defecto:** `${TOMCAT_HTTP_PORT}`
+>
+> * **`IS_PROXIED`:** establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.  
+>   **Por defecto:** `false`
+>
+> * **`PROXY_SCHEME`:** protocolo del proxy inverso.  
+>   **Por defecto:** `${FQSU_PROTOCOL}`
+>
+> * **`PROXY_NAME`:** dominio del proxy inverso.  
+>   **Por defecto:** `${FQSU_DOMAIN}`
+>
+> * **`PROXY_PORT`:** puerto del proxy inverso.  
+>   **Por defecto:** `${FQSU_PORT}`
 
 </details>
 
