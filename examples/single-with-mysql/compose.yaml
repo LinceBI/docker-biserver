@@ -52,12 +52,10 @@ services:
       - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
       - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"

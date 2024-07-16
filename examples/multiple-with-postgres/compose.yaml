@@ -53,12 +53,10 @@ services:
       - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
       - { type: "volume", source: "biserver-helium-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "helium"
       WEBAPP_PENTAHO_STYLE_DIRNAME: "helium-style"
@@ -93,12 +91,10 @@ services:
       - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
       - { type: "volume", source: "biserver-argon-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "argon"
       WEBAPP_PENTAHO_STYLE_DIRNAME: "argon-style"
