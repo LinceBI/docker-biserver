@@ -212,8 +212,8 @@ RUN <<-EOF
 EOF
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar"
-ARG H2_JDBC_CHECKSUM="b9d8f19358ada82a4f6eb5b174c6cfe320a375b5a9cb5a4fe456d623e6e55497"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.3.230/h2-2.3.230.jar"
+ARG H2_JDBC_CHECKSUM="d726be7fbb0e3e97adeba298b33932b5bccaf37e01bb3c323f6a5f4c4f86abbd"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./h2-*.jar
@@ -256,8 +256,8 @@ RUN <<-EOF
 EOF
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.6.2.jre11/mssql-jdbc-12.6.2.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="be4fbbe6d0fe52131ab84633c512e0e1d3d2f86cf4a3f60b5dd8d6b43dafc0d6"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.6.3.jre11/mssql-jdbc-12.6.3.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="eaa86241ae64b454257cbc64dbd3afb1e5817da34a8c879389c7725e43d28dd4"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./mssql-jdbc-*.jar
@@ -289,8 +289,8 @@ RUN <<-EOF
 EOF
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.1/clickhouse-jdbc-0.6.1-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="7574b0b3778172f441d4c8f1394433a7a459d346abfe53da5f549a802709d962"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.2/clickhouse-jdbc-0.6.2-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="714ad194ca57756eaa3b35bfbfa6e36bd63a4061922a3ee6e1fe9e0aff6676ae"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./clickhouse-jdbc-*.jar
