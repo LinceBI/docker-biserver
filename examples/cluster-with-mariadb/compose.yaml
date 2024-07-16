@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/caddy
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-3"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-4"
 # https://hub.docker.com/_/mariadb
 x-mariadb-image: &mariadb-image "docker.io/mariadb:11.3"
 
@@ -55,12 +55,10 @@ services:
       - { type: "volume", source: "biserver-1-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
       INSTANCE_ID: "node-1"
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
@@ -95,12 +93,10 @@ services:
       - { type: "volume", source: "biserver-2-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
       INSTANCE_ID: "node-2"
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"

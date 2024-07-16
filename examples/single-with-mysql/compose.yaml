@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/caddy
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-3"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-4"
 # https://hub.docker.com/_/mysql
 x-mysql-image: &mysql-image "docker.io/mysql:5.7"
 
@@ -52,12 +52,10 @@ services:
       - { type: "bind", source: "./config/biserver/biserver.init.d/", target: "/etc/biserver.init.d/", read_only: true }
       - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
-      IS_PROXIED: "true"
-      PROXY_SCHEME: "https"
-      PROXY_PORT: "443"
       FQSU_PROTOCOL: "https"
       FQSU_DOMAIN: "${DOMAIN:?}"
       FQSU_PORT: "443"
+      IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       DEFAULT_ADMIN_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"

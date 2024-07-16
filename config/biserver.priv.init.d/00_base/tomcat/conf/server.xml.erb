@@ -18,28 +18,45 @@
 	<Service name="Catalina">
 
 		<Connector
-			port="<%= ENV['TOMCAT_HTTP_PORT'] %>"
 			protocol="HTTP/1.1"
-			connectionTimeout="20000"
-			redirectPort="8443"
+			address="0.0.0.0"
+			port="<%= ENV['TOMCAT_HTTP_PORT'] %>"
+			redirectPort="<%= ENV['TOMCAT_HTTP_REDIRECT_PORT'] %>"
 			<%- if ENV['IS_PROXIED'] == 'true' -%>
 			scheme="<%= ENV['PROXY_SCHEME'] %>"
-			proxyPort="<%= ENV['PROXY_PORT'] %>"
 			secure="<%= ENV['PROXY_SCHEME'] == 'https' ? 'true' : 'false' %>"
+			proxyName="<%= ENV['PROXY_NAME'] %>"
+			proxyPort="<%= ENV['PROXY_PORT'] %>"
+			<%- else -%>
+			scheme="<%= ENV['FQSU_PROTOCOL'] %>"
+			secure="<%= ENV['FQSU_PROTOCOL'] == 'https' ? 'true' : 'false' %>"
 			<%- end -%>
+			connectionTimeout="-1"
 			URIEncoding="UTF-8"
 			relaxedPathChars="[]|"
 			relaxedQueryChars="^{}[]|&amp;"
-			maxHttpHeaderSize="65536"
+			maxHttpHeaderSize="<%= ENV['TOMCAT_HTTP_MAX_HTTP_HEADER_SIZE'] %>"
 			server="Apache Tomcat"
 			xpoweredBy="false" />
 
 		<Connector
-			port="<%= ENV['TOMCAT_AJP_PORT'] %>"
 			protocol="AJP/1.3"
-			redirectPort="8443"
-			secretRequired="false"
+			address="0.0.0.0"
+			port="<%= ENV['TOMCAT_AJP_PORT'] %>"
+			redirectPort="<%= ENV['TOMCAT_AJP_REDIRECT_PORT'] %>"
+			<%- if ENV['IS_PROXIED'] == 'true' -%>
+			scheme="<%= ENV['PROXY_SCHEME'] %>"
+			secure="<%= ENV['PROXY_SCHEME'] == 'https' ? 'true' : 'false' %>"
+			proxyName="<%= ENV['PROXY_NAME'] %>"
+			proxyPort="<%= ENV['PROXY_PORT'] %>"
+			<%- else -%>
+			scheme="<%= ENV['FQSU_PROTOCOL'] %>"
+			secure="<%= ENV['FQSU_PROTOCOL'] == 'https' ? 'true' : 'false' %>"
+			<%- end -%>
+			connectionTimeout="-1"
 			URIEncoding="UTF-8"
+			secretRequired="false"
+			packetSize="<%= ENV['TOMCAT_AJP_PACKET_SIZE'] %>"
 			xpoweredBy="false" />
 
 		<Engine name="Catalina" defaultHost="localhost">

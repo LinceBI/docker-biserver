@@ -14,7 +14,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 ## Argumentos del Dockerfile
 
   * **`BISERVER_VERSION`:** versión de Pentaho BI Server.  
-    **Por defecto:** `9.3.0.6-764-3`
+    **Por defecto:** `9.3.0.6-764-4`
 
   * **`BISERVER_MAVEN_REPO`:** repositorio de Maven del que se descargan las dependencias necesarias para la instalación de Pentaho BI Server.  
     **Por defecto:** `https://repo.stratebi.com/repository/pentaho-mvn/`
@@ -41,15 +41,6 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`TOMCAT_AJP_PORT`:** puerto en el que escuchará el conector AJP de Tomcat.  
 >   **Por defecto:** `8009`
 >
-> * **`IS_PROXIED`:** establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.  
->   **Por defecto:** `false`
->
-> * **`PROXY_SCHEME`:** protocolo del proxy inverso.  
->   **Por defecto:** `https`
->
-> * **`PROXY_PORT`:** puerto del proxy inverso.  
->   **Por defecto:** `443`
->
 > * **`FQSU_PROTOCOL`:** protocolo del Fully Qualified Server URL.  
 >   **Por defecto:** `http`
 >
@@ -58,6 +49,18 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >
 > * **`FQSU_PORT`:** puerto del Fully Qualified Server URL.  
 >   **Por defecto:** `${TOMCAT_HTTP_PORT}`
+>
+> * **`IS_PROXIED`:** establecer a `true` si Pentaho BI Server estará detrás de un proxy inverso.  
+>   **Por defecto:** `false`
+>
+> * **`PROXY_SCHEME`:** protocolo del proxy inverso.  
+>   **Por defecto:** `${FQSU_PROTOCOL}`
+>
+> * **`PROXY_NAME`:** dominio del proxy inverso.  
+>   **Por defecto:** `${FQSU_DOMAIN}`
+>
+> * **`PROXY_PORT`:** puerto del proxy inverso.  
+>   **Por defecto:** `${FQSU_PORT}`
 
 </details>
 
@@ -450,7 +453,7 @@ docker run --detach \
   --mount type=volume,src=biserver-jackrabbit,dst=/var/lib/biserver/pentaho-solutions/system/jackrabbit/repository/ \
   --mount type=volume,src=biserver-hsqldb,dst=/var/lib/biserver/data/hsqldb/ \
   --mount type=volume,src=biserver-logs,dst=/var/lib/biserver/tomcat/logs/ \
-  repo.stratebi.com/lincebi/biserver:9.3.0.6-764-3
+  repo.stratebi.com/lincebi/biserver:9.3.0.6-764-4
 ```
 
 En el directorio `./examples/` se pueden encontrar varios ejemplos más complejos con Docker Compose.
