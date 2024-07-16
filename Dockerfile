@@ -193,6 +193,8 @@ RUN <<-EOF
 	rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/kettle/plugins/pentaho-big-data-plugin/pentaho-mapreduce-libraries.zip
 	# Remove JPivot, it's not maintained anymore
 	rm -rf "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/pentaho-jpivot-plugin/
+	# Remove Brightcove Player from index.jsp
+	sed -i '/:\/\/players\.brightcove\.net\/.*\/index\.min\.js/d' "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/mantle/home/index.jsp
 	# Create repository directory
 	mkdir -p "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/jackrabbit/repository/
 	# Create HSQLDB directory
