@@ -1,41 +1,26 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 name: "biserver"
 
-# https://hub.docker.com/_/caddy
-x-caddy-image: &caddy-image "docker.io/caddy:2"
+# https://hub.docker.com/_/httpd
+x-httpd-image: &httpd-image "docker.io/httpd:2.4"
 # https://repo.stratebi.com
 x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.4.0.1-465-4"
 
 services:
 
-  caddy:
-    image: *caddy-image
+  httpd:
+    image: *httpd-image
     restart: "on-failure:3"
-    container_name: "biserver-caddy"
-    hostname: "caddy"
+    container_name: "biserver-httpd"
+    hostname: "httpd"
     networks:
       - "biserver"
     ports:
-      - "80:80/tcp"
-      - "443:443/tcp"
+      - "8080:8080/tcp"
     volumes:
-      - { type: "bind", source: "./config/caddy/", target: "/etc/caddy/", read_only: true }
-      - { type: "volume", source: "caddy-data", target: "/data/" }
-      - { type: "volume", source: "biserver-logs", target: "/var/www/html/logs/", read_only: true }
+      - { type: "bind", source: "./config/httpd/httpd.conf", target: "/usr/local/apache2/conf/httpd.conf", read_only: true }
     environment:
       DOMAIN: "${DOMAIN:?}"
-      TLS_ISSUER: "${TLS_ISSUER:?}"
-      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
-      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
-      TLS_KEY: "${TLS_KEY:-}"
-      TLS_CERT: "${TLS_CERT:-}"
-      BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
-    entrypoint: "/bin/sh"
-    command:
-      - "-euc"
-      - |
-        export BASIC_AUTH_PASSWORD_HASH=$(printenv BASIC_AUTH_PASSWORD | caddy hash-password)
-        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
 
   biserver:
     image: *biserver-image
@@ -52,9 +37,9 @@ services:
       - { type: "volume", source: "biserver-hsqldb", target: "/var/lib/biserver/data/hsqldb/" }
       - { type: "volume", source: "biserver-logs", target: "/var/lib/biserver/tomcat/logs/" }
     environment:
-      FQSU_PROTOCOL: "https"
+      FQSU_PROTOCOL: "http"
       FQSU_DOMAIN: "${DOMAIN:?}"
-      FQSU_PORT: "443"
+      FQSU_PORT: "8080"
       IS_PROXIED: "true"
       LOAD_SAMPLES: "${LOAD_SAMPLES:-true}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
@@ -64,9 +49,6 @@ services:
       AUDIT_CLEAN_MAX_RETENTION_DAYS: "${AUDIT_CLEAN_MAX_RETENTION_DAYS:-90}"
 
 volumes:
-
-  caddy-data:
-    name: "biserver-caddy-data"
 
   biserver-jackrabbit:
     name: "biserver-jackrabbit"
