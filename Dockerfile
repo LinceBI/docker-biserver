@@ -212,8 +212,8 @@ RUN <<-EOF
 EOF
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.3.230/h2-2.3.230.jar"
-ARG H2_JDBC_CHECKSUM="d726be7fbb0e3e97adeba298b33932b5bccaf37e01bb3c323f6a5f4c4f86abbd"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.3.232/h2-2.3.232.jar"
+ARG H2_JDBC_CHECKSUM="8dae62d22db8982c3dcb3826edb9c727c5d302063a67eef7d63d82de401f07d3"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./h2-*.jar
@@ -234,8 +234,8 @@ RUN <<-EOF
 EOF
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
-ARG POSTGRES_JDBC_CHECKSUM="a2644cbfba1baa145ff7e8c8ef582a6eed7a7ec4ca792f7f054122bdec756268"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.4/postgresql-42.7.4.jar"
+ARG POSTGRES_JDBC_CHECKSUM="188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./postgresql-*.jar
@@ -256,8 +256,8 @@ RUN <<-EOF
 EOF
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.6.3.jre11/mssql-jdbc-12.6.3.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="eaa86241ae64b454257cbc64dbd3afb1e5817da34a8c879389c7725e43d28dd4"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.8.1.jre11/mssql-jdbc-12.8.1.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="e6933c0711e598a224060e52ed31392f720a4a7664e85d8ae37c52a85b67ebb0"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./mssql-jdbc-*.jar
@@ -267,8 +267,8 @@ RUN <<-EOF
 EOF
 
 # Install Oracle JDBC
-ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.4.0.24.05/ojdbc11-23.4.0.24.05.jar"
-ARG ORACLE_JDBC_CHECKSUM="87fb13d9cdbfee487bc38142d8ac531dc235ba3abe5d9c46369496883b2eb5b3"
+ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.5.0.24.07/ojdbc11-23.5.0.24.07.jar"
+ARG ORACLE_JDBC_CHECKSUM="2cc69b821da842c5f5be8877444631cf9fa89561f1f6f5ad7bf1293eb669fc27"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./ojdbc11-*.jar
@@ -278,8 +278,8 @@ RUN <<-EOF
 EOF
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.2.0-2/vertica-jdbc-24.2.0-2.jar"
-ARG VERTICA_JDBC_CHECKSUM="1763c619d4459ff608acbc37f99350c66d56cc5dabbd095b73aa459deed8b42a"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.3.0-0/vertica-jdbc-24.3.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="e5b906e7f1f38b1617e874862bd405297a876eb3e2dc5e512991bf37a8bf0457"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./vertica-jdbc-*.jar
@@ -289,8 +289,8 @@ RUN <<-EOF
 EOF
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.2/clickhouse-jdbc-0.6.2-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="714ad194ca57756eaa3b35bfbfa6e36bd63a4061922a3ee6e1fe9e0aff6676ae"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.5/clickhouse-jdbc-0.6.5-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="bf5bf3e513627816119b3b742e46e9ec783ae25b2dfea56d2b758d9d87e760c0"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./clickhouse-jdbc-*.jar
