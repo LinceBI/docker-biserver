@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/caddy
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.6-764-4"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.9-874-1"
 # https://quay.io/repository/keycloak/keycloak
 x-keycloak-image: &keycloak-image "quay.io/keycloak/keycloak:24.0.2"
 # https://hub.docker.com/_/postgres
