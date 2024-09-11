@@ -37,6 +37,7 @@ RUN <<-EOF
 		openssl \
 		p11-kit \
 		patch \
+		perl \
 		postgresql-client \
 		pwgen \
 		python-is-python3 \

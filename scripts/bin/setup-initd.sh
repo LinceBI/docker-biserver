@@ -172,10 +172,11 @@ isPentahoPlugin() {
 }
 
 initdFromDir() {
-	source=${1:?}
-
 	_LC_COLLATE=${LC_COLLATE-}; LC_COLLATE=C
-	for path in "${source:?}"/*; do
+	find "${@}" -mindepth 1 -maxdepth 1 -not -name '.*' -print \
+		| perl -e 'print(sort({(split("/",$a))[-1]<=>(split("/",$b))[-1]}<>))' \
+		| while IFS= read -r path || [ -n "${path?}" ]; \
+	do
 		if [ -d "${path:?}" ]; then
 			# Copy directories
 			case "${path:?}" in

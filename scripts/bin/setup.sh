@@ -285,11 +285,8 @@ export LC_ALL=C
 # Pre-init.d setup
 /usr/share/biserver/bin/setup-pre-initd.sh
 
-# Private init.d setup
-/usr/share/biserver/bin/setup-initd.sh "${BISERVER_PRIV_INITD:?}"
-
-# Public init.d setup
-/usr/share/biserver/bin/setup-initd.sh "${BISERVER_INITD:?}"
+# init.d setup
+/usr/share/biserver/bin/setup-initd.sh "${BISERVER_PRIV_INITD:?}" "${BISERVER_INITD:?}"
 
 # Post-init.d setup
 /usr/share/biserver/bin/setup-post-initd.sh
