@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/caddy
 x-caddy-image: &caddy-image "docker.io/caddy:2"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.9-874-1"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.9-875-1"
 # https://hub.docker.com/r/pingcap/tidb
 x-tidb-image: &tidb-image "docker.io/pingcap/tidb:v8.0.0"
 # https://hub.docker.com/r/pingcap/tikv

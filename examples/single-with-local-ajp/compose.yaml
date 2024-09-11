@@ -4,7 +4,7 @@ name: "biserver"
 # https://hub.docker.com/_/httpd
 x-httpd-image: &httpd-image "docker.io/httpd:2.4"
 # https://repo.stratebi.com
-x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.9-874-1"
+x-biserver-image: &biserver-image "repo.stratebi.com/lincebi/biserver:9.3.0.9-875-1"
 
 services:
 
