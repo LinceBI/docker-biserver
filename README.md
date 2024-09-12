@@ -88,6 +88,9 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`COOKIE_SAMESITE`:** valor del atributo `SameSite` en la cabecera `Set-Cookie`.  
 >   **Por defecto:** `Lax`
 >
+> * **`COOKIE_PARTITIONED`:** establecer el atributo `Partitioned` en la cabecera `Set-Cookie`.  
+>   **Por defecto:** `false`
+>
 > * **`SECURITY_PROVIDER`:** proveedor de seguridad general, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
 >   **Por defecto:** `jackrabbit`
 >

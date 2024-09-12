@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>" docBase="webapps/<%= ENV['WEBAPP_PENTAHO_DIRNAME'] %>">
 
-	<CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor" sameSiteCookies="<%= ENV['COOKIE_SAMESITE'] %>" />
+	<CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor" sameSiteCookies="<%= ENV['COOKIE_SAMESITE'] %>" partitioned="<%= ENV['COOKIE_PARTITIONED'] %>" />
 
 	<!-- ========================================================= -->
 	<!-- jdbc/Jackrabbit                                           -->
