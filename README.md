@@ -85,6 +85,9 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > * **`SESSION_TIMEOUT`:** duración de sesión en minutos.  
 >   **Por defecto:** `120`
 >
+> * **`COOKIE_SAMESITE`:** valor del atributo `SameSite` en la cabecera `Set-Cookie`.  
+>   **Por defecto:** `Lax`
+>
 > * **`SECURITY_PROVIDER`:** proveedor de seguridad general, admite los valores `jackrabbit`, `ldap` y `jdbc`.  
 >   **Por defecto:** `jackrabbit`
 >
