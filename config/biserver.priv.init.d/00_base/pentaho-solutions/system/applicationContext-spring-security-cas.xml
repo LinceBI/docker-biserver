@@ -25,9 +25,11 @@
 		<constructor-arg>
 			<util:list>
 				<sec:filter-chain pattern="/api/csrf/token" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter" />
 				<sec:filter-chain pattern="/webservices/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilterForWS,
@@ -41,6 +43,7 @@
 					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/api/repos/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilterForWS,
@@ -56,6 +59,7 @@
 					filterInvocationInterceptorForWS,
 					preFlightFilter" />
 				<sec:filter-chain pattern="/api/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilterForWS,
@@ -70,6 +74,7 @@
 					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/plugin/reporting/api/jobs/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilterForWS,
@@ -85,6 +90,7 @@
 					filterInvocationInterceptorForWS,
 					preFlightFilter" />
 				<sec:filter-chain pattern="/plugin/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilterForWS,
@@ -99,6 +105,7 @@
 					exceptionTranslationFilterForWS,
 					filterInvocationInterceptorForWS" />
 				<sec:filter-chain pattern="/**" filters="
+					ssrfGateFilter,
 					csrfGateFilter,
 					corsFilter,
 					securityContextHolderAwareRequestFilter,
