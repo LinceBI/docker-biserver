@@ -37,6 +37,11 @@
 		<jobName>CleanAuditTable</jobName>
 		<jobState>NORMAL</jobState>
 		<jobParameters>
+			<name>lineage-id</name>
+			<stringValue>8a44cc74-6864-41dd-87cc-b2cc7eaf9a2b</stringValue>
+			<type>string</type>
+		</jobParameters>
+		<jobParameters>
 			<name>MAX_RETENTION_DAYS</name>
 			<stringValue><%= ENV['AUDIT_CLEAN_MAX_RETENTION_DAYS'] %></stringValue>
 			<type>string</type>
