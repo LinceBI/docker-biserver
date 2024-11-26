@@ -224,8 +224,8 @@ RUN <<-EOF
 EOF
 
 # Install HSQLDB JDBC
-ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.3/hsqldb-2.7.3.jar"
-ARG HSQLDB_JDBC_CHECKSUM="6f2f77eedbe75cfbe26bf30d73b13de0cc57fb7cdb27a92ed8c1a012f0e2363a"
+ARG HSQLDB_JDBC_URL="https://repo1.maven.org/maven2/org/hsqldb/hsqldb/2.7.4/hsqldb-2.7.4.jar"
+ARG HSQLDB_JDBC_CHECKSUM="5fab2bb4384ac06b762638c8fa2740c944b8d080e4796c0c6c2af8b90dd4e5ad"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./hsqldb-*.jar
@@ -268,8 +268,8 @@ RUN <<-EOF
 EOF
 
 # Install Oracle JDBC
-ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.5.0.24.07/ojdbc11-23.5.0.24.07.jar"
-ARG ORACLE_JDBC_CHECKSUM="2cc69b821da842c5f5be8877444631cf9fa89561f1f6f5ad7bf1293eb669fc27"
+ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.6.0.24.10/ojdbc11-23.6.0.24.10.jar"
+ARG ORACLE_JDBC_CHECKSUM="8e6af2c3401c64270922e0dca66879fd07281de3347ad1d1a0e1153ed41423a6"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./ojdbc11-*.jar
@@ -279,8 +279,8 @@ RUN <<-EOF
 EOF
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.3.0-0/vertica-jdbc-24.3.0-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="e5b906e7f1f38b1617e874862bd405297a876eb3e2dc5e512991bf37a8bf0457"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.4.0-0/vertica-jdbc-24.4.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="cc720c960d2280643b5c1d463a15e05a97fe9f456b30d1dfb5f16405ecbb0637"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./vertica-jdbc-*.jar
@@ -290,8 +290,8 @@ RUN <<-EOF
 EOF
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.6.5/clickhouse-jdbc-0.6.5-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="bf5bf3e513627816119b3b742e46e9ec783ae25b2dfea56d2b758d9d87e760c0"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.7.1/clickhouse-jdbc-0.7.1-shaded.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="fe60529ed10ba994651649df79997d89d627fc001a7aae13ef73f16bbadbd3cf"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./clickhouse-jdbc-*.jar
