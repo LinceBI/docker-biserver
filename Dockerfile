@@ -235,8 +235,8 @@ RUN <<-EOF
 EOF
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.4/postgresql-42.7.4.jar"
-ARG POSTGRES_JDBC_CHECKSUM="188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.5/postgresql-42.7.5.jar"
+ARG POSTGRES_JDBC_CHECKSUM="69020b3bd20984543e817393f2e6c01a890ef2e37a77dd11d6d8508181d079ab"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./postgresql-*.jar
@@ -290,8 +290,8 @@ RUN <<-EOF
 EOF
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.7.1/clickhouse-jdbc-0.7.1-shaded.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="fe60529ed10ba994651649df79997d89d627fc001a7aae13ef73f16bbadbd3cf"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.8.0/clickhouse-jdbc-0.8.0-shaded-all.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="040059202450f4d173a5c8b8be696de3be324336ccd69719a94908f190d663ec"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./clickhouse-jdbc-*.jar
