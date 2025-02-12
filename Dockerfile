@@ -268,8 +268,8 @@ RUN <<-EOF
 EOF
 
 # Install Oracle JDBC
-ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.6.0.24.10/ojdbc11-23.6.0.24.10.jar"
-ARG ORACLE_JDBC_CHECKSUM="8e6af2c3401c64270922e0dca66879fd07281de3347ad1d1a0e1153ed41423a6"
+ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.7.0.25.01/ojdbc11-23.7.0.25.01.jar"
+ARG ORACLE_JDBC_CHECKSUM="ec8b7f2020b03b19f572e1bc34f94330610e86d3113ffe1e1f0474b8f5ce88ed"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./ojdbc11-*.jar
