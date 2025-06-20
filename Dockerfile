@@ -290,8 +290,8 @@ RUN <<-EOF
 EOF
 
 # Install ClickHouse JDBC
-ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.8.0/clickhouse-jdbc-0.8.0-shaded-all.jar"
-ARG CLICKHOUSE_JDBC_CHECKSUM="040059202450f4d173a5c8b8be696de3be324336ccd69719a94908f190d663ec"
+ARG CLICKHOUSE_JDBC_URL="https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.8.6/clickhouse-jdbc-0.8.6-shaded-all.jar"
+ARG CLICKHOUSE_JDBC_CHECKSUM="fe9618acf16f5105f91e9a5ebc53eb95bf1bb669f3f201185fca6112bd5fd525"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./clickhouse-jdbc-*.jar
