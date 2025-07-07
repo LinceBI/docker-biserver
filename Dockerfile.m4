@@ -1,4 +1,6 @@
-FROM docker.io/ubuntu:24.04
+m4_changequote([[, ]])
+
+m4_ifdef([[CROSS_ARCH]], [[FROM docker.io/CROSS_ARCH/ubuntu:24.04]], [[FROM docker.io/ubuntu:24.04]])
 
 SHELL ["/bin/sh", "-euc"]
 

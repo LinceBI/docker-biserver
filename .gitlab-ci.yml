@@ -1,17 +1,24 @@
 stages:
   - "build:images"
   - "push:images"
+  - "push:manifest"
 
 default:
   image: "docker.io/docker:latest"
 
 build:images:
   stage: "build:images"
+  parallel:
+    matrix:
+      - { TAG: "amd64", ARCH: "amd64" }
+      - { TAG: "arm64", ARCH: "arm64v8" }
+  tags:
+    - ${TAG}
   before_script:
-    - "apk add --no-cache coreutils git make zstd"
+    - "apk add --no-cache coreutils git make m4 zstd"
   script:
-    - "make IMAGE_BUILD_OPTS='--pull' build-image"
-    - "make save-image save-standalone"
+    - "make IMAGE_BUILD_OPTS='--pull' build-${ARCH:?}-image"
+    - "make save-${ARCH:?}-image save-${ARCH:?}-standalone"
   artifacts:
     expire_in: "2 hours"
     paths:
@@ -19,15 +26,21 @@ build:images:
 
 push:images:
   stage: "push:images"
+  parallel:
+    matrix:
+      - { TAG: "amd64", ARCH: "amd64" }
+      - { TAG: "arm64", ARCH: "arm64v8" }
+  tags:
+    - ${TAG}
   dependencies:
     - "build:images"
   only:
     - "/^biserver-[0-9]+\\.[0-9]+$/"
   before_script:
-    - "apk add --no-cache coreutils git make zstd"
+    - "apk add --no-cache coreutils git make m4 zstd"
     - "docker login -u \"${REPO_DOCKER_RW_USER:?}\" -p \"${REPO_DOCKER_RW_PASSWORD:?}\" \"${REPO_DOCKER_REGISTRY:?}\""
   script:
-    - "make load-image push-image"
+    - "make load-${ARCH:?}-image push-${ARCH:?}-image"
 
 push:standalone:
   stage: "push:images"
@@ -38,4 +51,17 @@ push:standalone:
   before_script:
     - "apk add --no-cache coreutils git make zstd curl"
   script:
-    - "curl -u \"${REPO_RAW_LINCEBI_RW_USER:?}:${REPO_RAW_LINCEBI_RW_PASSWORD:?}\" -T ./dist/*_standalone.zip \"${REPO_RAW_LINCEBI_URL:?}\""
+    - "STANDALONE_ARCHIVE_NAME=$(basename ./dist/*_standalone.amd64.zip)"
+    - "curl -u \"${REPO_RAW_LINCEBI_RW_USER:?}:${REPO_RAW_LINCEBI_RW_PASSWORD:?}\" -T \"./dist/${STANDALONE_ARCHIVE_NAME:?}\" \"${REPO_RAW_LINCEBI_URL:?}/${STANDALONE_ARCHIVE_NAME%.amd64.zip}.zip\""
+
+push:manifest:
+  stage: "push:manifest"
+  dependencies:
+    - "push:images"
+  only:
+    - "/^biserver-[0-9]+\\.[0-9]+$/"
+  before_script:
+    - "apk add --no-cache coreutils git make zstd"
+    - "docker login -u \"${REPO_DOCKER_RW_USER:?}\" -p \"${REPO_DOCKER_RW_PASSWORD:?}\" \"${REPO_DOCKER_REGISTRY:?}\""
+  script:
+    - "make push-cross-manifest"
