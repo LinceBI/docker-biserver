@@ -27,11 +27,10 @@ services:
       - { type: "volume", source: "biserver-2-logs", target: "/var/www/html/logs/2/", read_only: true }
     environment:
       DOMAIN: "${DOMAIN:?}"
-      TLS_ISSUER: "${TLS_ISSUER:?}"
-      TLS_ISSUER_CA: "${TLS_ISSUER_CA:?}"
-      TLS_ISSUER_EMAIL: "${TLS_ISSUER_EMAIL:?}"
-      TLS_KEY: "${TLS_KEY:-}"
-      TLS_CERT: "${TLS_CERT:-}"
+      CADDY_TLS: "${CADDY_TLS:?}"
+      CADDY_TLS_KEY: "${CADDY_TLS_KEY:-}"
+      CADDY_TLS_CERT: "${CADDY_TLS_CERT:-}"
+      CADDY_ACME_CA: "${CADDY_ACME_CA:?}"
       WEBAPP_PENTAHO_DIRNAME: "${WEBAPP_PENTAHO_DIRNAME:-pentaho}"
       BASIC_AUTH_PASSWORD: "${DEFAULT_ADMIN_PASSWORD:?}"
     entrypoint: "/bin/sh"

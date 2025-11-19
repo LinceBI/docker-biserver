@@ -1,6 +1,8 @@
 {
 	admin off
+	acme_ca {$CADDY_ACME_CA}
 	auto_https disable_redirects
+	skip_install_trust
 }
 
 (common-directives) {
@@ -11,11 +13,8 @@
 }
 
 (tls-directives) {
-	tls {$TLS_CERT:} {$TLS_KEY:} {
-		issuer {$TLS_ISSUER} {
-			dir {$TLS_ISSUER_CA}
-			email {$TLS_ISSUER_EMAIL}
-		}
+	tls {$CADDY_TLS_CERT:} {$CADDY_TLS_KEY:} {
+		issuer {$CADDY_TLS}
 	}
 }
 
