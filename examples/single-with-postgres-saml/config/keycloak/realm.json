@@ -1,0 +1,109 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "realm": "biserver",
+  "displayName": "BI Server",
+  "enabled": true,
+  "attributes": {
+    "frontendUrl": "https://example.localhost/auth/"
+  },
+  "clients": [
+    {
+      "clientId": "biserver",
+      "enabled": true,
+      "protocol": "saml",
+      "rootUrl": "https://example.localhost/",
+      "redirectUris": ["*"],
+      "directAccessGrantsEnabled": true,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "defaultClientScopes": ["role_list"],
+      "attributes": {
+        "saml_name_id_format": "username",
+        "saml.force.post.binding": "true",
+        "saml.authnstatement": "true",
+        "saml.server.signature": "true",
+        "saml.client.signature": "true",
+        "saml.signature.algorithm": "RSA_SHA256",
+        "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer": "NONE",
+        "saml_signature_canonicalization_method": "http://www.w3.org/2001/10/xml-exc-c14n#",
+        "saml.signing.certificate": "MIICvTCCAaWgAwIBAgIEOMJgGDANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDEwRzYW1sMB4XDTIzMDYyNjA4MjYwOFoXDTQzMDYyMTA4MjYwOFowDzENMAsGA1UEAxMEc2FtbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIkPa6EfYwL3SfSYCLqqpsTFj5YeNL1qCbXCN4Lk8UxkQeqO5k5qcMPPglJOht2Mko8MZ+DwG4KFPCJfFp0UNWVM3BiV+zCS6Ja0LJCg0iOgOa40nZa21sVDiXVOX5Inu9bSQ4dpTGphcausTpdxUEjaDltK0qZpXDbDyo42sriAcQN0dMOSgPfwFzZ9wer/7x6HS5rwgIakiZQ94DiUAFlcFtaCBmxoXRusSNG59Fsje+28bL/cEy9+rYyF1Y8SkRzlKHMFSIWTpGPOdQs8OIw7alWvvna64V+UICuJ8kMtArFs6DHU6eEaVCESJEC2GHUGHPdXqtdWzp6HIn+R+W8CAwEAAaMhMB8wHQYDVR0OBBYEFHSamGvZzn3I5+zTSpXOKUkqWlOFMA0GCSqGSIb3DQEBCwUAA4IBAQB3J6zGAPpsRf8ePR3nkOYlZqz09dIysMmLFspHinIcd8wP+/3w5NHpOnuiKdKGKqo4Rzf21Pk/D7Mt353oriU3xFznGE/rX1lZqS4w5G/jp6Oo2HPpujFerB9MdvuEwLep2HdHr3JaOPkxqG1CG2Z2ti6wDkOt66gqEBpowM0U0bh4HJ2Xfqnj2w4fG4NOdoPJyQm8R6Hit60NbZgLGVN3uvaawqRDdM8pd7IK/Q4lG3iMzHxqCZBloCBhfQsj3jq92M/BwDKum3pQ/hepG205gkRr7l7MP+cc+GYV4qKV4e+tuAXjmn6VioOT7Ss1eRR9B3DQZpxJhdQ0Yk1nvbRT",
+        "saml.encrypt": "true",
+        "saml.encryption.certificate": "MIICvTCCAaWgAwIBAgIEOMJgGDANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDEwRzYW1sMB4XDTIzMDYyNjA4MjYwOFoXDTQzMDYyMTA4MjYwOFowDzENMAsGA1UEAxMEc2FtbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIkPa6EfYwL3SfSYCLqqpsTFj5YeNL1qCbXCN4Lk8UxkQeqO5k5qcMPPglJOht2Mko8MZ+DwG4KFPCJfFp0UNWVM3BiV+zCS6Ja0LJCg0iOgOa40nZa21sVDiXVOX5Inu9bSQ4dpTGphcausTpdxUEjaDltK0qZpXDbDyo42sriAcQN0dMOSgPfwFzZ9wer/7x6HS5rwgIakiZQ94DiUAFlcFtaCBmxoXRusSNG59Fsje+28bL/cEy9+rYyF1Y8SkRzlKHMFSIWTpGPOdQs8OIw7alWvvna64V+UICuJ8kMtArFs6DHU6eEaVCESJEC2GHUGHPdXqtdWzp6HIn+R+W8CAwEAAaMhMB8wHQYDVR0OBBYEFHSamGvZzn3I5+zTSpXOKUkqWlOFMA0GCSqGSIb3DQEBCwUAA4IBAQB3J6zGAPpsRf8ePR3nkOYlZqz09dIysMmLFspHinIcd8wP+/3w5NHpOnuiKdKGKqo4Rzf21Pk/D7Mt353oriU3xFznGE/rX1lZqS4w5G/jp6Oo2HPpujFerB9MdvuEwLep2HdHr3JaOPkxqG1CG2Z2ti6wDkOt66gqEBpowM0U0bh4HJ2Xfqnj2w4fG4NOdoPJyQm8R6Hit60NbZgLGVN3uvaawqRDdM8pd7IK/Q4lG3iMzHxqCZBloCBhfQsj3jq92M/BwDKum3pQ/hepG205gkRr7l7MP+cc+GYV4qKV4e+tuAXjmn6VioOT7Ss1eRR9B3DQZpxJhdQ0Yk1nvbRT",
+        "saml_assertion_consumer_url_post": "https://example.localhost/pentaho/saml/SSO",
+        "saml_artifact_binding_url": "https://example.localhost/pentaho/saml/SSO",
+        "saml_single_logout_service_url_post": "https://example.localhost/pentaho/saml/SingleLogout",
+        "saml_single_logout_service_url_redirect": "https://example.localhost/pentaho/saml/SingleLogout"
+      }
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "containerId": "00000000-0000-0000-0000-000000000000",
+        "name": "Pentaho:Administrator",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {}
+      },
+      {
+        "containerId": "00000000-0000-0000-0000-000000000000",
+        "name": "Pentaho:Employee",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {}
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.localhost",
+      "emailVerified": true,
+      "realmRoles": ["Pentaho:Administrator"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "alice",
+      "enabled": true,
+      "firstName": "Alice",
+      "lastName": "Doherty",
+      "email": "alice@example.localhost",
+      "emailVerified": true,
+      "realmRoles": ["Pentaho:Administrator", "Pentaho:Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "firstName": "Bob",
+      "lastName": "Miller",
+      "email": "bob@example.localhost",
+      "emailVerified": true,
+      "realmRoles": ["Pentaho:Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "carol",
+      "enabled": true,
+      "firstName": "Carol",
+      "lastName": "Phillips",
+      "email": "carol@example.localhost",
+      "emailVerified": true,
+      "realmRoles": ["Pentaho:Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    },
+    {
+      "username": "craig",
+      "enabled": false,
+      "firstName": "Craig",
+      "lastName": "Gregory",
+      "email": "craig@example.localhost",
+      "emailVerified": true,
+      "realmRoles": ["Pentaho:Employee"],
+      "credentials": [{ "type": "password", "value": "password" }]
+    }
+  ]
+}

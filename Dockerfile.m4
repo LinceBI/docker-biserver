@@ -317,6 +317,16 @@ RUN <<-EOF
 	chown biserver:root ./spring-security-cas-*.jar && chmod 0664 ./spring-security-cas-*.jar
 EOF
 
+# Install SAML package
+ARG PENTAHO_SAML_URL="https://repo.stratebi.com/repository/lincebi-mvn-releases/pentaho/pentaho-saml-sample/1.1.3-9.3/pentaho-saml-sample-1.1.3-9.3.kar"
+ARG PENTAHO_SAML_CHECKSUM="21d4beedb8c0b27c7ac2d5e04afcdd6bc33da297e69770432acc05ba7edcb7b5"
+RUN <<-EOF
+	cd "${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/karaf/deploy/
+	curl -LO "${PENTAHO_SAML_URL:?}"
+	printf '%s  %s' "${PENTAHO_SAML_CHECKSUM:?}" ./pentaho-saml-*.kar | sha256sum -c
+	chown biserver:root ./pentaho-saml-*.kar && chmod 0664 ./pentaho-saml-*.kar
+EOF
+
 # Add hook to update Pentaho BI Server truststore
 RUN <<-EOF
 	ln -s /usr/share/biserver/bin/jks-truststore-update.sh /etc/ca-certificates/update.d/biserver-jks-truststore

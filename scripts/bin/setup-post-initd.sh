@@ -48,6 +48,13 @@ if [ "${AUDIT_ENTRY:?}" != 'sql' ]; then
 		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/default-content/audit.zip
 fi
 
+# If not true SAML files will be removed
+if [ "${SAML_ENABLED:?}" != 'true' ]; then
+	rm -f \
+		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/karaf/etc/pentaho.saml.* \
+		"${BISERVER_HOME:?}"/"${SOLUTIONS_DIRNAME:?}"/system/karaf/deploy/pentaho-saml-*
+fi
+
 # If not true samples will not be loaded
 if [ "${LOAD_SAMPLES:?}" != 'true' ]; then
 	# Remove HSQLDB databases
