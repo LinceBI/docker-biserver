@@ -1,0 +1,183 @@
+# used in security.properties and applicationContext-spring-security-saml.xml
+saml.id=saml
+
+# IMPORTANT NOTE: we are *not* enabling IDP discovery, as that would add an extra layer of complexity to an
+# already complex POC of having SAML auth served via osgi bridge into a spring security 2 environment
+saml.discovery.idp.enabled=false
+
+#idp-discovery jsp not implemented
+saml.idp.selection.jsp=N/A
+
+# ############################# #
+# service providers ( pentaho ) #
+# ############################# #
+
+# This is how we ( service provider ) will identify ourselves, when sending
+# the authentication request to the 3rd-party identification service
+# PLEASE NOTE: entityId is case-sensitive
+saml.sp.metadata.entityId=<%= ENV['SAML_SP_METADATA_ENTITYID'] %>
+
+# Best practice is to have only one of the following 3 enabled;
+# - if none is set (also possible), then we will fallback to a default metadata bundled in the jar file
+# - if more than 1 is set, the first one holding a *valid* metadata resource path will be the one that will get used
+<%- if ENV['SAML_SP_METADATA_URL'] && ENV['SAML_SP_METADATA_URL'].length > 0 -%>
+saml.sp.metadata.url=<%= ENV['SAML_SP_METADATA_URL'] %>
+<%- elsif ENV['SAML_SP_METADATA_FILESYSTEM'] && ENV['SAML_SP_METADATA_FILESYSTEM'].length > 0 -%>
+saml.sp.metadata.filesystem=<%= ENV['SAML_SP_METADATA_FILESYSTEM'] %>
+<%- elsif ENV['SAML_SP_METADATA_CLASSPATH'] && ENV['SAML_SP_METADATA_CLASSPATH'].length > 0 -%>
+saml.sp.metadata.classpath=<%= ENV['SAML_SP_METADATA_CLASSPATH'] %>
+<%- else -%>
+#saml.sp.metadata.url=http://example.test/saml/sp/sp-metadata.xml
+#saml.sp.metadata.filesystem=/users/Work/saml/sp/sp-metadata.xml
+saml.sp.metadata.classpath=/metadata/sp/sp-metadata.xml
+<%- end -%>
+
+# ############################################################ #
+# identification providers ( ssocircle, okta, salesforce,... ) #
+# ############################################################ #
+
+# The url of the service we will be using as a identification provider
+saml.idp.url=<%= ENV['SAML_IDP_URL'] %>
+
+# Best practice is to have only one of the following 3 enabled;
+# - if none is set (also possible), then we will fallback to a default metadata bundled in the jar file
+# - if more than 1 is set, the first one holding a *valid* metadata resource path will be the one that will get used
+<%- if ENV['SAML_IDP_METADATA_URL'] && ENV['SAML_IDP_METADATA_URL'].length > 0 -%>
+saml.idp.metadata.url=<%= ENV['SAML_IDP_METADATA_URL'] %>
+<%- elsif ENV['SAML_IDP_METADATA_FILESYSTEM'] && ENV['SAML_IDP_METADATA_FILESYSTEM'].length > 0 -%>
+saml.idp.metadata.filesystem=<%= ENV['SAML_IDP_METADATA_FILESYSTEM'] %>
+<%- elsif ENV['SAML_IDP_METADATA_CLASSPATH'] && ENV['SAML_IDP_METADATA_CLASSPATH'].length > 0 -%>
+saml.idp.metadata.classpath=<%= ENV['SAML_IDP_METADATA_CLASSPATH'] %>
+<%- else -%>
+#saml.idp.metadata.url=http://example.test/saml/idp/idp-metadata.xml
+#saml.idp.metadata.filesystem=/users/Work/saml/idp/idp-metadata.xml
+saml.idp.metadata.classpath=/metadata/idp/idp-metadata.xml
+<%- end -%>
+
+# ############################# #
+# idp contact settings          #
+# ############################# #
+
+# 1 day in secs
+saml.valid.response.interval.in.secs=<%= ENV['SAML_VALID_RESPONSE_INTERVAL_IN_SECS'] %>
+
+# 2 hour max authentication age
+saml.max.authentication.age.in.secs=<%= ENV['SAML_MAX_AUTHENTICATION_AGE_IN_SECS'] %>
+
+# ############################### #
+# user attributes mapped to roles #
+# ############################### #
+
+# SAML Credentials include a user, but it can also include a list of attributes for that user;
+# One such attribute can hold within it a list of values which we can correlate to Pentaho Roles
+saml.role.related.user.attribute.name=<%= ENV['SAML_ROLE_RELATED_USER_ATTRIBUTE_NAME'] %>
+
+# (optional) some attribute values may come with a prefix that allows those to be identified between separate contexts
+# Examples: 'Pentaho:Report Author', 'Zendesk:CTools Support', 'Office365:Contributor C1', 'Pentaho:Authenticated', ...
+saml.role.related.user.attribute.prefix=<%= ENV['SAML_ROLE_RELATED_USER_ATTRIBUTE_PREFIX'] %>
+
+# ############################# #
+# certificates keystore         #
+# ############################# #
+
+# Best practice is to have only one of the following 3 enabled;
+# - if none is set (also possible), then we will fallback to a default keystore bundled in the jar file
+# - if more than 1 is set, the first one holding a *valid* keystore resource path will be the one that will get used
+<%- if ENV['SAML_KEYSTORE_URL'] && ENV['SAML_KEYSTORE_URL'].length > 0 -%>
+saml.keystore.url=<%= ENV['SAML_KEYSTORE_URL'] %>
+<%- elsif ENV['SAML_KEYSTORE_FILESYSTEM'] && ENV['SAML_KEYSTORE_FILESYSTEM'].length > 0 -%>
+saml.keystore.filesystem=<%= ENV['SAML_KEYSTORE_FILESYSTEM'] %>
+<%- elsif ENV['SAML_KEYSTORE_CLASSPATH'] && ENV['SAML_KEYSTORE_CLASSPATH'].length > 0 -%>
+saml.keystore.classpath=<%= ENV['SAML_KEYSTORE_CLASSPATH'] %>
+<%- else -%>
+#saml.keystore.url=http://example.test/saml/keystore/keystore.jks
+#saml.keystore.filesystem=/users/Work/saml/keystore/keystore.jks
+saml.keystore.classpath=/security/keystore.jks
+<%- end -%>
+
+# password to access the keystore, or empty for no password
+saml.keystore.password=<%= ENV['SAML_KEYSTORE_PASSWORD'] %>
+
+# comma-separated list of 'username<saml.username.password.delimiter.char>password' used to access private keys
+saml.keystore.private.username.passwords=<%= ENV['SAML_KEYSTORE_PRIVATE_USERNAME_PASSWORDS'] %>
+
+# delimiter char to be used in the comma-separated list of 'username<saml.username.password.delimiter.char>password'
+saml.username.password.delimiter.char=<%= ENV['SAML_USERNAME_PASSWORD_DELIMITER_CHAR'] %>
+
+# default key
+saml.keystore.default.key=<%= ENV['SAML_KEYSTORE_DEFAULT_KEY'] %>
+
+# canonicalization algorithm (choose between C14N-EXCL-OMIT-COMMENTS, C14N-EXCL-WITH-COMMENTS, C14N-OMIT-COMMENTS,
+# C14N-WITH-COMMENTS, C14N11-OMIT-COMMENTS and C14N11-WITH-COMMENTS)
+saml.canonicalization.algorithm=<%= ENV['SAML_CANONICALIZATION_ALGORITHM'] %>
+
+# signature algorithm (choose between RSA-SHA512, RSA-SHA384, RSA-SHA256, RSA-SHA1, ECDSA-SHA512, ECDSA-SHA384,
+# ECDSA-SHA256 and ECDSA-SHA1)
+saml.signature.algorithm=<%= ENV['SAML_SIGNATURE_ALGORITHM'] %>
+
+# data encryption algorithm (choose between AES256, AES192 and AES128)
+saml.dataencryption.algorithm=<%= ENV['SAML_DATAENCRYPTION_ALGORITHM'] %>
+
+# key transport encryption algorithm (choose between RSA-OAEP and RSA-15)
+saml.keytransportencryption.algorithm=<%= ENV['SAML_KEYTRANSPORTENCRYPTION_ALGORITHM'] %>
+
+# ############################# #
+# logout settings               #
+# ############################# #
+
+# redirect page on a logout request
+logout.redirect.url=/platform/logout
+
+# SAML best practices advise that all incoming/outgoing logout requests should be signed.
+# ( SSOCircle.com, however, does not sign Single Logout requests )
+# ( PingIdentity does not recognize signed Single Logout requests )
+ensure.incoming.logout.request.signed=<%= ENV['SAML_ENSURE_INCOMING_LOGOUT_REQUEST_SIGNED'] %>
+ensure.outgoing.logout.response.signed=<%= ENV['SAML_ENSURE_OUTGOING_LOGOUT_RESPONSE_SIGNED'] %>
+ensure.outgoing.logout.request.signed=<%= ENV['SAML_ENSURE_OUTGOING_LOGOUT_REQUEST_SIGNED'] %>
+
+# one-of: true | false
+#
+# Local Logout: terminates only the local session and doesn't affect neither session at IDP, nor sessions at
+# other SPs where user logged in using single sign-on.
+#
+# Global Logout (a.k.a. Single Logout): terminates both session at the current SP, the IDP session and sessions
+# at other SPs connected to the same IDP session. Global logout (a.k.a. Single Logout) can be initialized from
+# any of the participating SPs or from the IdP itself.
+#
+# Important Note: not all IdPs support Global Logout (a.k.a. Single Logout)! Please check with your chosen IdP
+# if this is a supported feature.
+# Examples: SSOCircle.com supports Single Logout; Okta.com does not (http://developer.okta.com/docs/guides/oan_guidance.html)
+use.global.logout.strategy=<%= ENV['SAML_USE_GLOBAL_LOGOUT_STRATEGY'] %>
+
+# one-of: saml | jdbc | memory
+#
+# For authorization.providers other than 'saml', we'll look for published UserDetailsService / IUserRoleListService
+# beans ( even if these are non-osgi ones )
+authorization.provider=<%= ENV['SAML_AUTHORIZATION_PROVIDER'] %>
+
+# When a username is not found in the authorization provider, should a user details
+# object be created with the default role? Enabling this option can cause problems
+# with user details chained for the system admin role.
+# default value is false - changing the value may cause problems with scheduled content
+create.user.details.not.found.in.authorization.provider=<%= ENV['SAML_CREATE_USER_DETAILS_NOT_FOUND_IN_AUTHORIZATION_PROVIDER'] %>
+
+# LOAD BALANCER CONFIGURATION
+# If the server will be behind a load balancer, server addressing properties must be
+# specified so that any host can produce and validate messages. Set the following property
+# to enable saml for servers behind a load balancer (ex. true | false)
+saml.lb.enabled=<%= ENV['SAML_LB_ENABLED'] %>
+
+# When the load balancer is enabled, provide server access url scheme (ex. http | https)
+saml.lb.scheme=<%= ENV['SAML_LB_SCHEME'] %>
+
+# When the load balancer is enabled, provide a value with the host address of the load balancer (ex. www.myserver.com)
+saml.lb.server.name=<%= ENV['SAML_LB_SERVER_NAME'] %>
+
+# When the load balancer is enabled, provide a value of with the context path of the load balancer (ex. /)
+saml.lb.context.path=<%= ENV['SAML_LB_CONTEXT_PATH'] %>
+
+# When the load balancer is enabled, provide the port of the load balancer
+saml.lb.server.port=<%= ENV['SAML_LB_SERVER_PORT'] %>
+
+# When the load balancer is enabled, set if the port must be included in the address (ex. true | false)
+saml.lb.include.port.in.request.url=<%= ENV['SAML_LB_INCLUDE_PORT_IN_REQUEST_URL'] %>

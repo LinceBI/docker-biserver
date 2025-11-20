@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:pen="http://www.pentaho.com/schema/pentaho-system"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.8.xsd
+		http://www.pentaho.com/schema/pentaho-system http://www.pentaho.com/schema/pentaho-system.xsd"
+	default-lazy-init="true">
+
+	<bean class="org.pentaho.platform.config.SolutionPropertiesFileConfiguration">
+		<constructor-arg value="saml" />
+		<constructor-arg value="applicationContext-spring-security-saml.properties" />
+		<pen:publish as-type="INTERFACES" />
+	</bean>
+
+	<!-- ======================== FILTER CHAIN ======================= -->
+
+	<!-- Overridden from applicationContext-spring-security.xml to enable SAML -->
+	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+		<constructor-arg>
+			<util:list>
+				<sec:filter-chain pattern="/api/csrf/token" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter" />
+				<sec:filter-chain pattern="/webservices/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilterForWS,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					samlMetadataGeneratorFilter,
+					samlWebSSOProcessingFilter,
+					basicProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/api/repos/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilterForWS,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					samlMetadataGeneratorFilter,
+					samlWebSSOProcessingFilter,
+					basicProcessingFilter,
+					requestParameterProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptorForWS,
+					preFlightFilter" />
+				<sec:filter-chain pattern="/api/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilterForWS,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					samlMetadataGeneratorFilter,
+					samlWebSSOProcessingFilter,
+					basicProcessingFilter,
+					requestParameterProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/plugin/reporting/api/jobs/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilterForWS,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					samlMetadataGeneratorFilter,
+					samlWebSSOProcessingFilter,
+					basicProcessingFilter,
+					requestParameterProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptorForWS,
+					preFlightFilter" />
+				<sec:filter-chain pattern="/plugin/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilterForWS,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					samlMetadataGeneratorFilter,
+					samlWebSSOProcessingFilter,
+					basicProcessingFilter,
+					requestParameterProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptorForWS" />
+				<sec:filter-chain pattern="/**" filters="
+					ssrfGateFilter,
+					csrfGateFilter,
+					corsFilter,
+					securityContextHolderAwareRequestFilter,
+					httpSessionPentahoSessionContextIntegrationFilter,
+					httpSessionContextIntegrationFilter,
+					httpSessionReuseDetectionFilter,
+					logoutFilter,
+					samlMetadataGeneratorFilter,
+					samlLogoutFilter,
+					samlSingleLogoutFilter,
+					samlWebSSOProcessingFilter,
+					authenticationProcessingFilter,
+					basicProcessingFilter,
+					requestParameterProcessingFilter,
+					anonymousProcessingFilter,
+					sessionMgmtFilter,
+					mdcFilter,
+					exceptionTranslationFilter,
+					filterInvocationInterceptor" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+
+	<!--
+	Default of ssoEnabled true disables the SessionExpiredDialog, so the sample
+	behaves as it always has when a session times out. However, it may be preferable
+	to set the ssoEnabled value to false, and add the ssoEnabled init-param in
+	pentaho-server/tomcat/webapps/pentaho/WEB-INF/web.xml, which will enable the
+	SessionExpiredDialog and redirect users to /Home on session timeout, which
+	sends users back to the IdP, instead of /Login, which behaves erratically:
+	-->
+	<!--
+	<filter>
+		<filter-name>Pentaho Web Context Filter</filter-name>
+		<filter-class>com.pentaho.platform.web.http.filters.PentahoEnterpriseWebContextFilter</filter-class>
+		<init-param>
+			<param-name>ssoEnabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	-->
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="httpSessionPentahoSessionContextIntegrationFilter" class="org.pentaho.platform.web.http.filters.HttpSessionPentahoSessionIntegrationFilter">
+		<property name="ssoEnabled" value="true" />
+	</bean>
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="httpRequestAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<constructor-arg>
+			<util:list>
+				<ref bean="roleVoter" />
+			</util:list>
+		</constructor-arg>
+	</bean>
+
+	<!-- ===================== HTTP REQUEST SECURITY ==================== -->
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<constructor-arg ref="samlAuthenticationFilterEntryPoint" />
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
+		</property>
+	</bean>
+
+	<!-- ======================== AUTHENTICATION ======================= -->
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+		<constructor-arg>
+			<util:list>
+				<pen:bean class="org.springframework.security.authentication.AuthenticationProvider" />
+				<ref bean="anonymousAuthenticationProvider" />
+			</util:list>
+		</constructor-arg>
+		<property name="authenticationEventPublisher">
+			<ref bean="defaultAuthenticationEventPublisher" />
+		</property>
+	</bean>
+
+	<!-- Overridden from applicationContext-spring-security.xml -->
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg value="${saml.logout.url}" />
+		<!-- URL redirected to after logout -->
+		<constructor-arg>
+			<util:list>
+				<bean class="org.pentaho.platform.web.http.security.PentahoLogoutHandler" />
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			</util:list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/platform/logout" />
+	</bean>
+
+	<!-- =============================-->
+	<!-- SPRING-SECURITY-SAML FILTERS -->
+	<!-- =============================-->
+
+	<pen:bean id="samlAuthenticationFilterEntryPoint" class="org.springframework.security.web.AuthenticationEntryPoint">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.authentication.entry.point" />
+		</pen:attributes>
+	</pen:bean>
+
+	<pen:bean id="samlWebSSOProcessingFilter" class="javax.servlet.Filter">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.filter.websso.processing" />
+		</pen:attributes>
+	</pen:bean>
+
+	<pen:bean id="samlWebSSOHoKProcessingFilter" class="javax.servlet.Filter">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.filter.websso.hok.processing" />
+		</pen:attributes>
+	</pen:bean>
+
+	<pen:bean id="samlMetadataGeneratorFilter" class="javax.servlet.Filter">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.filter.metadata.generator" />
+		</pen:attributes>
+	</pen:bean>
+
+	<pen:bean id="samlLogoutFilter" class="javax.servlet.Filter">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.filter.logout" />
+		</pen:attributes>
+	</pen:bean>
+
+	<pen:bean id="samlSingleLogoutFilter" class="javax.servlet.Filter">
+		<pen:attributes>
+			<pen:attr key="providerName" value="saml.filter.single.logout" />
+		</pen:attributes>
+	</pen:bean>
+
+</beans>

@@ -225,7 +225,7 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 > </details>
 >
 > <details>
->   <summary>Single Sign-On (CAS)</summary>
+>   <summary>CAS</summary>
 >
 >>  * **`CAS_ENABLED`:** habilita CAS.  
 >>    **Por defecto:** `false`
@@ -244,6 +244,105 @@ La construcción de esta imagen sigue el procedimiento estándar de Docker con e
 >>
 >>  * **`CAS_PROVIDER_USERDETAILS`:** proveedor de la información del usuario, admite los valores `userDetailsService`, `ldapUserDetailsService` y `jdbcUserDetailsService`.  
 >>    **Por defecto:** `userDetailsService`
+>
+> </details>
+>
+> <details>
+>   <summary>SAML</summary>
+>
+>>  * **`SAML_ENABLED`:** habilita SAML.  
+>>    **Por defecto:** `false`
+>>
+>>  * **`SAML_LOGOUT_URL`:** URL de cierre de sesión.  
+>>    **Por defecto:** `${FQSU_PROTOCOL}://${FQSU_DOMAIN}:${FQSU_PORT}`
+>>
+>>  * **`SAML_SP_METADATA_ENTITYID`:** identificador del SP (Service Principal).  
+>>    **Por defecto:** `biserver`
+>>
+>>  * **`SAML_SP_METADATA_URL`:** URL con los metadatos del SP.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_SP_METADATA_FILESYSTEM`:** ruta del sistema con los metadatos del SP.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_SP_METADATA_CLASSPATH`:** ruta en el classpath con los metadatos del SP.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_IDP_URL`:** URL del IdP (Identity Provider).  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_IDP_METADATA_URL`:** URL con los metadatos del IdP.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_IDP_METADATA_FILESYSTEM`:** ruta del sistema con los metadatos del IdP  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_IDP_METADATA_CLASSPATH`:** ruta en el classpath con los metadatos del IdP.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_VALID_RESPONSE_INTERVAL_IN_SECS`:** ventana de tiempo de validez de la respuesta.  
+>>    **Por defecto:** `86400`
+>>
+>>  * **`SAML_MAX_AUTHENTICATION_AGE_IN_SECS`:** duración máxima de la sesión.  
+>>    **Por defecto:** `7200`
+>>
+>>  * **`SAML_ROLE_RELATED_USER_ATTRIBUTE_NAME`:** atributo en la respuesta a utilizar como roles en Pentaho.  
+>>    **Por defecto:** `Role`
+>>
+>>  * **`SAML_ROLE_RELATED_USER_ATTRIBUTE_PREFIX`:** prefijo que deben tener los roles para ser utilizados.  
+>>    **Por defecto:** `Pentaho:`
+>>
+>>  * **`SAML_KEYSTORE_URL`:** URL con el keystore.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_KEYSTORE_FILESYSTEM`:** ruta del sistema con el keystore.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_KEYSTORE_CLASSPATH`:** ruta en el classpath con el keystore.  
+>>    **Por defecto:** *vacío*
+>>
+>>  * **`SAML_KEYSTORE_PASSWORD`:** contraseña del keystore.  
+>>    **Por defecto:** `changeit`
+>>
+>>  * **`SAML_KEYSTORE_PRIVATE_USERNAME_PASSWORDS`:** lista separada por comas de entidades y contraseñas del keystore.  
+>>    **Por defecto:** `saml:changeit`
+>>
+>>  * **`SAML_USERNAME_PASSWORD_DELIMITER_CHAR`:** delimitador del usuario y contraseña.  
+>>    **Por defecto:** `:`
+>>
+>>  * **`SAML_KEYSTORE_DEFAULT_KEY`:** clave por defecto del keystore.  
+>>    **Por defecto:** `saml`
+>>
+>>  * **`SAML_CANONICALIZATION_ALGORITHM`:** algoritmo de canonicalización, admite los valores `C14N-EXCL-OMIT-COMMENTS`, `C14N-EXCL-WITH-COMMENTS`, `C14N-OMIT-COMMENTS`, `C14N-WITH-COMMENTS`, `C14N11-OMIT-COMMENTS` y `C14N11-WITH-COMMENTS`.  
+>>    **Por defecto:** `C14N-EXCL-OMIT-COMMENTS`
+>>
+>>  * **`SAML_SIGNATURE_ALGORITHM`:** algoritmo de firma, admite los valores `RSA-SHA512`, `RSA-SHA384`, `RSA-SHA256`, `RSA-SHA1`, `ECDSA-SHA512`, `ECDSA-SHA384`, `ECDSA-SHA256` y `ECDSA-SHA1`.  
+>>    **Por defecto:** `RSA-SHA256`
+>>
+>>  * **`SAML_DATAENCRYPTION_ALGORITHM`:** algoritmo de cifrado de datos, admite los valores `AES256`, `AES192` y `AES128`.  
+>>    **Por defecto:** `AES256`
+>>
+>>  * **`SAML_KEYTRANSPORTENCRYPTION_ALGORITHM`:** algoritmo de cifrado de transporte, admite los valores `RSA-OAEP` y `RSA-15`.  
+>>    **Por defecto:** `RSA-OAEP`
+>>
+>>  * **`SAML_ENSURE_INCOMING_LOGOUT_REQUEST_SIGNED`:** firmar peticiones entrantes de cierre de sesión.  
+>>    **Por defecto:** `true`
+>>
+>>  * **`SAML_ENSURE_OUTGOING_LOGOUT_RESPONSE_SIGNED`:** firmar respuestas salientes de cierre de sesión.  
+>>    **Por defecto:** `true`
+>>
+>>  * **`SAML_ENSURE_OUTGOING_LOGOUT_REQUEST_SIGNED`:** firmar peticiones salientes de cierre de sesión.  
+>>    **Por defecto:** `true`
+>>
+>>  * **`SAML_USE_GLOBAL_LOGOUT_STRATEGY`:** cerrar sesión en el IdP.  
+>>    **Por defecto:** `true`
+>>
+>>  * **`SAML_AUTHORIZATION_PROVIDER`:** proveedor de roles, admite los valores `saml`, `jdbc`, `ldap` y `jackrabbit`.  
+>>    **Por defecto:** `saml`
+>>
+>>  * **`SAML_CREATE_USER_DETAILS_NOT_FOUND_IN_AUTHORIZATION_PROVIDER`:** crear usuarios no existentes durante el inicio de sesión.  
+>>    **Por defecto:** `false`
+>>
 >
 > </details>
 

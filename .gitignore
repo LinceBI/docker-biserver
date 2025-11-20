@@ -2,6 +2,7 @@
 !/config/biserver.init.d/.gitkeep
 
 /examples/*/config/biserver/biserver.init.d/*
+!/examples/*/config/biserver/biserver.init.d/90_*
 !/examples/*/config/biserver/biserver.init.d/.gitkeep
 
 /dist/
