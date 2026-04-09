@@ -302,6 +302,17 @@ RUN <<-EOF
 	chown biserver:root ./clickhouse-jdbc-*.jar && chmod 0664 ./clickhouse-jdbc-*.jar
 EOF
 
+# Install Snowflake JDBC
+ARG SNOWFLAKE_JDBC_URL="https://repo1.maven.org/maven2/net/snowflake/snowflake-jdbc/3.28.0/snowflake-jdbc-3.28.0.jar"
+ARG SNOWFLAKE_JDBC_CHECKSUM="41e3e99fde1aa90516448306885b345df7600db650258e7dfd0ea79c02f6cb49"
+RUN <<-EOF
+	cd "${CATALINA_BASE:?}"/webapps/"${WEBAPP_PENTAHO_DIRNAME:?}"/WEB-INF/lib/
+	rm -f ./snowflake-jdbc-*.jar
+	curl -LO "${SNOWFLAKE_JDBC_URL:?}"
+	printf '%s  %s' "${SNOWFLAKE_JDBC_CHECKSUM:?}" ./snowflake-jdbc-*.jar | sha256sum -c
+	chown biserver:root ./snowflake-jdbc-*.jar && chmod 0664 ./snowflake-jdbc-*.jar
+EOF
+
 # Install CAS libraries
 ARG CAS_CLIENT_CORE_URL="https://repo1.maven.org/maven2/org/jasig/cas/client/cas-client-core/3.6.4/cas-client-core-3.6.4.jar"
 ARG CAS_CLIENT_CORE_CHECKSUM="daab2af8636eac3939a8931469de7c1dea6ecb25516cea9a704a23c7ace48939"
