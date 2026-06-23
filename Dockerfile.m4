@@ -215,8 +215,8 @@ RUN <<-EOF
 EOF
 
 # Install H2 JDBC
-ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.3.232/h2-2.3.232.jar"
-ARG H2_JDBC_CHECKSUM="8dae62d22db8982c3dcb3826edb9c727c5d302063a67eef7d63d82de401f07d3"
+ARG H2_JDBC_URL="https://repo1.maven.org/maven2/com/h2database/h2/2.4.240/h2-2.4.240.jar"
+ARG H2_JDBC_CHECKSUM="29b70e427cc1c40cdc376283adbb0cc62853073797bb5fe5761f81fe73d57ce0"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./h2-*.jar
@@ -237,8 +237,8 @@ RUN <<-EOF
 EOF
 
 # Install Postgres JDBC
-ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.5/postgresql-42.7.5.jar"
-ARG POSTGRES_JDBC_CHECKSUM="69020b3bd20984543e817393f2e6c01a890ef2e37a77dd11d6d8508181d079ab"
+ARG POSTGRES_JDBC_URL="https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.9/postgresql-42.7.9.jar"
+ARG POSTGRES_JDBC_CHECKSUM="88f1fc3992e80ec3b048f798030e9a014aa4783c40afb56d3e7a87ee0adf166f"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./postgresql-*.jar
@@ -259,8 +259,8 @@ RUN <<-EOF
 EOF
 
 # Install MSSQL JDBC
-ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.8.1.jre11/mssql-jdbc-12.8.1.jre11.jar"
-ARG MSSQL_JDBC_CHECKSUM="e6933c0711e598a224060e52ed31392f720a4a7664e85d8ae37c52a85b67ebb0"
+ARG MSSQL_JDBC_URL="https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/13.4.0.jre11/mssql-jdbc-13.4.0.jre11.jar"
+ARG MSSQL_JDBC_CHECKSUM="e36f5237c1267983e5b88dc2169f6b9d7e50eceec6dc1ca31018e3877e14af66"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./mssql-jdbc-*.jar
@@ -270,8 +270,8 @@ RUN <<-EOF
 EOF
 
 # Install Oracle JDBC
-ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.7.0.25.01/ojdbc11-23.7.0.25.01.jar"
-ARG ORACLE_JDBC_CHECKSUM="ec8b7f2020b03b19f572e1bc34f94330610e86d3113ffe1e1f0474b8f5ce88ed"
+ARG ORACLE_JDBC_URL="https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.9.0.25.07/ojdbc11-23.9.0.25.07.jar"
+ARG ORACLE_JDBC_CHECKSUM="f52e9335276cd3999c23bb5a364fa01a628f3468945444d03cb7f92271bca1da"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./ojdbc11-*.jar
@@ -281,8 +281,8 @@ RUN <<-EOF
 EOF
 
 # Install Vertica JDBC
-ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/24.4.0-0/vertica-jdbc-24.4.0-0.jar"
-ARG VERTICA_JDBC_CHECKSUM="cc720c960d2280643b5c1d463a15e05a97fe9f456b30d1dfb5f16405ecbb0637"
+ARG VERTICA_JDBC_URL="https://repo1.maven.org/maven2/com/vertica/jdbc/vertica-jdbc/25.3.0-0/vertica-jdbc-25.3.0-0.jar"
+ARG VERTICA_JDBC_CHECKSUM="f43c4ed61a9639d95214e00c888fd21c4ea283d60ca2ce06c6855a774ff5e583"
 RUN <<-EOF
 	cd "${CATALINA_BASE:?}"/lib/
 	rm -f ./vertica-jdbc-*.jar
